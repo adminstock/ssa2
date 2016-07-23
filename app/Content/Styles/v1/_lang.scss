@@ -1,0 +1,21 @@
+﻿@import ".sprites/lang";
+
+.lang {
+	display: inline-block;
+}
+
+.lang-noselect {
+  @include sprite($globe);
+}
+
+.lang-en {
+  @include sprite($en);
+}
+
+.lang-ru {
+  @include sprite($ru);
+}
+
+.lang-de {
+  @include sprite($de);
+}

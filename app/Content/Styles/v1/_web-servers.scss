@@ -1,0 +1,17 @@
+﻿@import ".sprites/web-servers";
+
+.web-servers-apache24 {
+  @include sprite($apache24);
+}
+
+.web-servers-apache16 {
+  @include sprite($apache16);
+}
+
+.web-servers-nginx24 {
+  @include sprite($nginx24);
+}
+
+.web-servers-nginx16 {
+  @include sprite($nginx16);
+}

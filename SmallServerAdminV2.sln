@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{A0786B88-2ADB-4C21-ABE8-AA2D79766269}") = "WebApi.PHP", "webapi.php\WebApi.PHP.phpproj", "{4E3F98A7-ECF1-4C4D-AC34-AF0CD20BD69A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "app\App.csproj", "{DD66BCC4-AFC8-4CB9-A0AC-D6C23198EE50}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Info", "Info", "{80BD518C-0549-4120-9E08-3370C41D9CAE}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		README.md = README.md
+		README.ru.md = README.ru.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E3F98A7-ECF1-4C4D-AC34-AF0CD20BD69A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E3F98A7-ECF1-4C4D-AC34-AF0CD20BD69A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD66BCC4-AFC8-4CB9-A0AC-D6C23198EE50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD66BCC4-AFC8-4CB9-A0AC-D6C23198EE50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD66BCC4-AFC8-4CB9-A0AC-D6C23198EE50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD66BCC4-AFC8-4CB9-A0AC-D6C23198EE50}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

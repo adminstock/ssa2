@@ -1,0 +1,10 @@
+/app/typings
+/app/node_modules
+/app/bin
+/app/obj
+/app/src
+/app/dist
+*.user
+.vs
+.svn
+.sprites
