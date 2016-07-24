@@ -36,7 +36,7 @@ export default class Index extends React.Component<any, any> {
 
   render() {
     return (<div>
-      <h1>Hello world!</h1>
+      <h1>{__("Hello world!")}</h1>
       <span className="glyphicon glyphicon-music"></span>
       <Link to="/Users">Users</Link>
     </div>);

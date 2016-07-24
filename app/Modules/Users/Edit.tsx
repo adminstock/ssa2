@@ -19,12 +19,20 @@ import * as React from 'react';
 
 export default class Edit extends React.Component<any, any> {
 
+  static contextTypes: React.ValidationMap<any> = {
+    setTitle: React.PropTypes.func.isRequired
+  }
+
   constructor(props, context) {
     super(props, context);
 
     Debug.Write(this);
   }
-    
+
+  componentWillMount() {
+    (this.context as any).setTitle('Users Editor');
+  }
+
   render() {
     return (
       <div>TODO: User Editor</div>

@@ -20,12 +20,21 @@ import { Link } from 'react-router';
 
 export default class Index extends React.Component<any, any> {
 
+  static contextTypes: React.ValidationMap<any> = {
+    router: React.PropTypes.object.isRequired,
+    setTitle: React.PropTypes.func.isRequired
+  }
+
   constructor(props, context) {
     super(props, context);
 
     Debug.Write(this);
   }
-    
+
+  componentWillMount() {
+    (this.context as any).setTitle(__('Users'));
+  }
+
   render() {
     return (
       <div>

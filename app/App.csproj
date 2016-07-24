@@ -53,6 +53,7 @@
     <Content Include="typings\globals\react-dom\typings.json" />
     <TypeScriptCompile Include="AppStart\Init.tsx" />
     <TypeScriptCompile Include="Helpers\ApiRequest.ts" />
+    <TypeScriptCompile Include="Helpers\CookiesHelper.ts" />
     <TypeScriptCompile Include="Helpers\Debug.ts" />
     <TypeScriptCompile Include="AppStart\Index.tsx" />
     <TypeScriptCompile Include="Layouts\Main.tsx" />
@@ -64,8 +65,11 @@
     <Content Include="Content\Styles\v1\_lang.scss" />
     <Content Include="Content\Styles\v1\_web-servers.scss" />
     <Content Include="Content\Styles\v1\bundle.scss" />
+    <Content Include="Localization\ru.json" />
+    <Content Include="Localization\de.json" />
     <None Include="typings.json" />
     <TypeScriptCompile Include="typings.local\Debug.d.ts" />
+    <TypeScriptCompile Include="typings.local\i18n.d.ts" />
     <TypeScriptCompile Include="typings.local\_constants.d.ts" />
     <TypeScriptCompile Include="typings\globals\history\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\jquery\index.d.ts" />

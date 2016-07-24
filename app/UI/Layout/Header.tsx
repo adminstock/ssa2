@@ -18,10 +18,23 @@ import * as React from 'react';
 
 export default class Header extends React.Component<any, any> {
 
+  static contextTypes: React.ValidationMap<any> = {
+    setLanguage: React.PropTypes.func.isRequired
+  }
+
   constructor(props, context) {
     super(props, context);
 
     Debug.Write(this);
+  }
+  
+  /**
+   * Sets language.
+   *
+   * @param newLanguage New language: en, ru, de etc.
+   */
+  private setLanguage(newLanguage: string): void {
+    (this.context as any).setLanguage(newLanguage);
   }
 
   render() {
@@ -50,9 +63,9 @@ export default class Header extends React.Component<any, any> {
                 <span className="caret"></span>
               </a>
               <ul className="dropdown-menu">
-                <li><a href="?lang=en"><i className="lang lang-en"></i></a></li>
-                <li><a href="?lang=ru"><i className="lang lang-ru"></i></a></li>
-                <li><a href="?lang=de"><i className="lang lang-de"></i></a></li>
+                <li><a onClick={this.setLanguage.bind(this, ['en'])}><i className="lang lang-en"></i></a></li>
+                <li><a onClick={this.setLanguage.bind(this, ['ru'])}><i className="lang lang-ru"></i></a></li>
+                <li><a onClick={this.setLanguage.bind(this, ['de'])}><i className="lang lang-de"></i></a></li>
               </ul>
             </li>
             <li><a href="/logout.php"><span className="glyphicon glyphicon-log-out"></span> Logout</a></li>

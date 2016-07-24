@@ -22,6 +22,8 @@ import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
 import Header from 'UI/Layout/Header';
 import Menu from 'UI/Layout/Menu';
 
+import CookiesHelper from 'Helpers/CookiesHelper';
+
 export default class Main extends React.Component<any, any> {
 
   static contextTypes: React.ValidationMap<any> = {
@@ -30,7 +32,8 @@ export default class Main extends React.Component<any, any> {
 
   static childContextTypes: React.ValidationMap<any> = {
     router: React.PropTypes.object.isRequired,
-    setTitle: React.PropTypes.func.isRequired
+    setTitle: React.PropTypes.func.isRequired,
+    setLanguage: React.PropTypes.func
   }
 
   constructor(props, context) {
@@ -44,7 +47,8 @@ export default class Main extends React.Component<any, any> {
   public getChildContext(): any {
     return {
       router: (this.context as any).router,
-      setTitle: this.setTitle.bind(this)
+      setTitle: this.setTitle.bind(this),
+      setLanguage: this.setLanguage.bind(this)
     };
   }
 
@@ -54,10 +58,27 @@ export default class Main extends React.Component<any, any> {
    * @param value Text to set.
    */
   public setTitle(value: string): void {
+    Debug.Write('setTitle', value);
+
     this.setState({ title: value });
   }
 
+  /**
+   * Sets language.
+   *
+   * @param newLanguage New language: en, ru, de etc.
+   */
+  public setLanguage(newLanguage: string): void {
+    Debug.Write('setLanguage', newLanguage);
+
+    CookiesHelper.Add('lang', newLanguage, 365);
+
+    window.location.reload(true);
+  }
+
   render() {
+    Debug.Write('Main.render');
+
     return (
       <DocumentTitle title={this.state.title}>
         <div>
