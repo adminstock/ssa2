@@ -68,7 +68,7 @@ export default class ApiRequest<T> {
 
     data = data || {};
 
-    data = $.extend(data, { ApiMethod: method });
+    data = { Server: 'todo config file name', ApiMethod: method, Data: data };
 
     this._Url = url + method;
     this._Data = data;

@@ -24,6 +24,11 @@ export default class ApiServer {
    */
   public Url: string;
 
+  /**
+   * Authorization Url.
+   */
+  public AuthUrl: string;
+
   /** Server name (optional). */
   public Name: string;
 

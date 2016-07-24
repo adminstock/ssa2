@@ -9,6 +9,7 @@ var i18nPlugin = require('i18n-webpack-plugin');
 var apiServers = [
   {
     'Url': 'http://localhost:62802/',
+    'AuthUrl': 'http://localhost:62802/auth.php',
     'Name': 'WebApi.PHP',
     'Description': 'Local server.'
   }

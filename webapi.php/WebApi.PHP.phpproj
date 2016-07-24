@@ -18,6 +18,14 @@
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="auth.php" />
+    <Compile Include="config.php" />
     <Compile Include="index.php" />
+    <Compile Include="ssh\index.php" />
+    <Compile Include="users\index.php" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ssh\" />
+    <Folder Include="users\" />
   </ItemGroup>
 </Project>

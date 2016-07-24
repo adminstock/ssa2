@@ -58,6 +58,8 @@
     <TypeScriptCompile Include="AppStart\Index.tsx" />
     <TypeScriptCompile Include="Layouts\Main.tsx" />
     <TypeScriptCompile Include="Models\ApiServer.ts" />
+    <TypeScriptCompile Include="Models\OperatingSystem.ts" />
+    <TypeScriptCompile Include="Models\Server.ts" />
     <TypeScriptCompile Include="Models\User.ts" />
     <TypeScriptCompile Include="Modules\Users\Edit.tsx" />
     <TypeScriptCompile Include="Modules\Users\Index.tsx" />
