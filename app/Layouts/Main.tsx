@@ -18,6 +18,9 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import DocumentTitle from 'react-document-title';
 import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
+import { Modal, Button } from 'react-bootstrap';
+import Dialog from 'Models/Dialog';
+
 // TODO: Grouping Layout UI
 import Header from 'UI/Layout/Header';
 import Menu from 'UI/Layout/Menu';
@@ -33,22 +36,30 @@ export default class Main extends React.Component<any, any> {
   static childContextTypes: React.ValidationMap<any> = {
     router: React.PropTypes.object.isRequired,
     setTitle: React.PropTypes.func.isRequired,
-    setLanguage: React.PropTypes.func
+    setLanguage: React.PropTypes.func,
+    alert: React.PropTypes.func
   }
+
+  /** Created modal dialogs. */
+  // private dialogs: Array<Dialog> = new Array<Dialog>();
 
   constructor(props, context) {
     super(props, context);
 
     Debug.Write(this);
 
-    this.state = { title: 'SmallServerAdmin' };
+    this.state = {
+      title: 'SmallServerAdmin',
+      dialogs: new Array<Dialog>()
+    };
   }
 
   public getChildContext(): any {
     return {
       router: (this.context as any).router,
       setTitle: this.setTitle.bind(this),
-      setLanguage: this.setLanguage.bind(this)
+      setLanguage: this.setLanguage.bind(this),
+      alert: this.alert.bind(this)
     };
   }
 
@@ -76,8 +87,60 @@ export default class Main extends React.Component<any, any> {
     window.location.reload(true);
   }
 
+  // TODO: options
+  public alert(message?: string | JSX.Element | HTMLElement | JQuery, title?: string | JSX.Element | HTMLElement | JQuery, closeHandler?: { (dialog: JSX.Element): void; }): void {
+    var dialog = new Dialog();
+    dialog.Visible = true;
+    Debug.Write('Modal.Created', dialog.Key);
+
+    dialog.Element = (<Modal key={dialog.Key} show={dialog.Visible} onHide={() => {
+      Debug.Write('Modal.Close', dialog.Key, dialog);
+
+      // TODO: cancel handler
+      if (closeHandler !== undefined && closeHandler !== null && typeof closeHandler === 'function') {
+        closeHandler(dialog.Element);
+      }
+
+      dialog.Visible = false;
+
+      // remove dialog
+
+      // https://facebook.github.io/react/docs/update.html
+      //this.setState(ReactUpdate(this.state, { dialogs: { $splice: dialogs } }));
+
+      this.setState({
+        dialogs: this.state.dialogs.filter((d) => d.Key !== dialog.Key)
+      });
+
+      //this.render();
+
+    }}>
+      <Modal.Header closeButton>
+        <Modal.Title>Alert</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>{message}</Modal.Body>
+      <Modal.Footer>
+        <Button>Close</Button>
+      </Modal.Footer>
+    </Modal>);
+
+    var dialogs = this.state.dialogs;
+    dialogs.push(dialog);
+    this.setState({ dialogs: dialogs });
+
+    //this.render();
+  }
+
   render() {
     Debug.Write('Main.render');
+
+    var dialogsToRender = new Array<JSX.Element>();
+
+    this.state.dialogs.forEach((dialog: Dialog) => {
+      if (dialog.Visible) {
+        dialogsToRender.push(dialog.Element);
+      }
+    });
 
     return (
       <DocumentTitle title={this.state.title}>
@@ -98,6 +161,8 @@ export default class Main extends React.Component<any, any> {
             SmallServerAdmin v{SSA_VERSION} ({SSA_DATE_RELEASE})
             <br />
           </footer>
+
+          {dialogsToRender}
         </div>
       </DocumentTitle>
     )

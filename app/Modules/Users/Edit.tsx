@@ -20,7 +20,8 @@ import * as React from 'react';
 export default class Edit extends React.Component<any, any> {
 
   static contextTypes: React.ValidationMap<any> = {
-    setTitle: React.PropTypes.func.isRequired
+    setTitle: React.PropTypes.func.isRequired,
+    alert: React.PropTypes.func.isRequired
   }
 
   constructor(props, context) {
@@ -31,6 +32,10 @@ export default class Edit extends React.Component<any, any> {
 
   componentWillMount() {
     (this.context as any).setTitle('Users Editor');
+
+    // test
+    (this.context as any).alert('test1');
+    (this.context as any).alert('test2', 'test');
   }
 
   render() {

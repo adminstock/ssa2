@@ -31,6 +31,19 @@
     <Content Include="Content\Sprites\web-servers\nginx16.png" />
     <Content Include="Content\Sprites\web-servers\nginx24.png" />
     <Content Include="index.html" />
+    <Content Include="typings\globals\history\typings.json" />
+    <Content Include="typings\globals\jquery\typings.json" />
+    <Content Include="typings\globals\node\typings.json" />
+    <Content Include="typings\globals\react-addons-update\typings.json" />
+    <Content Include="typings\globals\react-bootstrap\typings.json" />
+    <Content Include="typings\globals\react-document-title\typings.json" />
+    <Content Include="typings\globals\react-dom\typings.json" />
+    <Content Include="typings\globals\react-router\typings.json" />
+    <Content Include="typings\globals\react\typings.json" />
+    <Content Include="typings\globals\source-map\typings.json" />
+    <Content Include="typings\globals\uglify-js\typings.json" />
+    <Content Include="typings\globals\webpack-env\typings.json" />
+    <Content Include="typings\globals\webpack\typings.json" />
     <Content Include="web.config" />
     <Content Include="webpack.config.js" />
   </ItemGroup>
@@ -40,17 +53,6 @@
     <Content Include="package.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="typings\globals\jquery\typings.json" />
-    <Content Include="typings\globals\node\typings.json" />
-    <Content Include="typings\globals\react-router\typings.json" />
-    <Content Include="typings\globals\react\typings.json" />
-    <Content Include="typings\globals\uglify-js\typings.json" />
-    <Content Include="typings\globals\webpack-env\typings.json" />
-    <Content Include="typings\globals\webpack\typings.json" />
-    <Content Include="typings\globals\history\typings.json" />
-    <Content Include="typings\globals\source-map\typings.json" />
-    <Content Include="typings\globals\react-document-title\typings.json" />
-    <Content Include="typings\globals\react-dom\typings.json" />
     <TypeScriptCompile Include="AppStart\Init.tsx" />
     <TypeScriptCompile Include="Helpers\ApiRequest.ts" />
     <TypeScriptCompile Include="Helpers\CookiesHelper.ts" />
@@ -58,6 +60,7 @@
     <TypeScriptCompile Include="AppStart\Index.tsx" />
     <TypeScriptCompile Include="Layouts\Main.tsx" />
     <TypeScriptCompile Include="Models\ApiServer.ts" />
+    <TypeScriptCompile Include="Models\Dialog.ts" />
     <TypeScriptCompile Include="Models\OperatingSystem.ts" />
     <TypeScriptCompile Include="Models\Server.ts" />
     <TypeScriptCompile Include="Models\User.ts" />
@@ -71,11 +74,15 @@
     <Content Include="Localization\de.json" />
     <None Include="typings.json" />
     <TypeScriptCompile Include="typings.local\Debug.d.ts" />
-    <TypeScriptCompile Include="typings.local\i18n.d.ts" />
+    <TypeScriptCompile Include="typings.local\__.d.ts" />
+    <TypeScriptCompile Include="typings.local\ReactUpdate.d.ts" />
     <TypeScriptCompile Include="typings.local\_constants.d.ts" />
+    <TypeScriptCompile Include="typings.local\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\history\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\jquery\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\react-addons-update\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\react-bootstrap\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-document-title\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-dom\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-router\index.d.ts" />
@@ -85,7 +92,6 @@
     <TypeScriptCompile Include="typings\globals\webpack-env\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\webpack\index.d.ts" />
     <TypeScriptCompile Include="typings\index.d.ts" />
-    <TypeScriptCompile Include="typings.local\index.d.ts" />
     <TypeScriptCompile Include="UI\Layout\Header.tsx" />
     <TypeScriptCompile Include="UI\Layout\Menu.tsx" />
   </ItemGroup>

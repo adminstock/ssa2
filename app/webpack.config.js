@@ -116,6 +116,7 @@ module.exports = Object.keys(languages).map(function(language) {
         'react': 'react',
         'React': 'react',
         'ReactDOM': 'react-dom',
+        'ReactUpdate': 'react-addons-update',
         'Debug': 'debug' // see alias 'Helpers/Debug'
       }),
 

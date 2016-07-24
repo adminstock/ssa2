@@ -21,6 +21,7 @@
     "draft-js": "^0.7.0",
     "es6-shim": "^0.35.1",
     "bootstrap-sass": "^3.3.6",
+    "react-bootstrap": "^0.30.0-rc.2",
     "font-awesome": "^4.6.3"
   },
   "devDependencies": {
