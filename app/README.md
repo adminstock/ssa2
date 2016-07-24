@@ -21,8 +21,8 @@ To the comfortable work required:
 
 ## Structure
 
-* **App** - folder contains main files of the application:
-  * **_Start.tsx** - routes, configuration and initialization of the application;
+* **AppStart** - folder contains main files of the application:
+  * **Init.tsx** - routes, configuration and initialization of the application;
   * **Index.tsx** - main page of the **SmallServerAdmin**.
 * **bin** - folder for binary assemblies. It created automatically. Not used. This folder should not be part of the solution.
 * **Content** - folder to store additional static content:
@@ -51,3 +51,29 @@ To the comfortable work required:
 * **typings.json** - config of **TypeScript Definition Manager**.
 * **web.config** - configuration of **IIS**.
 * **webpack.config.js** - configuration of **Webpack**.
+
+## Problems and solutions
+
+### Invariant Violation
+
+> Uncaught Invariant Violation: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. Check the render method of `Index`.
+
+This is some strange bug that can sometimes occur.
+
+To solve the problem, you must rebuild **webpack**.
+
+The best way through the menu **Build** -> **Rebuild App** (or Solution) or **Build** -> **Clean App** (or Solution) + **Build** -> **Build App** (or Solution).
+
+Then rebuild **webpack**: menu **View** -> **Other Windows** -> **Task Runner Explorer**. Select **webpack.config.js** and start **Run - Development**.
+
+If the problem persists, try to remove the folders `/app/src` and `/app/dist`, and try again.
+
+### Cannot resolve 'file' or 'directory' ./AppStart/Init in /SmallServerAdmin2/app/src
+
+> ERROR in Entry module not found: Error: Cannot resolve 'file' or 'directory' ./AppStart/Init in F:\AdminStock.net\SmallServerAdmin2\app/src
+
+The problem is that **TypeScript** files were not compiled in **JavaScript**.
+
+Use menu **Build** -> **Build App** (or Solution).
+
+NOTE: Building will fail if there is an error in the code.

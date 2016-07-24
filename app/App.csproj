@@ -51,10 +51,10 @@
     <Content Include="typings\globals\source-map\typings.json" />
     <Content Include="typings\globals\react-document-title\typings.json" />
     <Content Include="typings\globals\react-dom\typings.json" />
-    <TypeScriptCompile Include="App\_Start.tsx" />
+    <TypeScriptCompile Include="AppStart\Init.tsx" />
     <TypeScriptCompile Include="Helpers\ApiRequest.ts" />
     <TypeScriptCompile Include="Helpers\Debug.ts" />
-    <TypeScriptCompile Include="App\Index.tsx" />
+    <TypeScriptCompile Include="AppStart\Index.tsx" />
     <TypeScriptCompile Include="Layouts\Main.tsx" />
     <TypeScriptCompile Include="Models\ApiServer.ts" />
     <TypeScriptCompile Include="Models\User.ts" />

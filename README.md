@@ -14,13 +14,13 @@ The first version of [SmallServerAdmin](https://github.com/adminstock/ssa) is po
 
 The main purpose - is to simplify the code.
 
-The client application will be implemented on **TypeScript** using **ReactJS**.
+The client application will be implemented on **TypeScript** using **React**.
 
 On the server side will only **API**.
 
 The client application and the **API** will be completely independent.
 
-It is planned to add support for other operating systems.
+It is planned to add support for other operating systems in addition to **Debian** and **Ubuntu**.
 
 To begin, we need to make all the features of the first version.
 
