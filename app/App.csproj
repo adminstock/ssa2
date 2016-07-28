@@ -54,13 +54,17 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="AppStart\Init.tsx" />
+    <TypeScriptCompile Include="Core\EventArgs.ts" />
+    <TypeScriptCompile Include="UI\Dialog\DialogManager.tsx" />
+    <TypeScriptCompile Include="UI\Dialog\DialogSettings.ts" />
     <TypeScriptCompile Include="Helpers\ApiRequest.ts" />
+    <TypeScriptCompile Include="Helpers\TextHelper.ts" />
     <TypeScriptCompile Include="Helpers\CookiesHelper.ts" />
     <TypeScriptCompile Include="Helpers\Debug.ts" />
     <TypeScriptCompile Include="AppStart\Index.tsx" />
     <TypeScriptCompile Include="Layouts\Main.tsx" />
     <TypeScriptCompile Include="Models\ApiServer.ts" />
-    <TypeScriptCompile Include="Models\Dialog.ts" />
+    <TypeScriptCompile Include="UI\Dialog\Dialog.ts" />
     <TypeScriptCompile Include="Models\OperatingSystem.ts" />
     <TypeScriptCompile Include="Models\Server.ts" />
     <TypeScriptCompile Include="Models\User.ts" />
@@ -92,6 +96,7 @@
     <TypeScriptCompile Include="typings\globals\webpack-env\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\webpack\index.d.ts" />
     <TypeScriptCompile Include="typings\index.d.ts" />
+    <TypeScriptCompile Include="UI\Dialog\IDialogManagerState.ts" />
     <TypeScriptCompile Include="UI\Layout\Header.tsx" />
     <TypeScriptCompile Include="UI\Layout\Menu.tsx" />
   </ItemGroup>

@@ -61,7 +61,7 @@ const routes = (
  * @param callback The callback function.
  */
 export function LoadComponent(location: any, callback: (error: any, component?: string | React.ComponentClass<any> | React.StatelessComponent<any>) => void): void {
-  Debug.Write('Loading', location.pathname, location);
+  Debug.Log('Loading', location.pathname, location);
 
   var me = { location: location, callback: callback };
 
@@ -95,7 +95,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
  * @param component Loaded component.
  */
 export function LoadedComponent(component: any): void {
-  Debug.Write('Loaded', this.location.pathname);
+  Debug.Log('Loaded', this.location.pathname);
 
   this.callback(null, props => React.createElement(component.default, this.location.query || this.location.params));
 }

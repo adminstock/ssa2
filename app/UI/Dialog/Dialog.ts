@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { Modal } from 'react-bootstrap';
+import TextHelper from 'Helpers/TextHelper';
+import DialogSettings from 'DialogSettings';
 
 /**
  * Represents information about a server API.
@@ -27,9 +28,15 @@ export default class Dialog {
 
   public Element: JSX.Element;
 
-  constructor() {
-    // TODO: make global helper method for generatin keys
-    this.Key = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+  public Settings: DialogSettings;
+
+  constructor(settings?: DialogSettings) {
+    this.Key = TextHelper.RandomKey('dialog_');
+    this.Settings = settings;
+
+    if (settings !== undefined && settings != null) {
+      this.Settings.SetDialog(this);
+    }
   }
 
 }

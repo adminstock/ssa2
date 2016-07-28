@@ -14,32 +14,15 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { Link } from 'react-router';
+/**
+ * Represents the base class for classes that contain event data, and provides a value to use for events that do not include event data.
+ */
+export default class EventArgs {
 
-export default class Index extends React.Component<any, any> {
-
-  static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired,
-    setTitle: React.PropTypes.func.isRequired
-  }
-
-  constructor(props, context) {
-    super(props, context);
-
-    Debug.Log(this);
-  }
-
-  componentWillMount() {
-    (this.context as any).setTitle('Hello world!');
-  }
-
-  render() {
-    return (<div>
-      <h1>{__("Hello world!")}</h1>
-      <span className="glyphicon glyphicon-music"></span>
-      <Link to="/Users">Users</Link>
-    </div>);
-  }
+  /**
+   * Gets or sets a value indicating whether the event was cancelled.
+   * If the event is canceled, the base handler will not be invoked.
+   */
+  public Cancel: boolean;
 
 }

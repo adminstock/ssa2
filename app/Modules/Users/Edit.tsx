@@ -21,21 +21,21 @@ export default class Edit extends React.Component<any, any> {
 
   static contextTypes: React.ValidationMap<any> = {
     setTitle: React.PropTypes.func.isRequired,
-    alert: React.PropTypes.func.isRequired
+    Alert: React.PropTypes.func.isRequired
   }
 
   constructor(props, context) {
     super(props, context);
 
-    Debug.Write(this);
+    Debug.Log(this);
   }
 
   componentWillMount() {
     (this.context as any).setTitle('Users Editor');
 
     // test
-    (this.context as any).alert('test1');
-    (this.context as any).alert('test2', 'test');
+    (this.context as any).Alert('test1');
+    (this.context as any).Alert('test2', 'test');
   }
 
   render() {

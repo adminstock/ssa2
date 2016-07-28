@@ -1,6 +1,6 @@
 ﻿/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,32 +14,20 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { Link } from 'react-router';
+/**
+ * Text helper.
+ */
+export default class TextHelper {
 
-export default class Index extends React.Component<any, any> {
+  public static RandomKey(prefix?: string, size?: number): string {
+    prefix = prefix || '';
+    size = size || 5;
 
-  static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired,
-    setTitle: React.PropTypes.func.isRequired
-  }
+    if (size > 36) {
+      size = 36;
+    }
 
-  constructor(props, context) {
-    super(props, context);
-
-    Debug.Log(this);
-  }
-
-  componentWillMount() {
-    (this.context as any).setTitle('Hello world!');
-  }
-
-  render() {
-    return (<div>
-      <h1>{__("Hello world!")}</h1>
-      <span className="glyphicon glyphicon-music"></span>
-      <Link to="/Users">Users</Link>
-    </div>);
+    return prefix + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, size);
   }
 
 }

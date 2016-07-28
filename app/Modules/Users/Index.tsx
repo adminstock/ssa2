@@ -28,7 +28,7 @@ export default class Index extends React.Component<any, any> {
   constructor(props, context) {
     super(props, context);
 
-    Debug.Write(this);
+    Debug.Log(this);
   }
 
   componentWillMount() {

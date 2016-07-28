@@ -19,7 +19,10 @@ import { render } from 'react-dom';
 import DocumentTitle from 'react-document-title';
 import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
 import { Modal, Button } from 'react-bootstrap';
-import Dialog from 'Models/Dialog';
+
+import Dialog from 'UI/Dialog/Dialog';
+import DialogManager from 'UI/Dialog/DialogManager';
+import DialogSettings from 'UI/Dialog/DialogSettings';
 
 // TODO: Grouping Layout UI
 import Header from 'UI/Layout/Header';
@@ -37,20 +40,16 @@ export default class Main extends React.Component<any, any> {
     router: React.PropTypes.object.isRequired,
     setTitle: React.PropTypes.func.isRequired,
     setLanguage: React.PropTypes.func,
-    alert: React.PropTypes.func
+    Alert: React.PropTypes.func
   }
-
-  /** Created modal dialogs. */
-  // private dialogs: Array<Dialog> = new Array<Dialog>();
 
   constructor(props, context) {
     super(props, context);
 
-    Debug.Write(this);
-
+    Debug.Log(this);
+    
     this.state = {
-      title: 'SmallServerAdmin',
-      dialogs: new Array<Dialog>()
+      title: 'SmallServerAdmin'
     };
   }
 
@@ -59,7 +58,7 @@ export default class Main extends React.Component<any, any> {
       router: (this.context as any).router,
       setTitle: this.setTitle.bind(this),
       setLanguage: this.setLanguage.bind(this),
-      alert: this.alert.bind(this)
+      Alert: this.Alert.bind(this)
     };
   }
 
@@ -69,7 +68,7 @@ export default class Main extends React.Component<any, any> {
    * @param value Text to set.
    */
   public setTitle(value: string): void {
-    Debug.Write('setTitle', value);
+    Debug.Log('setTitle', value);
 
     this.setState({ title: value });
   }
@@ -80,67 +79,43 @@ export default class Main extends React.Component<any, any> {
    * @param newLanguage New language: en, ru, de etc.
    */
   public setLanguage(newLanguage: string): void {
-    Debug.Write('setLanguage', newLanguage);
+    Debug.Log('setLanguage', newLanguage);
 
     CookiesHelper.Add('lang', newLanguage, 365);
 
     window.location.reload(true);
   }
 
-  // TODO: options
-  public alert(message?: string | JSX.Element | HTMLElement | JQuery, title?: string | JSX.Element | HTMLElement | JQuery, closeHandler?: { (dialog: JSX.Element): void; }): void {
-    var dialog = new Dialog();
-    dialog.Visible = true;
-    Debug.Write('Modal.Created', dialog.Key);
+  // #region ..dialogs..
 
-    dialog.Element = (<Modal key={dialog.Key} show={dialog.Visible} onHide={() => {
-      Debug.Write('Modal.Close', dialog.Key, dialog);
+  public Alert(message?: string | JSX.Element, title?: string | JSX.Element, buttonTitle?: string, closeHandler?: { (dialog: Dialog): void; }): void {
+    let settings = new DialogSettings();
 
-      // TODO: cancel handler
-      if (closeHandler !== undefined && closeHandler !== null && typeof closeHandler === 'function') {
-        closeHandler(dialog.Element);
+    if (buttonTitle === undefined || buttonTitle == null || buttonTitle == '') {
+      buttonTitle = __('Ok');
+    }
+
+    settings.Header = title || __('Message');
+    settings.Body = message;
+    settings.Footer = (<Button bsStyle="default" onClick={settings.OnCloseDialog.bind(settings)}>{buttonTitle}</Button>);
+
+    if (typeof closeHandler === 'function') {
+      settings.ClosedHandler = (sender, args) => {
+        closeHandler(sender);
       }
+    }
 
-      dialog.Visible = false;
-
-      // remove dialog
-
-      // https://facebook.github.io/react/docs/update.html
-      //this.setState(ReactUpdate(this.state, { dialogs: { $splice: dialogs } }));
-
-      this.setState({
-        dialogs: this.state.dialogs.filter((d) => d.Key !== dialog.Key)
-      });
-
-      //this.render();
-
-    }}>
-      <Modal.Header closeButton>
-        <Modal.Title>Alert</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>{message}</Modal.Body>
-      <Modal.Footer>
-        <Button>Close</Button>
-      </Modal.Footer>
-    </Modal>);
-
-    var dialogs = this.state.dialogs;
-    dialogs.push(dialog);
-    this.setState({ dialogs: dialogs });
-
-    //this.render();
+    DialogManager.CreateDialog(settings);
   }
 
+  public Confirm(): void {
+    
+  }
+
+  // #endregion
+
   render() {
-    Debug.Write('Main.render');
-
-    var dialogsToRender = new Array<JSX.Element>();
-
-    this.state.dialogs.forEach((dialog: Dialog) => {
-      if (dialog.Visible) {
-        dialogsToRender.push(dialog.Element);
-      }
-    });
+    Debug.Log('Main.render');
 
     return (
       <DocumentTitle title={this.state.title}>
@@ -162,7 +137,7 @@ export default class Main extends React.Component<any, any> {
             <br />
           </footer>
 
-          {dialogsToRender}
+          <DialogManager />
         </div>
       </DocumentTitle>
     )

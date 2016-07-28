@@ -43,6 +43,7 @@ module.exports = Object.keys(languages).map(function(language) {
         // instead
         // import Header from '../UI/Header';
         // etc.
+        'Core': 'Core',
         'UI': 'UI',
         'UI/Layout': 'UI/Layout',
         'Layouts': 'Layouts',

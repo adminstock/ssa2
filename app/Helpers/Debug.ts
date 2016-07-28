@@ -19,18 +19,6 @@
  */
 export default class Debug {
 
-  public static Write(message?: any, ...params: any[]): void {
-    Debug.Log.apply(this, arguments);
-  }
-
-  public static WriteLine(message?: any, ...params: any[]): void {
-    Debug.Log.apply(this, arguments);
-  }
-
-  public static Add(message?: any, ...params: any[]): void {
-    Debug.Log.apply(this, arguments);
-  }
-
   public static Log(message?: any, ...params: any[]): void {
     if (process.env.NODE_ENV !== 'production') {
       console.log = Function.bind.call(console.log, console);

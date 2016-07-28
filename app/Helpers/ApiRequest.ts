@@ -81,8 +81,8 @@ export default class ApiRequest<T> {
   public Execute(): void {
     var $this = this;
 
-    Debug.Write('Token', this.Token);
-    Debug.Write('ApiRequest.Execute', this.Key, this.Url, this.Data);
+    Debug.Log('Token', this.Token);
+    Debug.Log('ApiRequest.Execute', this.Key, this.Url, this.Data);
 
     $.ajax({
 			type: 'POST',
@@ -94,14 +94,14 @@ export default class ApiRequest<T> {
       },
 
       success: (result: T) => {
-        Debug.Write('ApiRequest.Success', $this.Key, $this.Url, result);
+        Debug.Log('ApiRequest.Success', $this.Key, $this.Url, result);
         if ($this.SuccessCallback != null) {
           $this.SuccessCallback($this, result);
         }
       },
 
       error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
-        Debug.Write('ApiRequest.Error', $this.Key, $this.Url, textStatus, errorThrown);
+        Debug.Log('ApiRequest.Error', $this.Key, $this.Url, textStatus, errorThrown);
         if ($this.ErrorCallback != null) {
           $this.ErrorCallback($this, null);
         }
