@@ -2,6 +2,7 @@
 
 var path = require('path');
 var webpack = require('webpack');
+var webpackNotifierPlugin = require('webpack-notifier');
 var spritesmithPlugin = require('webpack-spritesmith');
 var i18nPlugin = require('i18n-webpack-plugin');
 
@@ -68,6 +69,8 @@ module.exports = Object.keys(languages).map(function(language) {
     },*/
 
     plugins: [
+      new webpackNotifierPlugin({ title: 'SmallServerAdminV2' }),
+
       new i18nPlugin(languages[language]),
 
       // https://webpack.github.io/docs/list-of-plugins.html#hotmodulereplacementplugin

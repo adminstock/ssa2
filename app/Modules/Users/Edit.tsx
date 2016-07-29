@@ -21,7 +21,8 @@ export default class Edit extends React.Component<any, any> {
 
   static contextTypes: React.ValidationMap<any> = {
     setTitle: React.PropTypes.func.isRequired,
-    Alert: React.PropTypes.func.isRequired
+    Alert: React.PropTypes.func.isRequired,
+    Confirm: React.PropTypes.func.isRequired
   }
 
   constructor(props, context) {
@@ -35,7 +36,11 @@ export default class Edit extends React.Component<any, any> {
 
     // test
     (this.context as any).Alert('test1');
-    (this.context as any).Alert('test2', 'test');
+    (this.context as any).Alert(<div>hello world</div>);
+    (this.context as any).Confirm(<div>hello world11111</div>);
+    (this.context as any).Confirm(<div>This is test<br />test<br />tessst</div>, (s, confirmed) => { Debug.Log('Confirmed', confirmed); });
+    (this.context as any).Confirm({ message: '123', title: 'Are you want?', callback: (s, confirmed) => { Debug.Log('Confirmed', confirmed); } });
+
   }
 
   render() {

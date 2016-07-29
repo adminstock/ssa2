@@ -42,7 +42,9 @@ export default class DialogSettings {
   public ClosedHandler: { (sender: Dialog, e: EventArgs): void };
 
   public ShowHandler: { (sender: Dialog, e: EventArgs): void };
-  
+
+  public State: any;
+
   public constructor() {
 
   }
