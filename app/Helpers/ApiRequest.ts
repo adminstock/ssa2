@@ -79,7 +79,7 @@ export default class ApiRequest<T> {
    * Sends a request to the API.
    */
   public Execute(): void {
-    var $this = this;
+    let $this = this;
 
     Debug.Log('Token', this.Token);
     Debug.Log('ApiRequest.Execute', this.Key, this.Url, this.Data);

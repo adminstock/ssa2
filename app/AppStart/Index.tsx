@@ -18,6 +18,9 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import Page from 'Core/Page';
 
+/**
+ * The main page.
+ */
 export default class Index extends Page<any, any> {
 
   constructor(props, context) {

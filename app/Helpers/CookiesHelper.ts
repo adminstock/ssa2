@@ -29,8 +29,8 @@ export default class CookiesHelper {
    * @param path If specified, the cookie is sent only to requests to this path. If this attribute is not set, the application path is used (/).
    */
   public static Add(name: string, value: string, days?: number, path?: string) {
-    var expires = '';
-    var date = new Date();
+    let expires = '';
+    let date = new Date();
 
     if (path === undefined || path == null || path == '') {
       path = '/';
@@ -45,17 +45,17 @@ export default class CookiesHelper {
   }
 
   /** 
-   * Returns cookie value by name.
+   * Returns cookie value by name. If value not found, returns null.
    * 
    * @param name The name of the cookie.
    */
   public static Get(name: string): string {
-    var ca = document.cookie.split(';');
+    let ca = document.cookie.split(';');
 
     name = name + '=';
 
     for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
+      let c = ca[i];
       while (c.charAt(0) == ' ') c = c.substring(1, c.length);
       if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
     }

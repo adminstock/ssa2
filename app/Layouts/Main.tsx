@@ -25,14 +25,20 @@ import DialogManager from 'UI/Dialog/DialogManager';
 import DialogSettings from 'UI/Dialog/DialogSettings';
 
 import IMainContext from 'IMainContext';
+import IMainState from 'IMainState';
 
 // TODO: Grouping Layout UI
 import Header from 'UI/Layout/Header';
 import Menu from 'UI/Layout/Menu';
 
+import Login from 'UI/Login';
+
 import CookiesHelper from 'Helpers/CookiesHelper';
 
-export default class Main extends React.Component<any, any> implements IMainContext {
+/**
+ * The main layout.
+ */
+export default class Main extends React.Component<any, IMainState> implements IMainContext {
 
   public router: any;
 
@@ -54,7 +60,7 @@ export default class Main extends React.Component<any, any> implements IMainCont
     Debug.Log(this);
     
     this.state = {
-      title: 'SmallServerAdmin'
+      Title: 'SmallServerAdmin'
     };
   }
 
@@ -76,7 +82,7 @@ export default class Main extends React.Component<any, any> implements IMainCont
   public SetTitle(value: string): void {
     Debug.Log('SetTitle', value);
 
-    this.setState({ title: value });
+    this.setState({ Title: value });
   }
 
   /**
@@ -253,7 +259,7 @@ export default class Main extends React.Component<any, any> implements IMainCont
     Debug.Log('Main.render');
 
     return (
-      <DocumentTitle title={this.state.title}>
+      <DocumentTitle title={this.state.Title}>
         <div>
           <Header />
           <div id="container" className="container">
@@ -271,6 +277,8 @@ export default class Main extends React.Component<any, any> implements IMainCont
             SmallServerAdmin v{SSA_VERSION} ({SSA_DATE_RELEASE})
             <br />
           </footer>
+
+          <Login />
 
           <DialogManager />
         </div>
