@@ -101,8 +101,9 @@
     <TypeScriptCompile Include="typings\index.d.ts" />
     <TypeScriptCompile Include="UI\Dialog\IDialogManagerState.ts" />
     <TypeScriptCompile Include="UI\Layout\Header.tsx" />
+    <TypeScriptCompile Include="UI\Layout\ILoginState.ts" />
     <TypeScriptCompile Include="UI\Layout\Menu.tsx" />
-    <TypeScriptCompile Include="UI\Login.tsx" />
+    <TypeScriptCompile Include="UI\Layout\Login.tsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Images\" />

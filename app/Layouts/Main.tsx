@@ -30,8 +30,7 @@ import IMainState from 'IMainState';
 // TODO: Grouping Layout UI
 import Header from 'UI/Layout/Header';
 import Menu from 'UI/Layout/Menu';
-
-import Login from 'UI/Login';
+import Login from 'UI/Layout/Login';
 
 import CookiesHelper from 'Helpers/CookiesHelper';
 
