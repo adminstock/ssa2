@@ -20,7 +20,9 @@
   <ItemGroup>
     <Compile Include="auth.php" />
     <Compile Include="config.php" />
+    <Compile Include="cors.php" />
     <Compile Include="index.php" />
+    <Compile Include="response.php" />
     <Compile Include="ssh\index.php" />
     <Compile Include="users\index.php" />
   </ItemGroup>

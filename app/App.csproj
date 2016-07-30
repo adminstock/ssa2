@@ -54,6 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="AppStart\Init.tsx" />
+    <TypeScriptCompile Include="Core\Config.ts" />
+    <TypeScriptCompile Include="Core\CurrentUser.ts" />
     <TypeScriptCompile Include="Core\EventArgs.ts" />
     <TypeScriptCompile Include="Core\Page.tsx" />
     <TypeScriptCompile Include="Layouts\IMainState.ts" />

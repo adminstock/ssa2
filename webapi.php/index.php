@@ -16,6 +16,7 @@
  */
 
 require_once 'config.php';
+require_once 'cors.php';
 
 /**
   * The SmallServerAdmin API.

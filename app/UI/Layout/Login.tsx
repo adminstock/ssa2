@@ -1,8 +1,24 @@
-﻿import * as React from 'react';
+﻿/*
+ * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import * as React from 'react';
 import { Modal, Button, Row, Col, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import CookiesHelper from 'Helpers/CookiesHelper';
 import IMainContext from 'Layouts/IMainContext';
 import ILoginState from 'ILoginState';
+import CurrentUser from 'Core/CurrentUser';
 
 /**
  * Represents login dialog.
@@ -26,9 +42,9 @@ export default class Login extends React.Component<any, ILoginState> {
     let loginProcessing = false;
 
     // get token
-    let token = CookiesHelper.Get('ssa-token');
+    let token = CurrentUser.AccessToken;
 
-    if (token == null) {
+    if (token == null || token == '') {
       // show form
       showDialog = showForm = true;
     } else {
@@ -72,13 +88,14 @@ export default class Login extends React.Component<any, ILoginState> {
     $.ajax({
       type: 'POST',
       contentType: 'application/json',
-      url: '',
-      
+      url: CurrentUser.ApiServer.AuthUrl,
+      data: JSON.stringify({ Method: 'Auth', Username: $this.state.Username, Password: $this.state.Password }),
+
       success: (result: any) => { // TODO: class of request result
         Debug.Log('Login.Success', result);
 
-        // set token to cookies
-        CookiesHelper.Add('ssa-token', result.Token);
+        // set token
+        CurrentUser.AccessToken = result.TokenValue;
 
         // hide login form
         $this.setState({ ShowDialog: false });
@@ -96,7 +113,7 @@ export default class Login extends React.Component<any, ILoginState> {
           title: __('Error'),
           callback: () => {
             // restore dialog
-            $this.setState({ ShowDialog: true });
+            $this.setState({ ShowDialog: true, Password: '' });
           }
         });
       },
@@ -111,6 +128,44 @@ export default class Login extends React.Component<any, ILoginState> {
     let $this = this;
 
     $this.setState({ Checking: true });
+
+    $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      url: CurrentUser.ApiServer.AuthUrl,
+      data: JSON.stringify({ Method: 'Valid', Token: CurrentUser.AccessToken }),
+
+      success: (result: any) => { // TODO: class of request result
+        Debug.Log('CheckToken.Success', result);
+
+        // hide login form
+        $this.setState({ ShowDialog: false });
+      },
+
+      error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
+        Debug.Log('CheckToken.Error', textStatus, errorThrown);
+
+        // remove token
+        CurrentUser.AccessToken = null;
+
+        // hide dialog
+        $this.setState({ ShowDialog: false });
+
+        // show error
+        $this.context.Alert({
+          message: 'Server error: ' + textStatus,
+          title: __('Error'),
+          callback: () => {
+            // restore dialog
+            $this.setState({ ShowDialog: true });
+          }
+        });
+      },
+
+      complete: (x: JQueryXHR, textStatus: string) => {
+        $this.setState({ Checking: false });
+      }
+    });
   }
 
   private Input_TextChanged(event: Event): void {
@@ -145,6 +200,12 @@ export default class Login extends React.Component<any, ILoginState> {
     } else {
       Debug.Error('Unknown ID "' + input.id + '".');
     }
+  }
+
+  private Leave(): void {
+    this.setState({ LoginProcessing: true });
+
+    window.location.href = 'http://www.adminstock.net';
   }
 
   render() {
@@ -191,7 +252,7 @@ export default class Login extends React.Component<any, ILoginState> {
             {disabledForm ? <i className="fa fa-refresh fa-spin fa-fw"></i> : null}
             {__('Login') }
           </Button>
-          <Button bsStyle="default" onClick={() => { window.location.href = 'http://www.adminstock.net'; } } disabled={disabledForm}>
+          <Button bsStyle="default" onClick={this.Leave.bind(this)} disabled={disabledForm}>
             {__('Leave') }
           </Button>
         </div>

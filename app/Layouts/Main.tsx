@@ -32,7 +32,7 @@ import Header from 'UI/Layout/Header';
 import Menu from 'UI/Layout/Menu';
 import Login from 'UI/Layout/Login';
 
-import CookiesHelper from 'Helpers/CookiesHelper';
+import CurrentUser from 'Core/CurrentUser';
 
 /**
  * The main layout.
@@ -92,7 +92,7 @@ export default class Main extends React.Component<any, IMainState> implements IM
   public SetLanguage(newLanguage: string): void {
     Debug.Log('SetLanguage', newLanguage);
 
-    CookiesHelper.Add('lang', newLanguage, 365);
+    CurrentUser.Language = newLanguage;
 
     window.location.reload(true);
   }

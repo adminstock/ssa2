@@ -73,6 +73,7 @@ export default class ApiRequest<T> {
     this._Url = url + method;
     this._Data = data;
     this._Key = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+    this.Token = window.sessionStorage.getItem('AccessToken');
   }
 
   /**
@@ -87,7 +88,8 @@ export default class ApiRequest<T> {
     $.ajax({
 			type: 'POST',
 			contentType: 'application/json',
-      url: this.Url,
+      url: $this.Url,
+      data: JSON.stringify($this.Data),
 
       headers: {
         "Authorization": "SSA-TOKEN " + $this.Token
