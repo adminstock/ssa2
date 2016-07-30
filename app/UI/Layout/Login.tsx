@@ -88,6 +88,7 @@ export default class Login extends React.Component<any, ILoginState> {
     $.ajax({
       type: 'POST',
       contentType: 'application/json',
+      dataType: 'json',
       url: CurrentUser.ApiServer.AuthUrl,
       data: JSON.stringify({ Method: 'Auth', Username: $this.state.Username, Password: $this.state.Password }),
 
@@ -95,7 +96,7 @@ export default class Login extends React.Component<any, ILoginState> {
         Debug.Log('Login.Success', result);
 
         // set token
-        CurrentUser.AccessToken = result.TokenValue;
+        CurrentUser.AccessToken = result.Data.TokenValue;
 
         // hide login form
         $this.setState({ ShowDialog: false });
@@ -132,6 +133,7 @@ export default class Login extends React.Component<any, ILoginState> {
     $.ajax({
       type: 'POST',
       contentType: 'application/json',
+      dataType: 'json',
       url: CurrentUser.ApiServer.AuthUrl,
       data: JSON.stringify({ Method: 'Valid', Token: CurrentUser.AccessToken }),
 

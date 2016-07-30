@@ -86,7 +86,7 @@ class Auth
       }
 
       // temp
-      $this->Output(['AccessTocken' => 42]);
+      $this->Output(['TokenValue' => 42]);
     }
   }
 
