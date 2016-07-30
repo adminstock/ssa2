@@ -15,11 +15,14 @@
  */
 
 import * as React from 'react';
+import IMainContext from 'Layouts/IMainContext';
 
 export default class Header extends React.Component<any, any> {
 
+  context: IMainContext;
+
   static contextTypes: React.ValidationMap<any> = {
-    setLanguage: React.PropTypes.func.isRequired
+    SetLanguage: React.PropTypes.func.isRequired
   }
 
   constructor(props, context) {
@@ -33,8 +36,8 @@ export default class Header extends React.Component<any, any> {
    *
    * @param newLanguage New language: en, ru, de etc.
    */
-  private setLanguage(newLanguage: string): void {
-    (this.context as any).setLanguage(newLanguage);
+  private SetLanguage(newLanguage: string): void {
+    this.context.SetLanguage(newLanguage);
   }
 
   render() {
@@ -63,9 +66,9 @@ export default class Header extends React.Component<any, any> {
                 <span className="caret"></span>
               </a>
               <ul className="dropdown-menu">
-                <li><a onClick={this.setLanguage.bind(this, ['en'])}><i className="lang lang-en"></i></a></li>
-                <li><a onClick={this.setLanguage.bind(this, ['ru'])}><i className="lang lang-ru"></i></a></li>
-                <li><a onClick={this.setLanguage.bind(this, ['de'])}><i className="lang lang-de"></i></a></li>
+                <li><a onClick={this.SetLanguage.bind(this, ['en'])}><i className="lang lang-en"></i></a></li>
+                <li><a onClick={this.SetLanguage.bind(this, ['ru'])}><i className="lang lang-ru"></i></a></li>
+                <li><a onClick={this.SetLanguage.bind(this, ['de'])}><i className="lang lang-de"></i></a></li>
               </ul>
             </li>
             <li><a href="/logout.php"><span className="glyphicon glyphicon-log-out"></span> Logout</a></li>

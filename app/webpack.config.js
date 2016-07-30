@@ -62,13 +62,14 @@ module.exports = Object.keys(languages).map(function(language) {
       chunkFilename: 'scripts/' + language + '/chunks/[id].js'
     },
 
-    /*devServer: {
+    devServer: {
       contentBase: '.',
       host: 'localhost',
-      port: 9000
-    },*/
+      port: 9090
+    },
 
     plugins: [
+      new webpack.OldWatchingPlugin(),
       new webpackNotifierPlugin({ title: 'SmallServerAdminV2' }),
 
       new i18nPlugin(languages[language]),
@@ -121,7 +122,8 @@ module.exports = Object.keys(languages).map(function(language) {
         'React': 'react',
         'ReactDOM': 'react-dom',
         'ReactUpdate': 'react-addons-update',
-        'Debug': 'debug' // see alias 'Helpers/Debug'
+        'Debug': 'debug', // see alias 'Helpers/Debug'
+        'IMainContext': 'Layouts/IMainContext'
       }),
 
       // https://github.com/mixtur/webpack-spritesmith

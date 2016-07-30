@@ -16,13 +16,9 @@
 
 import * as React from 'react';
 import { Link } from 'react-router';
+import Page from 'Core/Page';
 
-export default class Index extends React.Component<any, any> {
-
-  static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired,
-    setTitle: React.PropTypes.func.isRequired
-  }
+export default class Index extends Page<any, any> {
 
   constructor(props, context) {
     super(props, context);
@@ -31,7 +27,7 @@ export default class Index extends React.Component<any, any> {
   }
 
   componentWillMount() {
-    (this.context as any).setTitle('Hello world!');
+    this.SetTitle('Hello world!');
   }
 
   render() {

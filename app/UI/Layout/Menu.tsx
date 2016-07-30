@@ -16,8 +16,11 @@
 
 import * as React from 'react';
 import { Link } from 'react-router';
+import IMainContext from 'Layouts/IMainContext';
 
 export default class Menu extends React.Component<any, any> {
+
+  context: IMainContext;
 
   constructor(props, context) {
     super(props, context);

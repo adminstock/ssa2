@@ -17,12 +17,14 @@
 
 import * as React from 'react';
 import { Link } from 'react-router';
+import IMainContext from 'Layouts/IMainContext';
+import Page from 'Core/Page';
 
-export default class Index extends React.Component<any, any> {
+export default class Index extends Page<any, any> {
 
   static contextTypes: React.ValidationMap<any> = {
     router: React.PropTypes.object.isRequired,
-    setTitle: React.PropTypes.func.isRequired
+    SetTitle: React.PropTypes.func.isRequired
   }
 
   constructor(props, context) {
@@ -32,7 +34,7 @@ export default class Index extends React.Component<any, any> {
   }
 
   componentWillMount() {
-    (this.context as any).setTitle(__('Users'));
+    this.SetTitle(__('Users'));
   }
 
   render() {

@@ -16,14 +16,9 @@
  */
 
 import * as React from 'react';
+import Page from 'Core/Page';
 
-export default class Edit extends React.Component<any, any> {
-
-  static contextTypes: React.ValidationMap<any> = {
-    setTitle: React.PropTypes.func.isRequired,
-    Alert: React.PropTypes.func.isRequired,
-    Confirm: React.PropTypes.func.isRequired
-  }
+export default class Edit extends Page<any, any> {
 
   constructor(props, context) {
     super(props, context);
@@ -32,15 +27,14 @@ export default class Edit extends React.Component<any, any> {
   }
 
   componentWillMount() {
-    (this.context as any).setTitle('Users Editor');
-
+    this.SetTitle('Users Editor');
+    
     // test
-    (this.context as any).Alert('test1');
-    (this.context as any).Alert(<div>hello world</div>);
-    (this.context as any).Confirm(<div>hello world11111</div>);
-    (this.context as any).Confirm(<div>This is test<br />test<br />tessst</div>, (s, confirmed) => { Debug.Log('Confirmed', confirmed); });
-    (this.context as any).Confirm({ message: '123', title: 'Are you want?', callback: (s, confirmed) => { Debug.Log('Confirmed', confirmed); } });
-
+    this.Alert('test1');
+    this.Alert(<div>hello world</div>);
+    this.Confirm(<div>hello world11111</div>);
+    this.Confirm(<div>This is test<br />test<br />tessst</div>, (s, confirmed) => { Debug.Log('Confirmed', confirmed); });
+    this.Confirm({ message: '123', title: 'Are you want?', callback: (s, confirmed) => { Debug.Log('Confirmed', confirmed); } });
   }
 
   render() {

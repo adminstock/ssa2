@@ -55,6 +55,8 @@
   <ItemGroup>
     <TypeScriptCompile Include="AppStart\Init.tsx" />
     <TypeScriptCompile Include="Core\EventArgs.ts" />
+    <TypeScriptCompile Include="Core\Page.tsx" />
+    <TypeScriptCompile Include="Layouts\IMainContext.ts" />
     <TypeScriptCompile Include="UI\Dialog\DialogManager.tsx" />
     <TypeScriptCompile Include="UI\Dialog\DialogSettings.ts" />
     <TypeScriptCompile Include="Helpers\ApiRequest.ts" />

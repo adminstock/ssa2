@@ -24,13 +24,17 @@ import Dialog from 'UI/Dialog/Dialog';
 import DialogManager from 'UI/Dialog/DialogManager';
 import DialogSettings from 'UI/Dialog/DialogSettings';
 
+import IMainContext from 'IMainContext';
+
 // TODO: Grouping Layout UI
 import Header from 'UI/Layout/Header';
 import Menu from 'UI/Layout/Menu';
 
 import CookiesHelper from 'Helpers/CookiesHelper';
 
-export default class Main extends React.Component<any, any> {
+export default class Main extends React.Component<any, any> implements IMainContext {
+
+  public router: any;
 
   static contextTypes: React.ValidationMap<any> = {
     router: React.PropTypes.object.isRequired
@@ -38,8 +42,8 @@ export default class Main extends React.Component<any, any> {
 
   static childContextTypes: React.ValidationMap<any> = {
     router: React.PropTypes.object.isRequired,
-    setTitle: React.PropTypes.func.isRequired,
-    setLanguage: React.PropTypes.func,
+    SetTitle: React.PropTypes.func.isRequired,
+    SetLanguage: React.PropTypes.func,
     Alert: React.PropTypes.func,
     Confirm: React.PropTypes.func
   }
@@ -57,8 +61,8 @@ export default class Main extends React.Component<any, any> {
   public getChildContext(): any {
     return {
       router: (this.context as any).router,
-      setTitle: this.setTitle.bind(this),
-      setLanguage: this.setLanguage.bind(this),
+      SetTitle: this.SetTitle.bind(this),
+      SetLanguage: this.SetLanguage.bind(this),
       Alert: this.Alert.bind(this),
       Confirm: this.Confirm.bind(this),
     };
@@ -69,8 +73,8 @@ export default class Main extends React.Component<any, any> {
    *
    * @param value Text to set.
    */
-  public setTitle(value: string): void {
-    Debug.Log('setTitle', value);
+  public SetTitle(value: string): void {
+    Debug.Log('SetTitle', value);
 
     this.setState({ title: value });
   }
@@ -80,8 +84,8 @@ export default class Main extends React.Component<any, any> {
    *
    * @param newLanguage New language: en, ru, de etc.
    */
-  public setLanguage(newLanguage: string): void {
-    Debug.Log('setLanguage', newLanguage);
+  public SetLanguage(newLanguage: string): void {
+    Debug.Log('SetLanguage', newLanguage);
 
     CookiesHelper.Add('lang', newLanguage, 365);
 
