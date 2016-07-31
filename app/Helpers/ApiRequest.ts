@@ -15,19 +15,24 @@
  * limitations under the License.
  */
 
+import ApiResponse from 'Models/Api/ApiResponse';
+import ApiError from 'Models/Api/ApiError';
+import { ApiMessageType } from 'Core/Enums';
+import CurrentUser from 'Core/CurrentUser';
+
 /**
  * Represents a request to the WebAPI of SmallServerAdmin.
  */
-export default class ApiRequest<T> {
+export default class ApiRequest<TRequest, TResponse> {
 
   /** The handler successful execution of the request. */
-  public SuccessCallback: { (sender: ApiRequest<T>, response: T): void; } = null;
+  public SuccessCallback: { (result: TResponse): void; } = null;
 
   /** The error handler. */
-  public ErrorCallback: { (sender: ApiRequest<T>, response: any): void; } = null;
+  public ErrorCallback: { (error: ApiError): void; } = null;
 
   /** The request complete handler. */
-  public CompleteCallback: { (sender: ApiRequest<T>): void; } = null;
+  public CompleteCallback: { (): void; } = null;
 
   private _Url: string;
 
@@ -36,10 +41,24 @@ export default class ApiRequest<T> {
     return this._Url;
   }
 
-  private _Data: any;
+  private _Server: string;
+
+  /** The configuration file name of the server that is managed. */
+  public get Server(): string {
+    return this._Server;
+  }
+
+  private _Method: string;
+
+  /** The API method name. */
+  public get Method(): string {
+    return this._Method;
+  }
+
+  private _Data: TRequest;
 
   /** The request parameters. */
-  public get Data(): any {
+  public get Data(): TRequest {
     return this._Data;
   }
 
@@ -53,25 +72,20 @@ export default class ApiRequest<T> {
   /** Access token of the current user. */
   private Token: string;
   
-  constructor(method: string, data?: any, url?: string) {
+  constructor(method: string, data?: TRequest, url?: string) {
     if (method === null || method == '') {
       throw new Error('Method is required. Value cannot be empty.');
     }
 
     if (url === undefined || url == null || url == '') {
-      url = 'TODO';
+      url = CurrentUser.ApiServer.Url;
     }
 
-    if (!url.endsWith('/')) {
-      url += '/';
-    }
+    // this._Server = CurrentUser.Server
 
-    data = data || {};
-
-    data = { Server: 'todo config file name', ApiMethod: method, Data: data };
-
-    this._Url = url + method;
-    this._Data = data;
+    this._Url = url;
+    this._Method = method;
+    this._Data = data || null;
     this._Key = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
     this.Token = window.sessionStorage.getItem('AccessToken');
   }
@@ -83,35 +97,97 @@ export default class ApiRequest<T> {
     let $this = this;
 
     Debug.Log('Token', this.Token);
-    Debug.Log('ApiRequest.Execute', this.Key, this.Url, this.Data);
+
+    let headers = null;
+
+    if ($this.Token != null) {
+      headers = {
+        'Authorization': 'SSA-TOKEN ' + $this.Token
+      };
+    }
+
+    let data = {};
+
+    if ($this.Method != null && $this.Method != '') {
+      data = $.extend(data, { Method: $this.Method });
+    }
+
+    if ($this.Data != null) {
+      data = $.extend(data, { Data: $this.Data });
+    }
+
+    if ($this.Server != null && $this.Server != '') {
+      data = $.extend(data, { Server: $this.Server });
+    }
+
+    Debug.Log('ApiRequest.Execute', this.Key, this.Url, data);
 
     $.ajax({
 			type: 'POST',
-			contentType: 'application/json',
+      contentType: 'application/json',
+      dataType: 'json',
       url: $this.Url,
-      data: JSON.stringify($this.Data),
+      data: JSON.stringify(data),
 
-      headers: {
-        "Authorization": "SSA-TOKEN " + $this.Token
-      },
+      headers: headers,
 
-      success: (result: T) => {
+      // handler of request succeeds
+      success: (result: ApiResponse<TResponse>) => {
         Debug.Log('ApiRequest.Success', $this.Key, $this.Url, result);
+
+        // debug
+        if (process.env.NODE_ENV !== 'production') {
+          if (result.Messages != undefined && result.Messages != null) {
+            result.Messages.forEach((m) => {
+              if (m.Type == ApiMessageType.MSG_WARNINIG) {
+                Debug.Warn(m.Text);
+              }
+              else if (m.Type == ApiMessageType.MSG_ERROR || m.Type == ApiMessageType.MSG_CRITICAL) {
+                Debug.Error(m.Text);
+              } else {
+                Debug.Log(m.Text);
+              }
+            });
+          }
+        }
+
         if ($this.SuccessCallback != null) {
-          $this.SuccessCallback($this, result);
+          $this.SuccessCallback(result.Data);
         }
       },
 
+      // server returned error
       error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
-        Debug.Log('ApiRequest.Error', $this.Key, $this.Url, textStatus, errorThrown);
+        Debug.Log('ApiRequest.Error', $this.Key, $this.Url, x, textStatus, errorThrown);
+
+        let error: ApiError;
+
+        if (x.responseText !== undefined && x.responseText != null && x.responseText != '') {
+          try {
+            let errorResult = JSON.parse(x.responseText);
+
+            if (errorResult.Data !== undefined && errorResult.Data.Error !== undefined) {
+              error = new ApiError(errorResult.Data.Error.Text, errorResult.Data.Error.Code);
+            } else {
+              error = new ApiError(x.responseText);
+            }
+          } catch (ex) {
+            error = new ApiError(x.responseText);
+          }
+        } else {
+          error = new ApiError(textStatus || errorThrown);
+        }
+
         if ($this.ErrorCallback != null) {
-          $this.ErrorCallback($this, null);
+          $this.ErrorCallback(error);
         }
       },
 
       complete: (x: JQueryXHR, textStatus: string) => {
+        Debug.Log('ApiRequest.Complete', $this.Key, $this.Url);
+
         if ($this.CompleteCallback != null) {
-          $this.CompleteCallback($this);
+          $this.CompleteCallback();
         }
       }
     });

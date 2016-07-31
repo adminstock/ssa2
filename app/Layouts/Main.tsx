@@ -34,6 +34,8 @@ import Login from 'UI/Layout/Login';
 
 import CurrentUser from 'Core/CurrentUser';
 
+import ApiRequest from 'Helpers/ApiRequest';
+
 /**
  * The main layout.
  */
@@ -62,6 +64,7 @@ export default class Main extends React.Component<any, IMainState> implements IM
       Title: 'SmallServerAdmin'
     };
 
+    // add login form
     DialogManager.AddDialog(<Login key="login" />);
   }
 
@@ -255,6 +258,33 @@ export default class Main extends React.Component<any, IMainState> implements IM
   }
 
   // #endregion
+  // #region ..API Requests..
+
+  public MakeRequest<TRequest, TResponse>(method: string, data?: TRequest, successCallback?, errorCallback?): void {
+    let api = new ApiRequest<any, TResponse>(method, data);
+
+    api.SuccessCallback = () => {
+      if (typeof successCallback === 'function') {
+        successCallback();
+      }
+    }
+
+    api.ErrorCallback = (error) => {
+
+      if (error.Code == 'ERR_FORBIDDEN') {
+        // reset token
+        CurrentUser.AccessToken = null;
+
+        // show login form
+        DialogManager.ShowDialog('login');
+      }
+    }
+
+    api.Execute();
+  }
+
+  // #endregion
+
 
   render() {
     Debug.Log('Main.render');

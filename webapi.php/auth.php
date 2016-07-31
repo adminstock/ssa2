@@ -55,7 +55,14 @@ class Auth
       return;
     }
 
+    if (!isset($query['Data']))
+    {
+      $this->Error('Data request is required.');
+      return;
+    }
+    
     $methodName = strtolower($query['Method']);
+    $data = $query['Data'];
 
     // TODO
 
@@ -65,7 +72,7 @@ class Auth
     }
     else if ($methodName == 'valid')
     {
-      if (!isset($query['Token']) || $query['Token'] == '')
+      if (!isset($data['Token']) || $data['Token'] == '')
       {
         $this->Error('Token is required. Value cannot be empty.');
       }
@@ -75,12 +82,12 @@ class Auth
     else
     {
       // check username and password
-      if (!isset($query['Username']) || $query['Username'] == '')
+      if (!isset($data['Username']) || $data['Username'] == '')
       {
         $this->Error('Username is required. Value cannot be empty.');
       }
 
-      if (!isset($query['Password']) || $query['Password'] == '')
+      if (!isset($data['Password']) || $data['Password'] == '')
       {
         $this->Error('Password is required. Value cannot be empty.');
       }
@@ -119,9 +126,9 @@ class Auth
     * @param string $message The message text. 
     * @param int $status The HTTP status code. Default: 400 (Bad Request).
     */
-  private function Error($message, $status = 400)
+  private function Error($message, $code = NULL, $status = 400)
   {
-    $this->Output(array('Error' => $message), $status);
+    $this->Output(['Error' => ['Code' => $code, 'Text' => $message]], $status);
   }
 
   private function NormalizeDataForJsonEncode($data)

@@ -56,10 +56,16 @@
     <TypeScriptCompile Include="AppStart\Init.tsx" />
     <TypeScriptCompile Include="Core\Config.ts" />
     <TypeScriptCompile Include="Core\CurrentUser.ts" />
+    <TypeScriptCompile Include="Core\Enums.ts" />
     <TypeScriptCompile Include="Core\EventArgs.ts" />
     <TypeScriptCompile Include="Core\Page.tsx" />
     <TypeScriptCompile Include="Layouts\IMainState.ts" />
     <TypeScriptCompile Include="Layouts\IMainContext.ts" />
+    <TypeScriptCompile Include="Models\Api\ApiError.ts" />
+    <TypeScriptCompile Include="Models\Api\ApiMessage.ts" />
+    <TypeScriptCompile Include="Models\Api\ApiResponse.ts" />
+    <TypeScriptCompile Include="Models\Api\AuthResult.ts" />
+    <TypeScriptCompile Include="Models\Api\Success.ts" />
     <TypeScriptCompile Include="UI\Dialog\DialogManager.tsx" />
     <TypeScriptCompile Include="UI\Dialog\DialogSettings.ts" />
     <TypeScriptCompile Include="Helpers\ApiRequest.ts" />

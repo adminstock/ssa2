@@ -19,6 +19,9 @@ import { Modal, Button, Row, Col, Form, FormGroup, FormControl, ControlLabel } f
 import IMainContext from 'Layouts/IMainContext';
 import ILoginState from 'ILoginState';
 import CurrentUser from 'Core/CurrentUser';
+import ApiRequest from 'Helpers/ApiRequest';
+import AuthResult from 'Models/Api/AuthResult';
+import Success from 'Models/Api/Success';
 
 /**
  * Represents login dialog.
@@ -85,37 +88,34 @@ export default class Login extends React.Component<any, ILoginState> {
 
     $this.setState({ LoginProcessing: true });
 
-    $.ajax({
-      type: 'POST',
-      contentType: 'application/json',
-      dataType: 'json',
-      url: CurrentUser.ApiServer.AuthUrl,
-      data: JSON.stringify({ Method: 'Auth', Username: $this.state.Username, Password: $this.state.Password }),
+    var api = new ApiRequest<any, AuthResult>('Auth', { Username: $this.state.Username, Password: $this.state.Password }, CurrentUser.ApiServer.AuthUrl);
 
-      success: (result: any) => { // TODO: class of request result
-        Debug.Log('Login.Success', result);
+    api.SuccessCallback = (result) => {
+      // Debug.Log('Login.Success', result);
 
-        // set token
-        CurrentUser.AccessToken = result.Data.TokenValue;
+      // set token
+      CurrentUser.AccessToken = result.TokenValue;
 
-        // hide login form
-        $this.setState({ ShowDialog: false });
-      },
+      // hide login form
+      $this.setState({ ShowDialog: false });
+    }
 
-      error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
-        Debug.Log('Login.Error', textStatus, errorThrown);
+    api.ErrorCallback = (error) => {
+      // Debug.Log('Login.Error', error);
 
-        // show error
-        $this.context.Alert({
-          message: 'Server error: ' + textStatus,
-          title: __('Error')
-        });
-      },
+      // show error
+      $this.context.Alert({
+        message: 'Server error: ' + error.Text,
+        title: __('Error')
+      });
+    }
 
-      complete: (x: JQueryXHR, textStatus: string) => {
-        $this.setState({ LoginProcessing: false });
-      }
-    });
+
+    api.CompleteCallback = () => {
+      $this.setState({ LoginProcessing: false });
+    }
+
+    api.Execute();
   }
 
   private CheckToken(): void {
@@ -123,37 +123,33 @@ export default class Login extends React.Component<any, ILoginState> {
 
     $this.setState({ Checking: true });
 
-    $.ajax({
-      type: 'POST',
-      contentType: 'application/json',
-      dataType: 'json',
-      url: CurrentUser.ApiServer.AuthUrl,
-      data: JSON.stringify({ Method: 'Valid', Token: CurrentUser.AccessToken }),
+    var api = new ApiRequest<any, Success>('Valid', { Token: CurrentUser.AccessToken }, CurrentUser.ApiServer.AuthUrl);
 
-      success: (result: any) => { // TODO: class of request result
-        Debug.Log('CheckToken.Success', result);
+    api.SuccessCallback = (result) => {
+      // Debug.Log('CheckToken.Success', result);
 
-        // hide login form
-        $this.setState({ ShowDialog: false });
-      },
+      // hide login form
+      $this.setState({ ShowDialog: false });
+    }
 
-      error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
-        Debug.Log('CheckToken.Error', textStatus, errorThrown);
+    api.ErrorCallback = (error) => {
+      // Debug.Log('CheckToken.Error', error);
 
-        // remove token
-        CurrentUser.AccessToken = null;
+      // remove token
+      CurrentUser.AccessToken = null;
 
-        // show error
-        $this.context.Alert({
-          message: 'Server error: ' + textStatus,
-          title: __('Error')
-        });
-      },
+      // show error
+      $this.context.Alert({
+        message: 'Server error: ' + error.Text,
+        title: __('Error')
+      });
+    }
 
-      complete: (x: JQueryXHR, textStatus: string) => {
-        $this.setState({ Checking: false });
-      }
-    });
+    api.CompleteCallback = () => {
+      $this.setState({ Checking: false });
+    }
+
+    api.Execute();
   }
 
   private Input_TextChanged(event: Event): void {
