@@ -19,6 +19,7 @@ export default class AuthResult {
   public TokenValue: string;
 
   constructor() {
+
   }
 
 }

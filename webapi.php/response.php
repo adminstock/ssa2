@@ -1,4 +1,6 @@
 <?php
+namespace WebAPI;
+
 /*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
  * 

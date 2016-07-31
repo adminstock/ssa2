@@ -88,7 +88,7 @@ export default class Login extends React.Component<any, ILoginState> {
 
     $this.setState({ LoginProcessing: true });
 
-    var api = new ApiRequest<any, AuthResult>('Auth', { Username: $this.state.Username, Password: $this.state.Password }, CurrentUser.ApiServer.AuthUrl);
+    var api = new ApiRequest<any, AuthResult>('Auth.GetToken', { Username: $this.state.Username, Password: $this.state.Password }, CurrentUser.ApiServer.AuthUrl);
 
     api.SuccessCallback = (result) => {
       // Debug.Log('Login.Success', result);
@@ -123,7 +123,7 @@ export default class Login extends React.Component<any, ILoginState> {
 
     $this.setState({ Checking: true });
 
-    var api = new ApiRequest<any, Success>('Valid', { Token: CurrentUser.AccessToken }, CurrentUser.ApiServer.AuthUrl);
+    var api = new ApiRequest<any, Success>('Auth.TokenIsValid', { Token: CurrentUser.AccessToken }, CurrentUser.ApiServer.AuthUrl);
 
     api.SuccessCallback = (result) => {
       // Debug.Log('CheckToken.Success', result);

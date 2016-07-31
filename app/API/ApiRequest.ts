@@ -19,6 +19,7 @@ import ApiResponse from 'API/ApiResponse';
 import ApiError from 'API/ApiError';
 import { ApiMessageType } from 'API/Enums';
 import CurrentUser from 'Core/CurrentUser';
+import CookiesHelper from 'Helpers/CookiesHelper';
 
 /**
  * Represents a request to the WebAPI of SmallServerAdmin.
@@ -81,6 +82,17 @@ export default class ApiRequest<TRequest, TResponse> {
       url = CurrentUser.ApiServer.Url;
     }
 
+    // xdebug
+    if (process.env.NODE_ENV !== 'production') {
+      if (url.indexOf('?') == -1) {
+        url += '?';
+      } else {
+        url += '&';
+      }
+
+      url += 'XDEBUG_SESSION_START=1';
+    }
+
     // this._Server = CurrentUser.Server
 
     this._Url = url;
@@ -123,6 +135,8 @@ export default class ApiRequest<TRequest, TResponse> {
     Debug.Log('ApiRequest.Execute', this.Key, this.Url, data);
 
     $.ajax({
+      cache: false,
+      crossDomain: true,
 			type: 'POST',
       contentType: 'application/json',
       dataType: 'json',

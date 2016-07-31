@@ -9,8 +9,9 @@ var i18nPlugin = require('i18n-webpack-plugin');
 // TODO: move to external file
 var apiServers = [
   {
+    // http://localhost.fiddler:62802/ - for fiddler
     'Url': 'http://localhost:62802/',
-    'AuthUrl': 'http://localhost:62802/auth.php',
+    'AuthUrl': 'http://localhost:62802/',
     'Name': 'WebApi.PHP',
     'Description': 'Local server.'
   }

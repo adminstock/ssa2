@@ -1,4 +1,6 @@
 <?php
+namespace WebAPI;
+
 /*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
  * 
@@ -15,8 +17,9 @@
  * limitations under the License.
  */
 
-require_once 'config.php';
 require_once 'cors.php';
+require_once 'config.php';
+require_once 'response.php';
 
 /**
   * The SmallServerAdmin API.
@@ -27,6 +30,12 @@ class API
   function __construct()
   {
     global $config;
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS')
+    {
+      // skip options request
+      return;
+    }
 
     if ($_SERVER['REQUEST_METHOD'] != 'POST' || (!strrpos($_SERVER['HTTP_CONTENT_TYPE'], '/json') && !strrpos($_SERVER['CONTENT_TYPE'], '/json')))
     {
@@ -39,7 +48,7 @@ class API
       
     if (!$query)
     {
-      $this->Error(json_last_error());
+      $this->Error('JSON Error: '.json_last_error(), 'JSON_ERROR');
       return;
     }
       
@@ -66,10 +75,11 @@ class API
       // get class and method name
       $name = explode('.', $query['Method']);
       $moduleName = $name[0];
-      $methodName = $name[1];
+      $methodName = $name[1];    
 
       $moduleIncluded = FALSE;
 
+      // TODO
       $moduleSearch = [];
       $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/debian-8.4-x64.php';
       $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/debian-8.4.php';
@@ -84,7 +94,7 @@ class API
       //$moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.strtolower($moduleName).'/index.php';
 
       // search and include file
-      foreach($moduleSearch as $modulePath)
+      foreach ($moduleSearch as $modulePath)
       {
         if (is_file($modulePath))
         {
@@ -101,14 +111,16 @@ class API
 
       // search and create class instance
       $instance = NULL;
-      $moduleName = '\Api\\'.$moduleName;
-      if(class_exists($moduleName))
+      $moduleName = '\\WebAPI\\'.$moduleName.'\\Index';
+
+      if (class_exists($moduleName))
       {
         $instance = new $moduleName();
       }
       else 
       {
         $this->Error('Class "'.$moduleName.'" not found');
+        return;
       }
 
       if (!method_exists($instance, $methodName))
@@ -117,7 +129,54 @@ class API
         return;
       }
 
-      $this->Output($instance->{$methodName}($query['Data']));
+      $result = NULL;
+
+      if (isset($query['Data']) && is_array($query['Data']) === TRUE)
+      {
+        // check parameters
+        $r = new \ReflectionMethod($moduleName, $methodName);
+      
+        $methodParams = $r->getParameters();
+        $paramsToSet = [];
+
+        // change case of keys
+        $query['Data'] = array_change_key_case($query['Data'], CASE_LOWER);
+
+        foreach ($methodParams as $param) {
+          $name = strtolower($param->getName());
+
+          if (!isset($query['Data'][$name]))
+          {
+            // parameter not found
+            if ($param->isOptional())
+            {
+              // is optional parameter, skip
+              continue;  
+            }
+            else
+            {
+              // paramter is required, show error
+              throw new \ErrorException('"'.$name.'" is required.');
+            }
+          }
+
+          $paramsToSet[$name] = $query['Data'][$name];
+        }
+        
+        // call method
+        $result = call_user_func_array(array($instance, $methodName), $paramsToSet);
+      }
+      else if (isset($query['Data']))
+      {
+        $result = $this->Output($instance->{$methodName}($query['Data']));
+      }
+      else
+      {
+        $result = $this->Output($instance->{$methodName}());
+      }
+
+      // output
+      $this->Output($result);
     }
     catch (\Exception $ex)
     {
@@ -126,10 +185,10 @@ class API
         file_put_contents($config['ssa_log_path'], '['.date('Y-m-d H:i:s').'] Error: '.$ex->getMessage()."\nRequest: ".$requestBody, FILE_APPEND | LOCK_EX);
       }
 
-      $this->Error(($msg = $ex->getMessage()) != NULL ? $msg : 'Server error.', 500);
+      $this->Error(($msg = $ex->getMessage()) != NULL ? $msg : 'Server error.', 'SERVER_ERROR', 500);
     }
   }
-    
+
   /**
     * Outputs response to the client.
     * 
@@ -139,10 +198,13 @@ class API
   private function Output($data, $status = 200)
   {
     http_response_code($status);
-      
-    $data = $this->NormalizeDataForJsonEncode($data);
 
-    if (($result = json_encode($data)) === FALSE) // , JSON_UNESCAPED_UNICODE
+    $response = new \WebAPI\Response();
+    $response->Data = $data;
+
+    $result = json_encode($this->NormalizeDataForJsonEncode($response));
+
+    if ($result === FALSE)
     {
       throw new \ErrorException('JSON encode error #'.json_last_error().': '.json_last_error_msg());
     }
@@ -156,9 +218,19 @@ class API
     * @param string $message The message text. 
     * @param int $status The HTTP status code. Default: 400 (Bad Request).
     */
-  private function Error($message, $status = 400)
+  private function Error($message, $code = NULL, $status = 400)
   {
-    $this->Output(array('Error' => $message), $status);
+    $this->Output
+    (
+      [
+        'Error' => 
+        [
+          'Code' => $code, 
+          'Text' => $message
+        ]
+      ], 
+      $status
+    );
   }
 
   private function NormalizeDataForJsonEncode($data)

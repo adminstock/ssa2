@@ -18,7 +18,7 @@
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="auth.php" />
+    <Compile Include="auth\index.php" />
     <Compile Include="config.php" />
     <Compile Include="cors.php" />
     <Compile Include="index.php" />
@@ -27,6 +27,7 @@
     <Compile Include="users\index.php" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="auth\" />
     <Folder Include="ssh\" />
     <Folder Include="users\" />
   </ItemGroup>
