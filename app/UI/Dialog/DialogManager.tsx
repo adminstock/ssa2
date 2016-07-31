@@ -61,6 +61,9 @@ import EventArgs from 'Core/EventArgs';
 import { Modal, Button } from 'react-bootstrap';
 import TextHelper from 'Helpers/TextHelper';
 
+/**
+ * Manager of dialog boxes.
+ */
 export default class DialogManager extends React.Component<any, IDialogManagerState> {
 
   private static UpdateStateNeed: boolean = false;
@@ -71,7 +74,11 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
     Items: DialogManager.Items,
     AddDialog: DialogManager.AddDialog,
     CreateDialog: DialogManager.CreateDialog,
-    CloseDialog: DialogManager.CloseDialog
+    CloseDialog: DialogManager.CloseDialog,
+    HideAll: DialogManager.HideAll,
+    HideDialog: DialogManager.HideDialog,
+    ShowDialog: DialogManager.ShowDialog,
+    ShowNext: DialogManager.ShowNext
   };
 
   constructor(props?, context?) {
@@ -104,8 +111,15 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
     });
   }
 
+  /**
+   * Adds and shows dialog.
+   *
+   * @param element Modal dialog or react component to add.
+   */
   public static AddDialog(element: JSX.Element): Dialog {
     let dialog = new Dialog();
+
+    Debug.Log('DialogManager.AddDialog', dialog.Key);
 
     dialog.Visible = true;
     dialog.Element = element;
@@ -116,6 +130,11 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
     return dialog;
   }
 
+  /**
+   * Creates and shows a new dialog with the specified parameters.
+   *
+   * @param settings Parameters.
+   */
   public static CreateDialog(settings: DialogSettings): Dialog {
     let $this = this;
 
@@ -158,7 +177,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
               modal.push
               (
                 <Modal.Header key={TextHelper.RandomKey('modal_header_')} closeButton={settings.ShowCloseButton}>
-                  <Modal.Title key={TextHelper.RandomKey('modal_title_')}>{settings[current]}</Modal.Title>
+                    <Modal.Title key={TextHelper.RandomKey('modal_title_') }>{settings[current]}</Modal.Title>
                 </Modal.Header>
               );
             }
@@ -175,17 +194,39 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
 
     dialog.Element =
     (
-      <Modal key={'modal_' + dialog.Key} show={dialog.Visible} onHide={() => { $this.CloseDialog(dialog.Key); }}>{modal}</Modal>
+      <Modal key={'modal_' + dialog.Key} show={dialog.Visible} onHide={() => {
+        if (dialog.Closed) {
+          $this.CloseDialog(dialog.Key);
+        }
+      }}>{modal}</Modal>
     );
 
+    // hide all
+    DialogManager.HideAll(true);
+
+    // add and show dialog
     DialogManager.Items.push(dialog);
+
+    // update
     DialogManager.UpdateStateNeed = true;
 
     return dialog;
   }
-  
+
+  /**
+   * Closes and removes dialog.
+   *
+   * @param key The key of dialog that must be closed.
+   */
   public static CloseDialog(key: string): void {
-    let dialog = DialogManager.Items.filter((d) => d.Key === key)[0];
+    let dialogs = DialogManager.Items.filter((d) => d.Key === key);
+
+    if (dialogs.length <= 0) {
+      Debug.Warn('Dialog "' + key + '" not found.');
+      return;
+    }
+
+    let dialog = dialogs[0];
 
     if (dialog.Settings !== undefined && dialog.Settings != null) {
       let args = new EventArgs();
@@ -222,11 +263,91 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
       DialogManager.Items = DialogManager.Items.filter((d) => d.Key !== key);
     }
 
+    // show last dialog
+    if (DialogManager.Items.length > 0) {
+      DialogManager.Items[DialogManager.Items.length - 1].Visible = true;
+    }
+
     DialogManager.UpdateStateNeed = true;
 
     // Debug.Log(this.state.Items);
   }
 
+  /**
+   * Hides all dialogs.
+   */
+  public static HideAll(donotUpdate?: boolean): void {
+    Debug.Log('DialogManager.HideAll', donotUpdate);
+
+    DialogManager.Items.forEach((dialog: Dialog) => {
+      dialog.Visible = false;
+    });
+
+    if (!donotUpdate) {
+      DialogManager.UpdateStateNeed = true;
+    }
+  }
+
+  /**
+   * Hides dialog.
+   *
+   * @param key The key of dialog that must be hidden.
+   */
+  public static HideDialog(key: string): boolean {
+    Debug.Log('DialogManager.HideDialog', key);
+
+    return DialogManager.SetDialogVisibleStatus(key, false);
+  }
+
+  /**
+   * Shows dialog.
+   *
+   * @param key The key of dialog that must be hidden.
+   */
+  public static ShowDialog(key: string): boolean {
+    Debug.Log('DialogManager.ShowDialog', key);
+        
+    return DialogManager.SetDialogVisibleStatus(key, true);
+  }
+
+  // TODO: ShowNext - think
+
+  public static ShowNext(): boolean {
+    Debug.Log('DialogManager.ShowNext', DialogManager.Items.length);
+
+    if (DialogManager.Items.length <= 0) {
+      return false;
+    }
+
+    if (!DialogManager.Items[DialogManager.Items.length - 1].Visible) {
+      DialogManager.Items[DialogManager.Items.length - 1].Visible = true;
+      DialogManager.UpdateStateNeed = true;
+    }
+
+    return true;
+  }
+
+  private static SetDialogVisibleStatus(key: string, status: boolean): boolean {
+    let dialogs = DialogManager.Items.filter((d) => d.Key === key);
+
+    if (dialogs.length <= 0) {
+      Debug.Warn('Dialog "' + key + '" not found.');
+      return false;
+    }
+
+    let dialog = dialogs[0];
+
+    if (dialog.Visible != status) {
+      dialog.Visible = status;
+      DialogManager.UpdateStateNeed = true;
+    }
+
+    return true;
+  }
+
+  /**
+   * Commands to update the state.
+   */
   public static Update(): void {
     DialogManager.UpdateStateNeed = true;
   }
@@ -237,7 +358,9 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
     let items = [];
 
     DialogManager.Items.forEach((dialog: Dialog) => {
-      items.push(dialog.Element);
+      if (dialog.Visible) {
+        items.push(dialog.Element);
+      }
     });
 
     return (<div>{items}</div>);

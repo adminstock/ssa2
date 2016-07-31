@@ -61,6 +61,8 @@ export default class Main extends React.Component<any, IMainState> implements IM
     this.state = {
       Title: 'SmallServerAdmin'
     };
+
+    DialogManager.AddDialog(<Login key="login" />);
   }
 
   public getChildContext(): any {
@@ -276,8 +278,6 @@ export default class Main extends React.Component<any, IMainState> implements IM
             SmallServerAdmin v{SSA_VERSION} ({SSA_DATE_RELEASE})
             <br />
           </footer>
-
-          <Login />
 
           <DialogManager />
         </div>

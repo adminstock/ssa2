@@ -105,17 +105,10 @@ export default class Login extends React.Component<any, ILoginState> {
       error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
         Debug.Log('Login.Error', textStatus, errorThrown);
 
-        // hide dialog
-        $this.setState({ ShowDialog: false });
-
         // show error
         $this.context.Alert({
           message: 'Server error: ' + textStatus,
-          title: __('Error'),
-          callback: () => {
-            // restore dialog
-            $this.setState({ ShowDialog: true, Password: '' });
-          }
+          title: __('Error')
         });
       },
 
@@ -150,17 +143,10 @@ export default class Login extends React.Component<any, ILoginState> {
         // remove token
         CurrentUser.AccessToken = null;
 
-        // hide dialog
-        $this.setState({ ShowDialog: false });
-
         // show error
         $this.context.Alert({
           message: 'Server error: ' + textStatus,
-          title: __('Error'),
-          callback: () => {
-            // restore dialog
-            $this.setState({ ShowDialog: true });
-          }
+          title: __('Error')
         });
       },
 

@@ -22,12 +22,37 @@ import DialogSettings from 'DialogSettings';
  */
 export default class Dialog {
 
+  /** Unique key of the dialog. */
   public Key: string;
 
-  public Visible: boolean;
+  private _Visible: boolean;
 
+  /** Visible status. */
+  public get Visible(): boolean {
+    return this._Visible;
+  }
+  public set Visible(value: boolean) {
+    this._Visible = value;
+
+    if (this.Closed && value) {
+      this._Visible = false;
+    }
+  }
+
+  private _Closed: boolean;
+
+  /** Closed status. */
+  public get Closed(): boolean {
+    return this._Closed;
+  }
+  public set Closed(value: boolean) {
+    this._Closed = value;
+  }
+
+  /** Element. */
   public Element: JSX.Element;
 
+  /** Dialog settings. Do not change the property. */
   public Settings: DialogSettings;
 
   constructor(settings?: DialogSettings) {
