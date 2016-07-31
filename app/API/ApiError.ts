@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-import { ApiMessageType } from 'Core/Enums';
+import { ApiMessageType } from 'API/Enums';
 
 /**
- * Represents message.
+ * Represents API error message.
  */
-export default class ApiMessage {
+export default class ApiError {
 
-  /** Message type. You can use Core\Enums\ApiMessageType */
-  public Type: string;
+  /** Error code. */
+  public Code: string;
 
   /** Message text. */
   public Text: string;
 
-  constructor(text?: string, type?: string) {
+  constructor(text?: string, code?: string) {
     this.Text = text;
-    this.Type = type || ApiMessageType.MSG_INFO;
+    this.Code = code || null;
   }
 
 }

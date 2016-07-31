@@ -34,7 +34,7 @@ import Login from 'UI/Layout/Login';
 
 import CurrentUser from 'Core/CurrentUser';
 
-import ApiRequest from 'Helpers/ApiRequest';
+import ApiRequest from 'API/ApiRequest';
 
 /**
  * The main layout.
@@ -284,8 +284,7 @@ export default class Main extends React.Component<any, IMainState> implements IM
   }
 
   // #endregion
-
-
+  
   render() {
     Debug.Log('Main.render');
 

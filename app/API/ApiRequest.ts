@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-import ApiResponse from 'Models/Api/ApiResponse';
-import ApiError from 'Models/Api/ApiError';
-import { ApiMessageType } from 'Core/Enums';
+import ApiResponse from 'API/ApiResponse';
+import ApiError from 'API/ApiError';
+import { ApiMessageType } from 'API/Enums';
 import CurrentUser from 'Core/CurrentUser';
 
 /**

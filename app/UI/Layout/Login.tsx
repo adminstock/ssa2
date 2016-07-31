@@ -19,9 +19,9 @@ import { Modal, Button, Row, Col, Form, FormGroup, FormControl, ControlLabel } f
 import IMainContext from 'Layouts/IMainContext';
 import ILoginState from 'ILoginState';
 import CurrentUser from 'Core/CurrentUser';
-import ApiRequest from 'Helpers/ApiRequest';
-import AuthResult from 'Models/Api/AuthResult';
-import Success from 'Models/Api/Success';
+import ApiRequest from 'API/ApiRequest';
+import AuthResult from 'API/AuthResult';
+import Success from 'API/Success';
 
 /**
  * Represents login dialog.
