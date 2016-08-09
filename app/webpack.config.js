@@ -5,6 +5,7 @@ var webpack = require('webpack');
 var webpackNotifierPlugin = require('webpack-notifier');
 var spritesmithPlugin = require('webpack-spritesmith');
 var i18nPlugin = require('i18n-webpack-plugin');
+var htmlWebpackPlugin = require('html-webpack-plugin');
 
 // TODO: move to external file
 var apiServers = [
@@ -126,6 +127,16 @@ module.exports = Object.keys(languages).map(function(language) {
         'ReactUpdate': 'react-addons-update',
         'Debug': 'debug', // see alias 'Helpers/Debug'
         'IMainContext': 'Layouts/IMainContext'
+      }),
+
+      // https://github.com/ampedandwired/html-webpack-plugin
+      new htmlWebpackPlugin({
+        title: 'SmallServerAdminV2',
+        // favicon: ,
+        filename: path.join(__dirname, 'index.html'),
+        template: path.join(__dirname, 'Templates', 'index.html'),
+        chunks: [], // always empty
+        hash: true
       }),
 
       // https://github.com/mixtur/webpack-spritesmith

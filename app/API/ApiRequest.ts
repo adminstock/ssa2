@@ -19,7 +19,6 @@ import ApiResponse from 'API/ApiResponse';
 import ApiError from 'API/ApiError';
 import { ApiMessageType } from 'API/Enums';
 import CurrentUser from 'Core/CurrentUser';
-import CookiesHelper from 'Helpers/CookiesHelper';
 
 /**
  * Represents a request to the WebAPI of SmallServerAdmin.
@@ -137,7 +136,7 @@ export default class ApiRequest<TRequest, TResponse> {
     $.ajax({
       cache: false,
       crossDomain: true,
-			type: 'POST',
+      type: 'POST',
       contentType: 'application/json',
       dataType: 'json',
       url: $this.Url,

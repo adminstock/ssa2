@@ -119,6 +119,10 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
   public static AddDialog(element: JSX.Element): Dialog {
     let dialog = new Dialog();
 
+    if (element.key != undefined && element.key != null && element.key != '') {
+      dialog.Key = element.key.toString();
+    }
+
     Debug.Log('DialogManager.AddDialog', dialog.Key);
 
     dialog.Visible = true;
@@ -325,6 +329,15 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
     }
 
     return true;
+  }
+
+  /**
+   * Checks the existence of a dialog.
+   *
+   * @param key The dialog key to check.
+   */
+  public static Exists(key: string): boolean {
+    return DialogManager.Items.filter((d) => d.Key === key).length > 0;
   }
 
   private static SetDialogVisibleStatus(key: string, status: boolean): boolean {

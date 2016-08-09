@@ -30,7 +30,7 @@
     <Content Include="Content\Sprites\web-servers\apache24.png" />
     <Content Include="Content\Sprites\web-servers\nginx16.png" />
     <Content Include="Content\Sprites\web-servers\nginx24.png" />
-    <Content Include="index.html" />
+    <Content Include="Templates\index.html" />
     <Content Include="typings\globals\history\typings.json" />
     <Content Include="typings\globals\jquery\typings.json" />
     <Content Include="typings\globals\node\typings.json" />
