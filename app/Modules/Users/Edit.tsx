@@ -18,6 +18,7 @@
 import * as React from 'react';
 import DocumentTitle from 'react-document-title';
 import Page from 'Core/Page';
+import App from 'Core/App';
 
 export default class Edit extends Page<any, any> {
 
@@ -31,11 +32,11 @@ export default class Edit extends Page<any, any> {
 
   componentWillMount() {
     // test
-    this.Alert('test1');
-    this.Alert(<div>hello world</div>);
-    this.Confirm(<div>hello world11111</div>);
-    this.Confirm(<div>This is test<br />test<br />tessst</div>, (s, confirmed) => { Debug.Log('Confirmed', confirmed); });
-    this.Confirm({ message: '123', title: 'Are you want?', callback: (s, confirmed) => { Debug.Log('Confirmed', confirmed); } });
+    App.Alert('test1');
+    App.Alert(<div>hello world</div>);
+    App.Confirm(<div>hello world11111</div>);
+    App.Confirm(<div>This is test<br />test<br />tessst</div>, (s, confirmed) => { Debug.Log('Confirmed', confirmed); });
+    App.Confirm({ message: '123', title: 'Are you want?', callback: (s, confirmed) => { Debug.Log('Confirmed', confirmed); } });
   }
 
   render() {

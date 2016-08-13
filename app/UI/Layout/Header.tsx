@@ -16,6 +16,7 @@
 
 import * as React from 'react';
 import IMainContext from 'Core/IMainContext';
+import CurrentUser from 'Core/CurrentUser';
 
 export default class Header extends React.Component<any, any> {
 
@@ -37,7 +38,7 @@ export default class Header extends React.Component<any, any> {
    * @param newLanguage New language: en, ru, de etc.
    */
   private SetLanguage(newLanguage: string): void {
-    this.context.SetLanguage(newLanguage);
+    CurrentUser.Language = newLanguage;
   }
 
   render() {

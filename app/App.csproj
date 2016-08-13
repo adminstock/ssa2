@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="AppStart\Init.tsx" />
-    <TypeScriptCompile Include="Core\App.ts" />
+    <TypeScriptCompile Include="Core\App.tsx" />
     <TypeScriptCompile Include="Core\Config.ts" />
     <TypeScriptCompile Include="Core\CurrentUser.ts" />
     <TypeScriptCompile Include="API\Enums.ts" />

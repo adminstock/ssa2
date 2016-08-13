@@ -1,5 +1,6 @@
 ﻿/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +24,9 @@ import Config from 'Config';
  */
 export default class CurrentUser {
 
+  /**
+   * Gets or sets access token.
+   */
   public static get AccessToken(): string {
     return window.sessionStorage.getItem('AccessToken') || null;
   }
@@ -34,11 +38,20 @@ export default class CurrentUser {
     }
   }
 
+  /**
+   * Gets or sets language.
+   */
   public static get Language(): string {
     return CookiesHelper.Get('lang');
   }
   public static set Language(value: string) {
+    let currentLang = CurrentUser.Language;
+
     CookiesHelper.Add('lang', value, 365);
+
+    if (currentLang != value) {
+      window.location.reload(true);
+    }
   }
 
   private static ApiServerIsSet: boolean = false;
