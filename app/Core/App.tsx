@@ -20,13 +20,18 @@ import { browserHistory } from 'react-router';
 import { Modal, Button } from 'react-bootstrap';
 
 import ApiServer from 'Models/ApiServer';
+import ApiRequest from 'API/ApiRequest';
+
 import IMainContext from 'IMainContext';
+
 import Dialog from 'UI/Dialog/Dialog';
 import DialogManager from 'UI/Dialog/DialogManager';
 import DialogSettings from 'UI/Dialog/DialogSettings';
 
+import CurrentUser from 'CurrentUser';
+
 /**
- * ...
+ * The main class of the application.
  */
 export default class App {
 
@@ -49,8 +54,7 @@ export default class App {
   public static SetContext(context: IMainContext): void {
     App._Context = context;
   }
-
-
+  
   /**
    * Redirect to a specified URL or to route.
    *
@@ -219,6 +223,32 @@ export default class App {
     }
 
     DialogManager.CreateDialog(s);
+  }
+
+  // #endregion
+  // #region ..API Requests..
+
+  public MakeRequest<TRequest, TResponse>(method: string, data?: TRequest, successCallback?, errorCallback?): void {
+    let api = new ApiRequest<any, TResponse>(method, data);
+
+    api.SuccessCallback = () => {
+      if (typeof successCallback === 'function') {
+        successCallback();
+      }
+    }
+
+    api.ErrorCallback = (error) => {
+
+      if (error.Code == 'ERR_FORBIDDEN') {
+        // reset token
+        CurrentUser.AccessToken = null;
+
+        // show login form
+        DialogManager.ShowDialog('login');
+      }
+    }
+
+    api.Execute();
   }
 
   // #endregion

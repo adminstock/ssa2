@@ -33,8 +33,6 @@ import Login from 'UI/Layout/Login';
 import App from 'Core/App';
 import CurrentUser from 'Core/CurrentUser';
 
-import ApiRequest from 'API/ApiRequest';
-
 /**
  * The main layout.
  */
@@ -70,33 +68,6 @@ export default class Main extends React.Component<any, IMainState> implements IM
       router: (this.context as any).router
     };
   }
-
-  // #region ..API Requests..
-
-  public MakeRequest<TRequest, TResponse>(method: string, data?: TRequest, successCallback?, errorCallback?): void {
-    let api = new ApiRequest<any, TResponse>(method, data);
-
-    api.SuccessCallback = () => {
-      if (typeof successCallback === 'function') {
-        successCallback();
-      }
-    }
-
-    api.ErrorCallback = (error) => {
-
-      if (error.Code == 'ERR_FORBIDDEN') {
-        // reset token
-        CurrentUser.AccessToken = null;
-
-        // show login form
-        DialogManager.ShowDialog('login');
-      }
-    }
-
-    api.Execute();
-  }
-
-  // #endregion
   
   render() {
     Debug.Level3('Main.render');

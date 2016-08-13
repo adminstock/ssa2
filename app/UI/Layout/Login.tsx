@@ -19,6 +19,7 @@ import { Modal, Button, Row, Col, Form, FormGroup, FormControl, ControlLabel } f
 import IMainContext from 'Core/IMainContext';
 import ILoginState from 'ILoginState';
 import CurrentUser from 'Core/CurrentUser';
+import App from 'Core/App';
 import ApiRequest from 'API/ApiRequest';
 import AuthResult from 'API/AuthResult';
 import Success from 'API/Success';
@@ -29,10 +30,6 @@ import Success from 'API/Success';
 export default class Login extends React.Component<any, ILoginState> {
 
   context: IMainContext;
-
-  static contextTypes: React.ValidationMap<any> = {
-    Alert: React.PropTypes.func.isRequired
-  }
 
   constructor(props?, context?) {
     super(props, context);
@@ -104,7 +101,7 @@ export default class Login extends React.Component<any, ILoginState> {
       // Debug.Log('Login.Error', error);
 
       // show error
-      $this.context.Alert({
+      App.Alert({
         message: 'Server error: ' + error.Text,
         title: __('Error')
       });
@@ -139,7 +136,7 @@ export default class Login extends React.Component<any, ILoginState> {
       CurrentUser.AccessToken = null;
 
       // show error
-      $this.context.Alert({
+      App.Alert({
         message: 'Server error: ' + error.Text,
         title: __('Error')
       });

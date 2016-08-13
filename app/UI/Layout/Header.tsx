@@ -21,11 +21,7 @@ import CurrentUser from 'Core/CurrentUser';
 export default class Header extends React.Component<any, any> {
 
   context: IMainContext;
-
-  static contextTypes: React.ValidationMap<any> = {
-    SetLanguage: React.PropTypes.func.isRequired
-  }
-
+  
   constructor(props, context) {
     super(props, context);
 
