@@ -50,7 +50,7 @@ export default class Login extends React.Component<any, ILoginState> {
       showDialog = showForm = true;
     } else {
       // check token valid
-      showDialog = checking = true;
+      showDialog = checking = !CurrentUser.IsValid;
     }
 
     // state
@@ -124,15 +124,13 @@ export default class Login extends React.Component<any, ILoginState> {
     var api = new ApiRequest<any, Success>('Auth.TokenIsValid', { Token: CurrentUser.AccessToken }, CurrentUser.ApiServer.AuthUrl);
 
     api.SuccessCallback = (result) => {
-      // Debug.Log('CheckToken.Success', result);
+      CurrentUser.IsValid = true;
 
       // hide login form
       $this.setState({ ShowDialog: false });
     }
 
     api.ErrorCallback = (error) => {
-      // Debug.Log('CheckToken.Error', error);
-
       // remove token
       CurrentUser.AccessToken = null;
 

@@ -33,9 +33,24 @@ export default class CurrentUser {
   public static set AccessToken(value: string) {
     if (value == null) {
       window.sessionStorage.removeItem('AccessToken');
+      CurrentUser.IsValid = false;
     } else {
       window.sessionStorage.setItem('AccessToken', value);
     }
+  }
+
+  /**
+   * Gets or sets the status of the relevance of the access token.
+   */
+  public static get IsValid(): boolean {
+    if (window.sessionStorage.getItem('IsValid') == null || window.sessionStorage.getItem('IsValid') == '') {
+      return false;
+    } else {
+      return JSON.parse(window.sessionStorage.getItem('IsValid'));
+    }
+  }
+  public static set IsValid(value: boolean) {
+    window.sessionStorage.setItem('IsValid', JSON.stringify(value));
   }
 
   /**
@@ -57,6 +72,9 @@ export default class CurrentUser {
   private static ApiServerIsSet: boolean = false;
   private static _ApiServer: ApiServer;
 
+  /**
+   * Gets or sets host of the WebAPI server.
+   */
   public static get ApiServer(): ApiServer {
     if (!CurrentUser.ApiServerIsSet) {
       let apiUrl = CookiesHelper.Get('api-url');
@@ -96,6 +114,9 @@ export default class CurrentUser {
     CurrentUser._ApiServer = value;
   }
 
+  /**
+   * Gets or sets config file of the server to manage.
+   */
   public static get ManagedServer(): string {
     return CookiesHelper.Get('managed-server');
   }
