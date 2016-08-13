@@ -63,7 +63,7 @@ const routes = (
  * @param callback The callback function.
  */
 export function LoadComponent(location: any, callback: (error: any, component?: string | React.ComponentClass<any> | React.StatelessComponent<any>) => void): void {
-  Debug.Log('Loading', location.pathname, location);
+  Debug.Call('Loading', location.pathname, location);
 
   var me = { location: location, callback: callback };
 
@@ -99,7 +99,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
  * @param component Loaded component.
  */
 export function LoadedComponent(component: any): void {
-  Debug.Log('Loaded', this.location.pathname);
+  Debug.Call('Loaded', this.location.pathname);
 
   Overlay.Hide();
 

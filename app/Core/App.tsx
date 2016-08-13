@@ -42,6 +42,9 @@ export default class App {
     return App._Context;
   }
 
+  /** Provides current user. */
+  public static CurrentUser: CurrentUser;
+
   constructor() {
     Debug.Warn('"App" is static class. No need to create an instance of this class.');
   }
@@ -61,7 +64,7 @@ export default class App {
    * @param url The absolute or relative address.
    */
   public static Redirect(url: string): void {
-    Debug.Log('Redirect', url);
+    Debug.Call('App.Redirect', url);
 
     if (url.toLowerCase().startsWith('http:') || url.toLowerCase().startsWith('https:')) {
       window.location.href = url;
@@ -99,7 +102,7 @@ export default class App {
    * @param settings Text, elements or message settings.
    */
   public static Alert(settings?: any): void {
-    Debug.Log('Main.Alert', typeof settings, settings);
+    Debug.Call('App.Alert', typeof settings, settings);
 
     let s = new DialogSettings();
 
@@ -170,7 +173,7 @@ export default class App {
    * @param settings Set of key/value pairs that configure the Confirm dialog. All settings are optional.
    */
   public static Confirm(settings?: any): void {
-    Debug.Log('Main.Confirm', typeof settings, settings);
+    Debug.Call('App.Confirm', typeof settings, settings);
 
     let s = new DialogSettings();
 

@@ -20,43 +20,78 @@
  */
 export default class Debug {
 
-  public static Log(message?: any, ...params: any[]): void {
-    if (process.env.NODE_ENV !== 'production') {
-      console.log = Function.bind.call(console.log, console);
-      console.log.apply(this, arguments);
+  public static get LogLevels(): Array<{ [key: string]: any }> {
+    if (DEV_MODE) {
+      return LOG_LEVELS;
     }
+  }
+
+  public static Log(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('log', message, params); }
+  }
+
+  public static Level1(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('level1', message, params); }
   }
 
   public static Level2(message?: any, ...params: any[]): void {
-    Debug.Level(2, message, params);
+    if (DEV_MODE) { Debug.Level('level2', message, params); }
   }
 
   public static Level3(message?: any, ...params: any[]): void {
-    Debug.Level(3, message, params);
+    if (DEV_MODE) { Debug.Level('level3', message, params); }
   }
 
-  private static Level(level: number, message?: any, ...params: any[]) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.log = Function.bind.call(console.log, console);
+  public static Init(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('init', message, params); }
+  }
 
-      let args = Array.prototype.slice.call(arguments);
+  public static Init1(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('init1', message, params); }
+  }
 
-      args.shift();
+  public static Init2(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('init2', message, params); }
+  }
 
-      // TODO: styles
+  public static Init3(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('init3', message, params); }
+  }
 
-      if (args && args.length > 0) {
-        args[0] = '%cL' + level + ':%c ' + args[0];
-        args.splice(1, 0, 'background-color: #999999; color:white;');
-        args.splice(2, 0, 'color: #333333;');
-      }
+  public static Call(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('call', message, params); }
+  }
 
-      console.log.apply(this, args);
-    }
+  public static Call1(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('call1', message, params); }
+  }
+
+  public static Call2(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('call2', message, params); }
+  }
+
+  public static Call3(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('call3', message, params); }
+  }
+
+  public static Render(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('render', message, params); }
+  }
+
+  public static Render1(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('render1', message, params); }
+  }
+
+  public static Render2(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('render2', message, params); }
+  }
+
+  public static Render3(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('render3', message, params); }
   }
 
   public static Error(message?: any, ...params: any[]): void {
-    if (process.env.NODE_ENV !== 'production') {
+    if (DEV_MODE) {
       console.error = Function.bind.call(console.error, console);
       console.error.apply(this, arguments);
     }
@@ -67,16 +102,52 @@ export default class Debug {
   }
 
   public static Warning(message?: any, ...params: any[]): void {
-    if (process.env.NODE_ENV !== 'production') {
+    if (DEV_MODE) {
       console.warn = Function.bind.call(console.warn, console);
       console.warn.apply(this, arguments);
     }
   }
 
   public static Info(message?: any, ...params: any[]): void {
-    if (process.env.NODE_ENV !== 'production') {
+    if (DEV_MODE) {
       console.info = Function.bind.call(console.info, console);
       console.info.apply(this, arguments);
+    }
+  }
+
+  private static Level(level: string, message?: any, ...params: any[]) {
+    if (DEV_MODE) {
+      if (Debug.LogLevels['all'] != undefined || Debug.LogLevels[level] != undefined) {
+        console.log = Function.bind.call(console.log, console);
+
+        let args = Array.prototype.slice.call(arguments);
+
+        args.shift();
+
+        if (args && args.length > 0) {
+          args[0] = '%c' + level + ':%c ' + args[0];
+
+          if ($.isArray(Debug.LogLevels[level])) {
+            args.splice(1, 0, Debug.LogLevels[level][0]);
+
+            if (Debug.LogLevels[level][1] != null && Debug.LogLevels[level][1] != '') {
+              args.splice(2, 0, Debug.LogLevels[level][1]);
+            } else {
+              args.splice(2, 0, 'color: black;');
+            }
+          } else {
+            args.splice(1, 0, 'background-color: #999999; color:white;');
+
+            if (Debug.LogLevels[level] != null && Debug.LogLevels[level] != '') {
+              args.splice(2, 0, Debug.LogLevels[level]);
+            } else {
+              args.splice(2, 0, 'color: black;');
+            }
+          }
+        }
+
+        console.log.apply(this, args);
+      }
     }
   }
 

@@ -18,6 +18,28 @@ var apiServers = [
   }
 ];
 
+var logLevels = {
+  log: ['background-color: #008000; color: white;', 'color: #000000;'],
+  level1: ['background-color: #00a400; color: white;', 'color: #333333;'],
+  level2: ['background-color: #5f915b; color: white;', 'color: #666666;'],
+  level3: ['background-color: #8bb588; color: white;', 'color: #999999;'],
+
+  init: ['background-color: #1166cc; color: white;', 'color: #1166cc;'],
+  init1: ['background-color: #237eed; color: white;', 'color: #237eed;'],
+  init2: ['background-color: #4d96f0; color: white;', 'color: #4d96f0;'],
+  init3: ['background-color: #78aff3; color: white;', 'color: #78aff3;'],
+
+  call: ['background-color: #cccccc; color: black;', 'color: #333333; font-style: italic;'],
+  call1: ['background-color: #cccccc; color: black;', 'color: #555555; font-style: italic;'],
+  call2: ['background-color: #cccccc; color: black;', 'color: #777777; font-style: italic;'],
+  call3: ['background-color: #cccccc; color: black;', 'color: #999999; font-style: italic;'],
+
+  render: ['background-color: #400080; color: white;', 'color: #400080; font-style: italic;'],
+  render1: ['background-color: #6700ce; color: white;', 'color: #400080; font-style: italic;'],
+  render2: ['background-color: #972fff; color: white;', 'color: #400080; font-style: italic;'],
+  render3: ['background-color: #d3a8ff; color: white;', 'color: #400080; font-style: italic;']
+};
+
 var languages = {
   'en': null,
   'ru': require('./Localization/ru.json'),
@@ -100,6 +122,10 @@ module.exports = Object.keys(languages).map(function(language) {
         'process.env': {
           'NODE_ENV': JSON.stringify(process.env.NODE_ENV) // do not change this string
         },
+
+        'DEV_MODE': JSON.stringify(process.env.NODE_ENV == 'development'),
+
+        'LOG_LEVELS': JSON.stringify(logLevels),
 
         // SmallServerAdmin version. For example: 2.0.0-alpha, 2.0.0-beta, 2.0.0
         'SSA_VERSION': JSON.stringify('2.0.0-alpha'),

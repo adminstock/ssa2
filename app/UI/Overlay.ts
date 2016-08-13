@@ -47,6 +47,8 @@ export class Overlay {
    * Initialization of the overlay.
    */
   private static Init(): void {
+    Debug.Call3('Overlay.Init', $('#overlay').length);
+
     if ($('#overlay').length > 0) {
       return;
     }
@@ -64,7 +66,7 @@ export class Overlay {
   public static Show(type: OverlayType, text?: string, duration?: number | string): void {
     Overlay.Init();
 
-    Debug.Log('Overlay.Show', type, text);
+    Debug.Call('Overlay.Show', type, text);
 
     text = text || 'Please wait...';
 
@@ -120,7 +122,7 @@ export class Overlay {
    * @param duration
    */
   public static Hide(duration?: number | string): void {
-    Debug.Log('Overlay.Hide');
+    Debug.Call('Overlay.Hide');
     $('#overlay').hide(duration);
   }
 
@@ -130,6 +132,7 @@ export class Overlay {
    * @param text Text to set.
    */
   public static SetText(text: string): void {
+    Debug.Call1('Overlay.SetText', text);
     $('.loader-text', '#overlay').html(text);
   }
   

@@ -33,7 +33,7 @@ export default class Page<P, S> extends React.Component<P, S> {
   constructor(props, context) {
     super(props, context);
 
-    Debug.Log('Page', this);
+    Debug.Init('Page', this);
   }
 
 }
