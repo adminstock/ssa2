@@ -24,11 +24,18 @@ export enum OverlayType {
   White = 1 << 10,
   Black = 1 << 11,
 
-  Opacity15 = 1 << 20,
-  Opacity25 = 1 << 21,
-  Opacity50 = 1 << 22,
-  Opacity75 = 1 << 23,
-  Opacity90 = 1 << 24,
+  /** Default. */
+  TextBlack = 1 << 20,
+  TextWhite = 1 << 21,
+  TextYellow = 1 << 22,
+  TextRed = 1 << 23,
+  TextGreen = 1 << 24,
+
+  Opacity15 = 1 << 30,
+  Opacity25 = 1 << 31,
+  Opacity50 = 1 << 32,
+  Opacity75 = 1 << 33,
+  Opacity90 = 1 << 34,
 }
 
 /**
@@ -83,6 +90,19 @@ export class Overlay {
 
     if (type & OverlayType.Loader) {
       loader = 'loader';
+
+      if (type & OverlayType.TextGreen) {
+        loader += ' loader-green';
+      }
+      else if (type & OverlayType.TextRed) {
+        loader += ' loader-red';
+      }
+      else if (type & OverlayType.TextGreen) {
+        loader += ' loader-green';
+      }
+      else if (type & OverlayType.TextWhite) {
+        loader += ' loader-white';
+      }
     }
 
     $('#overlay').attr('class', wrapper);
