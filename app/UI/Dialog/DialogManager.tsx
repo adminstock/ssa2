@@ -85,7 +85,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
   constructor(props?, context?) {
     super(props, context);
 
-    Debug.Log(this);
+    Debug.Init(this);
 
     this.state = {
       Items: DialogManager.Items

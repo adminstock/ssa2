@@ -42,7 +42,7 @@ export default class Edit extends Page<any, any> {
   render() {
     return (
       <DocumentTitle title={this.props.Title}>
-        TODO: User Editor
+        <div>TODO: User Editor</div>
       </DocumentTitle>
     );
   }

@@ -120,12 +120,28 @@ export default class Debug {
       if (Debug.LogLevels['all'] != undefined || Debug.LogLevels[level] != undefined) {
         console.log = Function.bind.call(console.log, console);
 
-        let args = Array.prototype.slice.call(arguments);
+        if (level == 'log') {
+          console.log(arguments);
+        }
 
+        let args: Array<any> = Array.prototype.slice.call(arguments);
+
+        // remove <level>
         args.shift();
 
         if (args && args.length > 0) {
-          args[0] = '%c' + level + ':%c ' + args[0];
+          if (typeof args[0] === 'object' && args[0].constructor && args[0].constructor.name) {
+            args.splice(0, 1, '%c' + level + ':%c ' + args[0].constructor.name);
+          } else {
+            args.splice(0, 1, '%c' + level + ':%c ' + args[0]);
+          }
+
+          if (args.length > 1 && $.isArray(args[1])) {
+            // move items to external array
+            let a = args[1];
+            args.splice(1, 1);
+            args = args.concat(a);
+          }
 
           if ($.isArray(Debug.LogLevels[level])) {
             args.splice(1, 0, Debug.LogLevels[level][0]);
@@ -137,7 +153,7 @@ export default class Debug {
             }
           } else {
             args.splice(1, 0, 'background-color: #999999; color:white;');
-
+          
             if (Debug.LogLevels[level] != null && Debug.LogLevels[level] != '') {
               args.splice(2, 0, Debug.LogLevels[level]);
             } else {
@@ -145,6 +161,8 @@ export default class Debug {
             }
           }
         }
+
+        // console.log(args);
 
         console.log.apply(this, args);
       }

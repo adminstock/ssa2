@@ -37,9 +37,11 @@ export default class Index extends Page<any, any> {
   render() {
     return (
       <DocumentTitle title={this.props.Title}>
+        <div>
         TODO<br /><i className="fa fa-spinner fa-spin fa-3x fa-fw"></i><br />
         <Link to="/Users/Edit">New</Link><br />
         <Link to="/Users/Edit?id=123">Edit</Link>
+        </div>
       </DocumentTitle>
     );
   }

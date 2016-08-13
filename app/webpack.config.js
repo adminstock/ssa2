@@ -29,8 +29,8 @@ var logLevels = {
   init2: ['background-color: #4d96f0; color: white;', 'color: #4d96f0;'],
   init3: ['background-color: #78aff3; color: white;', 'color: #78aff3;'],
 
-  call: ['background-color: #cccccc; color: #333333;', 'color: #333333; font-style: italic;'],
-  call1: ['background-color: #cccccc; color: #555555;', 'color: #555555; font-style: italic;'],
+  call: ['background-color: #cccccc; color: #555555;', 'color: #333333; font-style: italic;'],
+  call1: ['background-color: #cccccc; color: #666666;', 'color: #555555; font-style: italic;'],
   call2: ['background-color: #cccccc; color: #777777;', 'color: #777777; font-style: italic;'],
   call3: ['background-color: #cccccc; color: #999999;', 'color: #999999; font-style: italic;'],
 
