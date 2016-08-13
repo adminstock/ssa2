@@ -19,6 +19,7 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import DocumentTitle from 'react-document-title';
 import Page from 'Core/Page';
+import App from 'Core/App';
 
 export default class Index extends Page<any, any> {
 
@@ -31,7 +32,7 @@ export default class Index extends Page<any, any> {
   }
 
   componentWillMount() {
-
+    App.MakeRequest('Users.GetUsers');
   }
 
   render() {

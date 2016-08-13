@@ -1,0 +1,12 @@
+﻿{
+  "name": "Example",
+  "description": "Example of configuration file.",
+  "ssh": {
+    "host": "192.168.56.139",
+    "port": 22,
+    "user": "ssa",
+    "password": "123456",
+    "required-password": true
+  },
+  "modules": "users,svn,dbadmin,sites,files,monitoring,services,ssh,settings"
+}

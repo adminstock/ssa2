@@ -24,11 +24,18 @@
     <Compile Include="index.php" />
     <Compile Include="response.php" />
     <Compile Include="ssh\index.php" />
+    <Compile Include="ssh\models\SshResult.php" />
     <Compile Include="users\index.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="auth\" />
+    <Folder Include="servers\" />
     <Folder Include="ssh\" />
+    <Folder Include="ssh\models\" />
     <Folder Include="users\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="servers\192.168.56.139.json" />
+    <Content Include="servers\example.json" />
   </ItemGroup>
 </Project>

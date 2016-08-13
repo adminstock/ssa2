@@ -92,13 +92,12 @@ export default class ApiRequest<TRequest, TResponse> {
       url += 'XDEBUG_SESSION_START=1';
     }
 
-    // this._Server = CurrentUser.Server
-
     this._Url = url;
     this._Method = method;
     this._Data = data || null;
     this._Key = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-    this.Token = window.sessionStorage.getItem('AccessToken');
+    this._Server = CurrentUser.ManagedServer;
+    this.Token = CurrentUser.AccessToken;
   }
 
   /**
@@ -107,7 +106,8 @@ export default class ApiRequest<TRequest, TResponse> {
   public Execute(): void {
     let $this = this;
 
-    Debug.Level1('Token', this.Token);
+    Debug.Level3('Token', this.Token);
+    Debug.Level3('Server', this.Server);
 
     let headers = null;
 

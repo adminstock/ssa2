@@ -1,6 +1,9 @@
 <?php
+namespace WebAPI\SSH;
+
 /*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +21,7 @@
 /**
  * Represents SSH client.
  */
-class SSH
+class Index
 {
 
   /**
@@ -28,18 +31,52 @@ class SSH
     */
   private $SshConnection = NULL;
 
+  private $Settings = [];
+
   function __construct()
   {
     global $config;
 
-    $this->SshConnection = ssh2_connect($config['ssh_host'], (int)$config['ssh_port']);
+    if (!isset($config['server']) || !isset($config['server']['ssh']) || !is_array($config['server']['ssh']))
+    {
+      throw new \ErrorException('SSH settings not found. Please check config file of the server.');
+    }
+
+    $this->Settings = $config['server']['ssh'];
+
+    if (!isset($this->Settings['host']) || $this->Settings['host'] == '')
+    {
+      throw new \ErrorException('SSH host is required. Please check config file of the server.');
+    }
+
+    if (!isset($this->Settings['user']))
+    {
+      throw new \ErrorException('SSH username is required. Please check config file of the server.');
+    }
+    
+    if (!isset($this->Settings['password']))
+    {
+      throw new \ErrorException('SSH password is required. Please check config file of the server.');
+    }
+
+    $host = $this->Settings['host'];
+    $port = 22;
+    $user = $this->Settings['user'];
+    $password = $this->Settings['password'];
+
+    if (isset($this->Settings['port']))
+    {
+      $port = (int)$this->Settings['port'];
+    }
+
+    $this->SshConnection = ssh2_connect($host, $port);
 
     if (!$this->SshConnection)
     {
-      throw new \ErrorException('Cannot connect to server "'.$config['ssh_host'].'".');
+      throw new \ErrorException('Cannot to connect "'.$host.'".');
     }
 
-    if (!ssh2_auth_password($this->SshConnection, $config['ssh_user'], $config['ssh_password']))
+    if (!ssh2_auth_password($this->SshConnection, $user, $password))
     {
       throw new \ErrorException('Authentication failed.');
     }
@@ -50,7 +87,7 @@ class SSH
     * 
     * @param \string|\string[] $command The command to execute.
     * @param \bool $dontTrim Specifies whether to disable the automatic removal of spaces on the sides.
-    * @return \Models\SshResult|\Models\SshResult[]
+    * @return \WebAPI\SSH\Models\SshResult|\WebAPI\SSH\Models\SshResult[]
     */
   public function Execute($command, $dontTrim = FALSE)
   {
@@ -67,10 +104,10 @@ class SSH
       $stream_error = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
       $stream_io = ssh2_fetch_stream($stream, SSH2_STREAM_STDIO);
 
-      stream_set_blocking($stream_error, 1);
-      stream_set_blocking($stream_io, 1);
+      stream_set_blocking($stream_error, TRUE);
+      stream_set_blocking($stream_io, TRUE);
         
-      $result = new \Models\SshResult();
+      $result = new \WebAPI\SSH\Models\SshResult();
 
       $result->Error = stream_get_contents($stream_error);
       $result->Result = stream_get_contents($stream_io);
@@ -107,10 +144,10 @@ class SSH
         $stream_error = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
         $stream_io = ssh2_fetch_stream($stream, SSH2_STREAM_STDIO);
 
-        stream_set_blocking($stream_error, 1);
-        stream_set_blocking($stream_io, 1);
+        stream_set_blocking($stream_error, TRUE);
+        stream_set_blocking($stream_io, TRUE);
 
-        $r = new \Models\SshResult();
+        $r = new \WebAPI\SSH\Models\SshResult();
         $r->Error = stream_get_contents($stream_error);
         $r->Result = stream_get_contents($stream_io);
 
@@ -155,7 +192,7 @@ class SSH
         throw new \ErrorException('Could not open shell exec stream.');
       }
 
-      stream_set_blocking($stream, 1);
+      stream_set_blocking($stream, TRUE);
         
       $result = '';
 
@@ -233,11 +270,9 @@ class SSH
 
   private function MakeCommand($command)
   {
-    global $config;
-
-    if ((bool)$config['ssh_required_password'])
+    if (isset($this->Settings['required-password']) && (bool)$this->Settings['required-password'])
     {
-      return 'echo "' . str_replace('"', '\\"', $config['ssh_password']) . '" | sudo -S bash -c "' . str_replace('"', '\\"', $command) . '"';
+      return 'echo "' . str_replace('"', '\\"', $this->Settings['password']) . '" | sudo -S bash -c "' . str_replace('"', '\\"', $command) . '"';
     }
     else
     {

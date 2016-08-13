@@ -231,7 +231,7 @@ export default class App {
   // #endregion
   // #region ..API Requests..
 
-  public MakeRequest<TRequest, TResponse>(method: string, data?: TRequest, successCallback?, errorCallback?): void {
+  public static MakeRequest<TRequest, TResponse>(method: string, data?: TRequest, successCallback?, errorCallback?): void {
     let api = new ApiRequest<any, TResponse>(method, data);
 
     api.SuccessCallback = () => {
@@ -248,6 +248,9 @@ export default class App {
 
         // show login form
         DialogManager.ShowDialog('login');
+      } else {
+        // show error message
+        App.Alert({ message: error.Text, title: __('Error') });
       }
     }
 

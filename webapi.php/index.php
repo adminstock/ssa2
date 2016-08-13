@@ -3,6 +3,7 @@ namespace WebAPI;
 
 /*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +20,46 @@ namespace WebAPI;
 
 require_once 'cors.php';
 require_once 'config.php';
-require_once 'response.php';
+
+spl_autoload_register(function ($class) {
+  $namespace = substr($class, strripos($class, 'WebAPI') + strlen('WebAPI') + 1);
+  $className = substr($class, strripos($class, '\\') + 1);
+
+  $paths = [];
+
+  if ($namespace == $className) 
+  {
+    $paths[] = strtolower($className).'.php';
+    $paths[] = $className.'.php';
+  }
+  else 
+  {
+    $segments = explode('\\', $namespace);
+
+    if (count($segments) <= 2)
+    {
+      $paths[] = str_replace('\\', '/', strtolower($namespace)).'.php';
+      $paths[] = str_replace('\\', '/', $namespace).'.php';
+    }
+    else
+    {
+      array_pop($segments);
+      $folderPath = implode('/', $segments);
+      $paths[] = strtolower($folderPath).'/'.$className.'.php';
+      $paths[] = strtolower($folderPath).'/'.strtolower($className).'.php';
+      $paths[] = $folderPath.'/'.$className.'.php';
+    }
+  }
+
+  foreach ($paths as $path)
+  {
+    if (is_file($path))
+    {
+      require_once $path;
+      break;
+    }  
+  }
+});
 
 /**
   * The SmallServerAdmin API.
@@ -72,6 +112,12 @@ class API
 
     try
     {
+      // load server config
+      if (isset($query['Server']) && $query['Server'] != '')
+      {
+        $this->LoadServerConfig($query['Server']);
+      }
+
       // get class and method name
       $name = explode('.', $query['Method']);
       $moduleName = $name[0];
@@ -81,16 +127,16 @@ class API
 
       // TODO
       $moduleSearch = [];
-      $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/debian-8.4-x64.php';
-      $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/debian-8.4.php';
-      $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/debian.php';
-      $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/linux.php';
+      $moduleSearch[] = $moduleName.'/debian-8.4-x64.php';
+      $moduleSearch[] = $moduleName.'/debian-8.4.php';
+      $moduleSearch[] = $moduleName.'/debian.php';
+      $moduleSearch[] = $moduleName.'/linux.php';
       // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/windows-6.1.7601.php';
       // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/windows-6.1.php';
       // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/windows.php';
       // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/freebsd-10.3.php';
       // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/freebsd.php';
-      $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/index.php';
+      $moduleSearch[] = $moduleName.'/index.php';
       //$moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.strtolower($moduleName).'/index.php';
 
       // search and include file
@@ -187,6 +233,34 @@ class API
 
       $this->Error(($msg = $ex->getMessage()) != NULL ? $msg : 'Server error.', 'SERVER_ERROR', 500);
     }
+  }
+
+  /**
+   * Loads server config.
+   */
+  private function LoadServerConfig($serverName)
+  {
+    global $config;
+    
+    if (!isset($serverName))
+    {
+      throw new \ErrorException('$serverName is required, value cannot be empty.');
+    }
+
+    if (!isset($config['servers_config_path']) || !is_dir($config['servers_config_path']))
+    {
+      throw new \ErrorException('servers_config_path is required, value cannot be empty. Please check config.php.');
+    }
+    
+    if (!is_file($config['servers_config_path'].'/'.$serverName.'.json'))
+    {
+      throw new \ErrorException('File "'.$config['servers_config_path'].'/'.$serverName.'.json'.'" not found.');
+    }
+
+    $json = file_get_contents($config['servers_config_path'].'/'.$serverName.'.json');
+    $json = str_replace("\xEF\xBB\xBF", '', $json);
+
+    $config['server'] = json_decode($json, TRUE);
   }
 
   /**

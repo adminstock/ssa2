@@ -1,5 +1,5 @@
 <?php
-namespace WebAPI\Auth;
+namespace WebAPI\SSH\Models;
 
 /*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
@@ -18,37 +18,27 @@ namespace WebAPI\Auth;
  * limitations under the License.
  */
 
-/**
- * Processing user authentication requests.
- */
-class Index
+class SshResult
 {
+    
+  /**
+    * SSH result.
+    * 
+    * @var string
+    */
+  public $Result;
 
-  public function GetToken($username, $password)
+  /**
+    * SSH error message.
+    * 
+    * @var string
+    */
+  public $Error;
+
+  function __construct()
   {
-    if (!isset($username) || $username == '')
-    {
-      throw new \ErrorException('Username is required. Value cannot be empty.');
-    }
-
-    if (!isset($password) || $password == '')
-    {
-      throw new \ErrorException('Password is required. Value cannot be empty.');
-    }
-
-    // TODO
-    return ['TokenValue' => 42];
-  }
-
-  public function TokenIsValid($token)
-  {
-    if (!isset($token) || $token == '')
-    {
-      $this->Error('Token is required. Value cannot be empty.');
-    }
-
-    // TODO
-    return ['Success' => TRUE];
+    $this->Result = '';
+    $this->Error = '';
   }
 
 }

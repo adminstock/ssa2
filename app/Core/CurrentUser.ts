@@ -96,6 +96,13 @@ export default class CurrentUser {
     CurrentUser._ApiServer = value;
   }
 
+  public static get ManagedServer(): string {
+    return CookiesHelper.Get('managed-server');
+  }
+  public static set ManagedServer(value: string) {
+    CookiesHelper.Add('managed-server', value, 365);
+  }
+
   constructor() {
     Debug.Warn('"CurrentUser" is static class. No need to create an instance of this class.');
   }

@@ -1,6 +1,9 @@
 <?php
+namespace WebAPI\Users;
+
 /*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +21,19 @@
 /**
  * API of SmallServerAdmin.
  */
-class Users
+class Index
 {
 
   /**
     * SSH client.
     * 
-    * @var SSH
+    * @var \WebAPI\SSH\Index
     */
   private $SshClient = NULL;
 
   function __construct()
   {
-    $this->SshClient = new SSH();
+    $this->SshClient = new \WebAPI\SSH\Index();
   }
 
   #region ..Public methods..
