@@ -6,6 +6,7 @@ var webpackNotifierPlugin = require('webpack-notifier');
 var spritesmithPlugin = require('webpack-spritesmith');
 var i18nPlugin = require('i18n-webpack-plugin');
 var htmlWebpackPlugin = require('html-webpack-plugin');
+var webpackStrip = require('strip-loader');
 
 // TODO: move to external file
 var apiServers = [
@@ -233,7 +234,17 @@ module.exports = Object.keys(languages).map(function(language) {
 
         // remove Debug
         // https://github.com/yahoo/strip-loader
-        { test: /\.js$/, loader: 'strip-loader?strip[]=Debug' },
+        { 
+          test: /\.js$/, 
+          loader: webpackStrip.loader(
+            'Debug.Log', 'Debug.Level1', 'Debug.Level2', 'Debug.Level3',
+            'Debug.Call', 'Debug.Call1', 'Debug.Call2', 'Debug.Call3',
+            'Debug.Render', 'Debug.Render1', 'Debug.Render2', 'Debug.Render3',
+            'Debug.Init', 'Debug.Init1', 'Debug.Init2', 'Debug.Init3',
+            'Debug.Warn', 'Debug.Warning', 'Debug.Error', 'Debug.Info',
+            'Debug.Request', 'Debug.Response'
+          )
+        },
 
         // https://github.com/jtangelder/sass-loader
         {
