@@ -257,6 +257,10 @@ export default class App {
     api.Execute();
   }
 
+  public static AbortAllRequests(): void {
+    ApiRequest.AbortAll();
+  }
+
   // #endregion
 
 }

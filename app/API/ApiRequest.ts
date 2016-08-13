@@ -25,6 +25,8 @@ import CurrentUser from 'Core/CurrentUser';
  */
 export default class ApiRequest<TRequest, TResponse> {
 
+  private static ActiveRequests: Array<JQueryXHR> = new Array<JQueryXHR>();
+
   /** The handler successful execution of the request. */
   public SuccessCallback: { (result: TResponse): void; } = null;
 
@@ -133,7 +135,7 @@ export default class ApiRequest<TRequest, TResponse> {
 
     Debug.Request('ApiRequest.Execute', this.Key, this.Url, data);
 
-    $.ajax({
+    let r = $.ajax({
       cache: false,
       crossDomain: true,
       type: 'POST',
@@ -173,6 +175,11 @@ export default class ApiRequest<TRequest, TResponse> {
       error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
         Debug.Response('ApiRequest.Error', $this.Key, $this.Url, x, textStatus, errorThrown);
 
+        if (textStatus == 'abort') {
+          // skip
+          return;
+        }
+
         let error: ApiError;
 
         if (x.responseText !== undefined && x.responseText != null && x.responseText != '') {
@@ -199,9 +206,30 @@ export default class ApiRequest<TRequest, TResponse> {
       complete: (x: JQueryXHR, textStatus: string) => {
         Debug.Level3('ApiRequest.Complete', $this.Key, $this.Url);
 
+        let itemToRemove = ApiRequest.ActiveRequests.indexOf(r);
+
+        if (itemToRemove != -1) {
+          let removedItem = ApiRequest.ActiveRequests.splice(itemToRemove, 1);
+          Debug.Level3('Removed', itemToRemove, removedItem, ApiRequest.ActiveRequests.length);
+        } else {
+          Debug.Level3('Item not found.', r, ApiRequest.ActiveRequests.length);
+        }
+
         if ($this.CompleteCallback != null) {
           $this.CompleteCallback();
         }
+      }
+    });
+    
+    ApiRequest.ActiveRequests.push(r);
+  }
+
+  public static AbortAll(): void {
+    Debug.Call('ApiRequest.AbortAll', ApiRequest.ActiveRequests.length);
+
+    ApiRequest.ActiveRequests.forEach((x) => {
+      if (x.readyState == 1) {
+        x.abort();
       }
     });
   }

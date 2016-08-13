@@ -65,9 +65,11 @@ const routes = (
 export function LoadComponent(location: any, callback: (error: any, component?: string | React.ComponentClass<any> | React.StatelessComponent<any>) => void): void {
   Debug.Call('Loading', location.pathname, location);
 
-  var me = { location: location, callback: callback };
-
   Overlay.Show(OverlayType.White | OverlayType.Loader | OverlayType.Opacity90);
+
+  App.AbortAllRequests();
+
+  var me = { location: location, callback: callback };
 
   // idiocy...
   // currently not found a better solution
