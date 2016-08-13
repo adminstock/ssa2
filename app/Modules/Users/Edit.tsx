@@ -16,19 +16,20 @@
  */
 
 import * as React from 'react';
+import DocumentTitle from 'react-document-title';
 import Page from 'Core/Page';
 
 export default class Edit extends Page<any, any> {
 
+  static defaultProps = {
+    Title: __('Users Editor')
+  }
+
   constructor(props, context) {
     super(props, context);
-
-    Debug.Log(this);
   }
 
   componentWillMount() {
-    this.SetTitle('Users Editor');
-    
     // test
     this.Alert('test1');
     this.Alert(<div>hello world</div>);
@@ -39,7 +40,9 @@ export default class Edit extends Page<any, any> {
 
   render() {
     return (
-      <div>TODO: User Editor</div>
+      <DocumentTitle title={this.props.Title}>
+        TODO: User Editor
+      </DocumentTitle>
     );
   }
 

@@ -116,16 +116,16 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
    *
    * @param element Modal dialog or react component to add.
    */
-  public static AddDialog(element: JSX.Element): Dialog {
+  public static AddDialog(element: JSX.Element, visible?: boolean): Dialog {
     let dialog = new Dialog();
 
     if (element.key != undefined && element.key != null && element.key != '') {
       dialog.Key = element.key.toString();
     }
 
-    Debug.Log('DialogManager.AddDialog', dialog.Key);
+    Debug.Log('DialogManager.AddDialog', dialog.Key, visible);
 
-    dialog.Visible = true;
+    dialog.Visible = (visible == undefined || visible == null ? true : visible);
     dialog.Element = element;
 
     DialogManager.Items.push(dialog);
@@ -308,10 +308,10 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
    *
    * @param key The key of dialog that must be hidden.
    */
-  public static ShowDialog(key: string): boolean {
+  public static ShowDialog(key: string, state?: any): boolean {
     Debug.Log('DialogManager.ShowDialog', key);
         
-    return DialogManager.SetDialogVisibleStatus(key, true);
+    return DialogManager.SetDialogVisibleStatus(key, true, state);
   }
 
   // TODO: ShowNext - think
@@ -340,8 +340,10 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
     return DialogManager.Items.filter((d) => d.Key === key).length > 0;
   }
 
-  private static SetDialogVisibleStatus(key: string, status: boolean): boolean {
+  private static SetDialogVisibleStatus(key: string, status: boolean, state?: any): boolean {
     let dialogs = DialogManager.Items.filter((d) => d.Key === key);
+
+    Debug.Level2('DialogManager.SetDialogVisibleStatus', key, status, dialogs);
 
     if (dialogs.length <= 0) {
       Debug.Warn('Dialog "' + key + '" not found.');
@@ -352,6 +354,11 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
 
     if (dialog.Visible != status) {
       dialog.Visible = status;
+
+      //if (props != undefined) {
+      //  dialog.Element = props;
+      //}
+
       DialogManager.UpdateStateNeed = true;
     }
 
@@ -366,7 +373,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
   }
 
   render() {
-    Debug.Log('DialogManager.render', DialogManager.Items, this.state);
+    Debug.Level3('DialogManager.render', DialogManager.Items, this.state);
 
     let items = [];
 

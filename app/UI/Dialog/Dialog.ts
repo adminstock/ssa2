@@ -32,9 +32,12 @@ export default class Dialog {
     return this._Visible;
   }
   public set Visible(value: boolean) {
-    this._Visible = value;
+    Debug.Level3('Dialog.SetVisible', this.Key, this.Visible, value);
 
+    this._Visible = value;
+    
     if (this.Closed && value) {
+      Debug.Level3('Dialog.SetVisible is closed');
       this._Visible = false;
     }
   }

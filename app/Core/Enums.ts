@@ -14,30 +14,8 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { Link } from 'react-router';
-import Page from 'Core/Page';
-
-/**
- * The main page.
- */
-export default class Index extends Page<any, any> {
-
-  constructor(props, context) {
-    super(props, context);
-
-    Debug.Log(this);
-  }
-
-  componentWillMount() {
-  }
-
-  render() {
-    return (<div>
-      <h1>{__("Hello world!")}</h1>
-      <span className="glyphicon glyphicon-music"></span>
-      <Link to="/Users">Users</Link>
-    </div>);
-  }
-
+export enum LayoutMode {
+  Default,
+  Blank,
+  Loader
 }

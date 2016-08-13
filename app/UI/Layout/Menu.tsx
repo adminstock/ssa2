@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import { Link } from 'react-router';
-import IMainContext from 'Layouts/IMainContext';
+import IMainContext from 'Core/IMainContext';
 
 export default class Menu extends React.Component<any, any> {
 

@@ -1,0 +1,53 @@
+﻿.overlay-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1024;
+  background-color: white;
+}
+
+.overlay-black {
+  background-color: black;
+}
+
+.overlay-opacity15 {
+	opacity: 0.15;
+}
+
+.overlay-opacity25 {
+	opacity: 0.25;
+}
+
+.overlay-opacity50 {
+	opacity: 0.5;
+}
+
+.overlay-opacity75 {
+	opacity: 0.75;
+}
+
+.overlay-opacity90 {
+	opacity: 0.90;
+}
+
+.loader {
+  text-align: center;
+  -webkit-transform: translate(-50%,-50%);
+  -moz-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  -o-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  i {
+    font-size: 72px;
+  }
+}
+
+.loader-white {
+  color: white;
+}

@@ -1,5 +1,6 @@
 ﻿/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +18,21 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import DocumentTitle from 'react-document-title';
-import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
+import { Router, Route, Link } from 'react-router';
 import { Modal, Button } from 'react-bootstrap';
 
 import Dialog from 'UI/Dialog/Dialog';
 import DialogManager from 'UI/Dialog/DialogManager';
 import DialogSettings from 'UI/Dialog/DialogSettings';
 
-import IMainContext from 'IMainContext';
+import IMainContext from 'Core/IMainContext';
 import IMainState from 'IMainState';
 
-// TODO: Grouping Layout UI
 import Header from 'UI/Layout/Header';
 import Menu from 'UI/Layout/Menu';
 import Login from 'UI/Layout/Login';
 
+import App from 'Core/App';
 import CurrentUser from 'Core/CurrentUser';
 
 import ApiRequest from 'API/ApiRequest';
@@ -49,7 +50,6 @@ export default class Main extends React.Component<any, IMainState> implements IM
 
   static childContextTypes: React.ValidationMap<any> = {
     router: React.PropTypes.object.isRequired,
-    SetTitle: React.PropTypes.func.isRequired,
     SetLanguage: React.PropTypes.func,
     Alert: React.PropTypes.func,
     Confirm: React.PropTypes.func
@@ -64,6 +64,8 @@ export default class Main extends React.Component<any, IMainState> implements IM
       Title: 'SmallServerAdmin'
     };
 
+    App.SetContext(this);
+
     // add login form
     DialogManager.AddDialog(<Login key="login" />);
   }
@@ -71,22 +73,10 @@ export default class Main extends React.Component<any, IMainState> implements IM
   public getChildContext(): any {
     return {
       router: (this.context as any).router,
-      SetTitle: this.SetTitle.bind(this),
       SetLanguage: this.SetLanguage.bind(this),
       Alert: this.Alert.bind(this),
-      Confirm: this.Confirm.bind(this),
+      Confirm: this.Confirm.bind(this)
     };
-  }
-
-  /**
-   * Sets a new title to window.
-   *
-   * @param value Text to set.
-   */
-  public SetTitle(value: string): void {
-    Debug.Log('SetTitle', value);
-
-    this.setState({ Title: value });
   }
 
   /**
@@ -109,21 +99,21 @@ export default class Main extends React.Component<any, IMainState> implements IM
    *
    * @param message Message text.
    */
-  public Alert(message?: string);
+  public Alert(message?: string): void;
 
   /**
    * Displays an alert box with a specified message and an OK button.
    *
    * @param message Any elements. For example: <div>Hello world!</div>
    */
-  public Alert(message?: JSX.Element);
+  public Alert(message?: JSX.Element): void;
 
   /**
    * Displays an alert box with a specified message and an OK button.
    *
    * @param settings Set of key/value pairs that configure the Alert dialog. All settings are optional.
    */
-  public Alert(settings?: { message?: string | JSX.Element, title?: string | JSX.Element, buttonTitle?: string, callback?: { (dialog: Dialog): void; } });
+  public Alert(settings?: { message?: string | JSX.Element, title?: string | JSX.Element, buttonTitle?: string, callback?: { (dialog: Dialog): void; } }): void;
 
   /**
    * Displays an alert box with a specified message and an OK button.
@@ -179,7 +169,7 @@ export default class Main extends React.Component<any, IMainState> implements IM
    * @param message Specifies the text to display in the confirm box.
    * @param callback Callback function.
    */
-  public Confirm(message?: string, callback?: { (dialog: Dialog, confirmed: boolean): void; });
+  public Confirm(message?: string, callback?: { (dialog: Dialog, confirmed: boolean): void; }): void;
 
   /**
    * Displays a dialog box with a specified message, along with an OK and a Cancel button.
@@ -187,14 +177,14 @@ export default class Main extends React.Component<any, IMainState> implements IM
    * @param message Specifies any elements to display in the confirm box.
    * @param callback Callback function.
    */
-  public Confirm(message?: JSX.Element, callback?: { (dialog: Dialog, confirmed: boolean): void; });
+  public Confirm(message?: JSX.Element, callback?: { (dialog: Dialog, confirmed: boolean): void; }): void;
 
   /**
    * Displays a dialog box with a specified message, along with an OK and a Cancel button.
    *
    * @param settings Set of key/value pairs that configure the Confirm dialog. All settings are optional.
    */
-  public Confirm(settings?: { message?: string | JSX.Element, title?: string | JSX.Element, buttonOkTitle?: string, buttonCancelTitle?: string, callback?: { (dialog: Dialog, confirmed: boolean): void; } });
+  public Confirm(settings?: { message?: string | JSX.Element, title?: string | JSX.Element, buttonOkTitle?: string, buttonCancelTitle?: string, callback?: { (dialog: Dialog, confirmed: boolean): void; } }): void;
 
   /**
    * Displays a dialog box with a specified message, along with an OK and a Cancel button.
@@ -286,7 +276,7 @@ export default class Main extends React.Component<any, IMainState> implements IM
   // #endregion
   
   render() {
-    Debug.Log('Main.render');
+    Debug.Level3('Main.render');
 
     return (
       <DocumentTitle title={this.state.Title}>

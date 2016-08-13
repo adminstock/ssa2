@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import { Modal, Button, Row, Col, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import IMainContext from 'Layouts/IMainContext';
+import IMainContext from 'Core/IMainContext';
 import ILoginState from 'ILoginState';
 import CurrentUser from 'Core/CurrentUser';
 import ApiRequest from 'API/ApiRequest';

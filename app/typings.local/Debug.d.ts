@@ -9,6 +9,8 @@
  */
 interface DebugStatic {
   Log(message?: any, ...params: any[]): void;
+  Level2(message?: any, ...params: any[]): void;
+  Level3(message?: any, ...params: any[]): void;
   Error(message?: any, ...params: any[]): void;
   Warn(message?: any, ...params: any[]): void;
   Warning(message?: any, ...params: any[]): void;

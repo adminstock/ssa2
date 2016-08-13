@@ -17,33 +17,30 @@
 
 import * as React from 'react';
 import { Link } from 'react-router';
-import IMainContext from 'Layouts/IMainContext';
+import DocumentTitle from 'react-document-title';
 import Page from 'Core/Page';
 
 export default class Index extends Page<any, any> {
 
-  static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired,
-    SetTitle: React.PropTypes.func.isRequired
+  static defaultProps = {
+    Title: __('Users')
   }
 
   constructor(props, context) {
     super(props, context);
-
-    Debug.Log(this);
   }
 
   componentWillMount() {
-    this.SetTitle(__('Users'));
+
   }
 
   render() {
     return (
-      <div>
+      <DocumentTitle title={this.props.Title}>
         TODO<br /><i className="fa fa-spinner fa-spin fa-3x fa-fw"></i><br />
         <Link to="/Users/Edit">New</Link><br />
         <Link to="/Users/Edit?id=123">Edit</Link>
-      </div>
+      </DocumentTitle>
     );
   }
 

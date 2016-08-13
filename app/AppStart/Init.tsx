@@ -23,8 +23,10 @@ require('jquery');
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
+import { Router, Route, Link, IndexRoute, browserHistory } from 'react-router';
 import LayoutMain from 'Layouts/Main';
+import App from 'Core/App';
+import { Overlay, OverlayType } from 'UI/Overlay';
 
 if (process.env.NODE_ENV === 'production') {
   console.log('SmallServerAdminV2', 'production');
@@ -35,7 +37,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // routes
 const routes = (
-<Router history={hashHistory}>
+  <Router history={browserHistory}>
   <Route path="/" component={LayoutMain}>
     <IndexRoute getComponent={(location, callback) => { LoadComponent(location, callback); } } />
 
@@ -64,6 +66,8 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
   Debug.Log('Loading', location.pathname, location);
 
   var me = { location: location, callback: callback };
+
+  Overlay.Show(OverlayType.White | OverlayType.Loader | OverlayType.Opacity90);
 
   // idiocy...
   // currently not found a better solution
@@ -96,6 +100,8 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
  */
 export function LoadedComponent(component: any): void {
   Debug.Log('Loaded', this.location.pathname);
+
+  Overlay.Hide();
 
   this.callback(null, props => React.createElement(component.default, this.location.query || this.location.params));
 }

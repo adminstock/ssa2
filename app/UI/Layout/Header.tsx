@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import IMainContext from 'Layouts/IMainContext';
+import IMainContext from 'Core/IMainContext';
 
 export default class Header extends React.Component<any, any> {
 

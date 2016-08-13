@@ -54,13 +54,15 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="AppStart\Init.tsx" />
+    <TypeScriptCompile Include="Core\App.ts" />
     <TypeScriptCompile Include="Core\Config.ts" />
     <TypeScriptCompile Include="Core\CurrentUser.ts" />
     <TypeScriptCompile Include="API\Enums.ts" />
+    <TypeScriptCompile Include="Core\Enums.ts" />
     <TypeScriptCompile Include="Core\EventArgs.ts" />
     <TypeScriptCompile Include="Core\Page.tsx" />
     <TypeScriptCompile Include="Layouts\IMainState.ts" />
-    <TypeScriptCompile Include="Layouts\IMainContext.ts" />
+    <TypeScriptCompile Include="Core\IMainContext.ts" />
     <TypeScriptCompile Include="API\ApiError.ts" />
     <TypeScriptCompile Include="API\ApiMessage.ts" />
     <TypeScriptCompile Include="API\ApiResponse.ts" />
@@ -87,6 +89,7 @@
     <Content Include="Content\Styles\v1\bundle.scss" />
     <Content Include="Localization\ru.json" />
     <Content Include="Localization\de.json" />
+    <Content Include="Content\Styles\v1\_overlay.scss" />
     <None Include="typings.json" />
     <TypeScriptCompile Include="typings.local\Debug.d.ts" />
     <TypeScriptCompile Include="typings.local\__.d.ts" />
@@ -112,6 +115,7 @@
     <TypeScriptCompile Include="UI\Layout\ILoginState.ts" />
     <TypeScriptCompile Include="UI\Layout\Menu.tsx" />
     <TypeScriptCompile Include="UI\Layout\Login.tsx" />
+    <TypeScriptCompile Include="UI\Overlay.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Images\" />

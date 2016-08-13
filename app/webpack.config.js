@@ -68,7 +68,8 @@ module.exports = Object.keys(languages).map(function(language) {
     devServer: {
       contentBase: '.',
       host: 'localhost',
-      port: 9090
+      port: 9090,
+      historyApiFallback: true
     },
 
     plugins: [
