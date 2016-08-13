@@ -25,8 +25,6 @@ export default class Index extends Page<any, any> {
 
   constructor(props, context) {
     super(props, context);
-
-    Debug.Log(this);
   }
 
   componentWillMount() {

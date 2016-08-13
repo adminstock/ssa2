@@ -231,6 +231,10 @@ module.exports = Object.keys(languages).map(function(language) {
           }
         },
 
+        // remove Debug
+        // https://github.com/yahoo/strip-loader
+        { test: /\.js$/, loader: 'strip-loader?strip[]=Debug' },
+
         // https://github.com/jtangelder/sass-loader
         {
           test: /\.scss$/,
