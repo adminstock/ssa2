@@ -1,5 +1,6 @@
 ﻿/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,10 +103,10 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
       return;
     }
     
-    Debug.Log('DialogManager.UpdateState', 'processing');
+    Debug.Call3('DialogManager.UpdateState', 'processing');
 
     this.setState({ Items: DialogManager.Items }, () => {
-      Debug.Log('DialogManager.UpdateState', 'successfully');
+      Debug.Call3('DialogManager.UpdateState', 'successfully');
       DialogManager.UpdateStateNeed = false;
       window.setTimeout($this.UpdateState.bind($this), 100);
     });
@@ -123,7 +124,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
       dialog.Key = element.key.toString();
     }
 
-    Debug.Log('DialogManager.AddDialog', dialog.Key, visible);
+    Debug.Call('DialogManager.AddDialog', dialog.Key, visible);
 
     dialog.Visible = (visible == undefined || visible == null ? true : visible);
     dialog.Element = element;
@@ -146,7 +147,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
 
     dialog.Visible = true;
 
-    Debug.Log('DialogManager.NewDialog', dialog.Key);
+    Debug.Call('DialogManager.NewDialog', dialog.Key);
 
     let modal = [];
 
@@ -159,7 +160,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
         if (settings[current] != null) {
           let added = false;
 
-          Debug.Log('typeof settings.' + current, typeof settings[current], settings[current]);
+          Debug.Level3('typeof settings.' + current, typeof settings[current], settings[current]);
 
           if (typeof settings[current] === 'object') {
 
@@ -236,11 +237,11 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
       let args = new EventArgs();
 
       if (dialog.Settings.ClosingHandler !== undefined && dialog.Settings.ClosingHandler !== null && typeof dialog.Settings.ClosingHandler === 'function') {
-        Debug.Log('Dialog.ClosingHandler', dialog.Key);
+        Debug.Call('Dialog.ClosingHandler', dialog.Key);
         dialog.Settings.ClosingHandler(dialog, args);
       }
 
-      Debug.Log('Dialog.CloseDialog', dialog.Key, args);
+      Debug.Call('Dialog.CloseDialog', dialog.Key, args);
 
       if (args.Cancel) {
         // handler is cancelled
@@ -251,7 +252,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
       DialogManager.Items = DialogManager.Items.filter((d) => d.Key !== key);
 
       if (dialog.Settings.ClosedHandler !== undefined && dialog.Settings.ClosedHandler !== null && typeof dialog.Settings.ClosedHandler === 'function') {
-        Debug.Log('Dialog.ClosedHandler', dialog.Key);
+        Debug.Call('Dialog.ClosedHandler', dialog.Key);
 
         args = new EventArgs();
         dialog.Settings.ClosedHandler(dialog, args);
@@ -261,7 +262,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
         }
       }
     } else {
-      Debug.Log('DialogManager.CloseDialog', key);
+      Debug.Call('DialogManager.CloseDialog', key);
 
       // remove dialog
       DialogManager.Items = DialogManager.Items.filter((d) => d.Key !== key);
@@ -281,7 +282,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
    * Hides all dialogs.
    */
   public static HideAll(donotUpdate?: boolean): void {
-    Debug.Log('DialogManager.HideAll', donotUpdate);
+    Debug.Call('DialogManager.HideAll', donotUpdate);
 
     DialogManager.Items.forEach((dialog: Dialog) => {
       dialog.Visible = false;
@@ -298,7 +299,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
    * @param key The key of dialog that must be hidden.
    */
   public static HideDialog(key: string): boolean {
-    Debug.Log('DialogManager.HideDialog', key);
+    Debug.Call('DialogManager.HideDialog', key);
 
     return DialogManager.SetDialogVisibleStatus(key, false);
   }
@@ -309,7 +310,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
    * @param key The key of dialog that must be hidden.
    */
   public static ShowDialog(key: string, state?: any): boolean {
-    Debug.Log('DialogManager.ShowDialog', key);
+    Debug.Call('DialogManager.ShowDialog', key);
         
     return DialogManager.SetDialogVisibleStatus(key, true, state);
   }
@@ -317,7 +318,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
   // TODO: ShowNext - think
 
   public static ShowNext(): boolean {
-    Debug.Log('DialogManager.ShowNext', DialogManager.Items.length);
+    Debug.Call('DialogManager.ShowNext', DialogManager.Items.length);
 
     if (DialogManager.Items.length <= 0) {
       return false;
@@ -343,7 +344,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
   private static SetDialogVisibleStatus(key: string, status: boolean, state?: any): boolean {
     let dialogs = DialogManager.Items.filter((d) => d.Key === key);
 
-    Debug.Level2('DialogManager.SetDialogVisibleStatus', key, status, dialogs);
+    Debug.Call3('DialogManager.SetDialogVisibleStatus', key, status, dialogs);
 
     if (dialogs.length <= 0) {
       Debug.Warn('Dialog "' + key + '" not found.');
@@ -373,7 +374,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
   }
 
   render() {
-    Debug.Level3('DialogManager.render', DialogManager.Items, this.state);
+    Debug.Render3('DialogManager.render', DialogManager.Items, this.state);
 
     let items = [];
 

@@ -48,14 +48,14 @@ export default class Main extends React.Component<any, IMainState> implements IM
     router: React.PropTypes.object.isRequired
   }
 
+  static defaultProps = {
+    Title: 'SmallServerAdminV2'
+  }
+
   constructor(props, context) {
     super(props, context);
 
     Debug.Log(this);
-    
-    this.state = {
-      Title: 'SmallServerAdmin'
-    };
 
     App.SetContext(this);
 
@@ -73,7 +73,7 @@ export default class Main extends React.Component<any, IMainState> implements IM
     Debug.Render('Main.render');
 
     return (
-      <DocumentTitle title={this.state.Title}>
+      <DocumentTitle title={this.props.Title}>
         <div>
           <Header />
           <div id="container" className="container">

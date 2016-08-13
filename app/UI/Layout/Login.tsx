@@ -191,7 +191,7 @@ export default class Login extends React.Component<any, ILoginState> {
   }
 
   render() {
-    // Debug.Log('Login.render');
+    Debug.Render3('Login.render');
 
     let disabledForm = this.state.LoginProcessing || this.state.Checking;
 

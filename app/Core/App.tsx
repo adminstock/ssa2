@@ -43,7 +43,7 @@ export default class App {
   }
 
   /** Provides current user. */
-  public static CurrentUser: CurrentUser;
+  public static CurrentUser = CurrentUser;
 
   constructor() {
     Debug.Warn('"App" is static class. No need to create an instance of this class.');

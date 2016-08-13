@@ -1,5 +1,6 @@
 ﻿/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,10 +60,10 @@ export default class DialogSettings {
 
   public OnCloseDialog(): void {
     if (!this.Dialog) {
-      Debug.Log('OnCloseDialog', false);
+      Debug.Call1('OnCloseDialog', false);
     }
     else {
-      Debug.Log('OnCloseDialog', true);
+      Debug.Call1('OnCloseDialog', true);
 
       DialogManager.CloseDialog(this.Dialog.Key);
     }
