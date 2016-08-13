@@ -26,7 +26,7 @@ export default class Header extends React.Component<any, any> {
   constructor(props, context) {
     super(props, context);
 
-    Debug.Log(this);
+    Debug.Init(this);
   }
   
   /**

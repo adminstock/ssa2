@@ -55,7 +55,7 @@ export default class Main extends React.Component<any, IMainState> implements IM
   constructor(props, context) {
     super(props, context);
 
-    Debug.Log(this);
+    Debug.Init(this);
 
     App.SetContext(this);
 

@@ -107,7 +107,7 @@ export default class ApiRequest<TRequest, TResponse> {
   public Execute(): void {
     let $this = this;
 
-    Debug.Log('Token', this.Token);
+    Debug.Level1('Token', this.Token);
 
     let headers = null;
 
@@ -131,7 +131,7 @@ export default class ApiRequest<TRequest, TResponse> {
       data = $.extend(data, { Server: $this.Server });
     }
 
-    Debug.Log('ApiRequest.Execute', this.Key, this.Url, data);
+    Debug.Request('ApiRequest.Execute', this.Key, this.Url, data);
 
     $.ajax({
       cache: false,
@@ -146,7 +146,7 @@ export default class ApiRequest<TRequest, TResponse> {
 
       // handler of request succeeds
       success: (result: ApiResponse<TResponse>) => {
-        Debug.Log('ApiRequest.Success', $this.Key, $this.Url, result);
+        Debug.Response('ApiRequest.Success', $this.Key, $this.Url, result);
 
         // debug
         if (process.env.NODE_ENV !== 'production') {
@@ -171,7 +171,7 @@ export default class ApiRequest<TRequest, TResponse> {
 
       // server returned error
       error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
-        Debug.Log('ApiRequest.Error', $this.Key, $this.Url, x, textStatus, errorThrown);
+        Debug.Response('ApiRequest.Error', $this.Key, $this.Url, x, textStatus, errorThrown);
 
         let error: ApiError;
 
@@ -197,7 +197,7 @@ export default class ApiRequest<TRequest, TResponse> {
       },
 
       complete: (x: JQueryXHR, textStatus: string) => {
-        Debug.Log('ApiRequest.Complete', $this.Key, $this.Url);
+        Debug.Level3('ApiRequest.Complete', $this.Key, $this.Url);
 
         if ($this.CompleteCallback != null) {
           $this.CompleteCallback();

@@ -90,6 +90,14 @@ export default class Debug {
     if (DEV_MODE) { Debug.Level('render3', message, params); }
   }
 
+  public static Request(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('request', message, params); }
+  }
+
+  public static Response(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('response', message, params); }
+  }
+
   public static Error(message?: any, ...params: any[]): void {
     if (DEV_MODE) {
       console.error = Function.bind.call(console.error, console);
@@ -119,10 +127,6 @@ export default class Debug {
     if (DEV_MODE) {
       if (Debug.LogLevels['all'] != undefined || Debug.LogLevels[level] != undefined) {
         console.log = Function.bind.call(console.log, console);
-
-        if (level == 'log') {
-          console.log(arguments);
-        }
 
         let args: Array<any> = Array.prototype.slice.call(arguments);
 

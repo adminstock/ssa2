@@ -35,7 +35,7 @@ export default class Login extends React.Component<any, ILoginState> {
   constructor(props?, context?) {
     super(props, context);
 
-    Debug.Log(this);
+    Debug.Init(this);
 
     let showDialog = false;
     let showForm = false;

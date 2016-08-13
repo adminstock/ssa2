@@ -32,6 +32,9 @@ interface DebugStatic {
   Render2(message?: any, ...params: any[]): void;
   Render3(message?: any, ...params: any[]): void;
 
+  Request(message?: any, ...params: any[]): void;
+  Response(message?: any, ...params: any[]): void;
+
   Error(message?: any, ...params: any[]): void;
   Warn(message?: any, ...params: any[]): void;
   Warning(message?: any, ...params: any[]): void;
