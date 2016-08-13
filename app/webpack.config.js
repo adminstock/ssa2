@@ -234,8 +234,9 @@ module.exports = Object.keys(languages).map(function(language) {
 
         // remove Debug
         // https://github.com/yahoo/strip-loader
-        { 
-          test: /\.js$/, 
+        (process.env.NODE_ENV == 'development' ? { test: /\.abc123$/  } : {
+          test: /\.js$/,
+          exclude: /node_modules/,
           loader: webpackStrip.loader(
             'Debug.Log', 'Debug.Level1', 'Debug.Level2', 'Debug.Level3',
             'Debug.Call', 'Debug.Call1', 'Debug.Call2', 'Debug.Call3',
@@ -244,7 +245,7 @@ module.exports = Object.keys(languages).map(function(language) {
             'Debug.Warn', 'Debug.Warning', 'Debug.Error', 'Debug.Info',
             'Debug.Request', 'Debug.Response'
           )
-        },
+        }),
 
         // https://github.com/jtangelder/sass-loader
         {
@@ -298,11 +299,7 @@ module.exports = Object.keys(languages).map(function(language) {
           }
         }
       ]
-    },
-
-    /*sassLoader: {
-      includePaths: [path.resolve(__dirname, './Content/Styles')]
-    }*/
+    }
 
   };
 });
