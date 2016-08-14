@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="AppStart\Init.tsx" />
+    <TypeScriptCompile Include="AppStart\InitServers.tsx" />
     <TypeScriptCompile Include="Core\App.tsx" />
     <TypeScriptCompile Include="Core\Config.ts" />
     <TypeScriptCompile Include="Core\CurrentUser.ts" />
@@ -68,6 +69,7 @@
     <TypeScriptCompile Include="API\ApiResponse.ts" />
     <TypeScriptCompile Include="API\AuthResult.ts" />
     <TypeScriptCompile Include="API\Success.ts" />
+    <None Include="servers.json" />
     <TypeScriptCompile Include="UI\Dialog\DialogManager.tsx" />
     <TypeScriptCompile Include="UI\Dialog\DialogSettings.ts" />
     <TypeScriptCompile Include="API\ApiRequest.ts" />

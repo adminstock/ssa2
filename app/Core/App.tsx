@@ -30,6 +30,8 @@ import DialogSettings from 'UI/Dialog/DialogSettings';
 
 import CurrentUser from 'CurrentUser';
 
+import Config from 'Config';
+
 /**
  * The main class of the application.
  */
@@ -44,6 +46,9 @@ export default class App {
 
   /** Provides current user. */
   public static CurrentUser = CurrentUser;
+
+  /** Provides access to config. */
+  public static Config = Config;
 
   constructor() {
     Debug.Warn('"App" is static class. No need to create an instance of this class.');

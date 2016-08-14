@@ -22,7 +22,18 @@ import ApiServer from 'Models/ApiServer';
 export default class Config {
 
   public static get ListOfApiServers(): Array<ApiServer> {
-    return SSA_API_SERVERS;
+    if (window.sessionStorage.getItem('ApiServers') == null || window.sessionStorage.getItem('ApiServers') == '') {
+      return null;
+    } else {
+      return JSON.parse(window.sessionStorage.getItem('ApiServers'));
+    }
+  }
+  public static set ListOfApiServers(value: Array<ApiServer>) {
+    if (value == null || value.length == 0) {
+      window.sessionStorage.removeItem('ApiServers');
+    } else {
+      window.sessionStorage.setItem('ApiServers', JSON.stringify(value));
+    }
   }
 
   constructor() {

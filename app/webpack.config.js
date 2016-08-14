@@ -8,17 +8,6 @@ var i18nPlugin = require('i18n-webpack-plugin');
 var htmlWebpackPlugin = require('html-webpack-plugin');
 var webpackStrip = require('strip-loader');
 
-// TODO: move to external file
-var apiServers = [
-  {
-    // http://localhost.fiddler:62802/ - for fiddler
-    'Url': 'http://localhost:62802/',
-    'AuthUrl': 'http://localhost:62802/',
-    'Name': 'WebApi.PHP',
-    'Description': 'Local server.'
-  }
-];
-
 var logLevels = {
   log: ['background-color: #008000; color: white; border-radius: 4px; padding: 1px 4px 1px 4px;', 'color: #000000;'],
   level1: ['background-color: #00a400; color: white; border-radius: 4px; padding: 1px 4px 1px 4px;', 'color: #333333;'],
@@ -136,9 +125,6 @@ module.exports = Object.keys(languages).map(function(language) {
 
         // date release (yyyy-mm-dd)
         'SSA_DATE_RELEASE': JSON.stringify('unreleased'),
-
-        // list of api servers
-        'SSA_API_SERVERS': JSON.stringify(apiServers)
       }),
 
       // https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin

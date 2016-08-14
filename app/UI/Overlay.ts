@@ -21,21 +21,21 @@ export enum OverlayType {
   Loader = 1 << 0,
 
   /** Default. */
-  White = 1 << 10,
-  Black = 1 << 11,
+  White = 1 << 1,
+  Black = 1 << 2,
 
   /** Default. */
-  TextBlack = 1 << 20,
-  TextWhite = 1 << 21,
-  TextYellow = 1 << 22,
-  TextRed = 1 << 23,
-  TextGreen = 1 << 24,
+  TextBlack = 1 << 3,
+  TextWhite = 1 << 4,
+  TextYellow = 1 << 5,
+  TextRed = 1 << 6,
+  TextGreen = 1 << 7,
 
-  Opacity15 = 1 << 30,
-  Opacity25 = 1 << 31,
-  Opacity50 = 1 << 32,
-  Opacity75 = 1 << 33,
-  Opacity90 = 1 << 34,
+  Opacity15 = 1 << 8,
+  Opacity25 = 1 << 9,
+  Opacity50 = 1 << 10,
+  Opacity75 = 1 << 11,
+  Opacity90 = 1 << 12,
 }
 
 /**
@@ -53,7 +53,7 @@ export class Overlay {
       return;
     }
 
-    $('body').append('<div id="overlay" class="overlay-wrapper"><div data-loader="true" class="loader"><i class="fa fa-spinner fa-pulse fa-fw"></i><br /><span class="loader-text"></span></div></div>');
+    $('body').append('<div id="overlay" class="overlay-wrapper"><div data-loader="true" class="loader"><i class="fa fa-spinner fa-pulse fa-fw"></i><div class="loader-text"></div></div></div>');
   }
 
   /**

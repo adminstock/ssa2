@@ -1,0 +1,8 @@
+﻿[
+  {
+    "Url": "http://localhost:62802/",
+    "AuthUrl": "http://localhost:62802/",
+    "Name": "WebApi.PHP",
+    "Description": "Local server."
+  }
+]

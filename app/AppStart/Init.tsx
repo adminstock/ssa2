@@ -38,22 +38,27 @@ if (process.env.NODE_ENV === 'production') {
 // routes
 const routes = (
   <Router history={browserHistory}>
-  <Route path="/" component={LayoutMain}>
-    <IndexRoute getComponent={(location, callback) => { LoadComponent(location, callback); } } />
-
-    <Route path="/Users">
+    <Route path="/" component={LayoutMain}>
       <IndexRoute getComponent={(location, callback) => { LoadComponent(location, callback); } } />
-      <Route path="/Users/Edit" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
-      <Route path="/Users/Edit?id=:id" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+
+      {/* modules */}
+      <Route path="/Users">
+        <IndexRoute getComponent={(location, callback) => { LoadComponent(location, callback); } } />
+        <Route path="/Users/Edit" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+        <Route path="/Users/Edit?id=:id" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+      </Route>
+
+      <Route path="/Services" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+
+      <Route path="/Files" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+
+      <Route path="/Monitoring" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
     </Route>
 
-    <Route path="/Services" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
-
-    <Route path="/Files" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
-
-    <Route path="/Monitoring" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
-  </Route>
-</Router>);
+    {/* additional inits */}
+    <Route path="/Init/Servers" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+  </Router>
+);
 
 /**
  * Loads the specified component.
@@ -69,6 +74,12 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 
   App.AbortAllRequests();
 
+  // check servers list
+  if (App.Config.ListOfApiServers == null && location.pathname != '/Init/Servers') {
+    App.Redirect('/Init/Servers');
+    return;
+  }
+
   var me = { location: location, callback: callback };
 
   // idiocy...
@@ -79,6 +90,10 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
     case '/':
     case '/Index':
       require(['Index'], LoadedComponent.bind(me));
+      break;
+
+    case '/Init/Servers':
+      require(['InitServers'], LoadedComponent.bind(me));
       break;
 
     case '/Users':
