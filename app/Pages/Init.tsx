@@ -1,5 +1,6 @@
 ﻿/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +21,9 @@ import { Overlay, OverlayType } from 'UI/Overlay';
 import ApiServer from 'Models/ApiServer';
 
 /**
- * Initializes a list of API servers.
+ * Initializes of the application.
  */
-export default class InitServers extends React.Component<any, any> {
+export default class Init extends React.Component<any, any> {
 
   constructor(props, context) {
     super(props, context);
@@ -55,7 +56,7 @@ export default class InitServers extends React.Component<any, any> {
         if (result != null && result.length > 0) {
           App.Redirect('/');
         } else {
-          // TODO
+          App.Redirect('/Error?msg=List of servers is empty...');
         }
       },
 
@@ -68,13 +69,8 @@ export default class InitServers extends React.Component<any, any> {
           return;
         }
 
-        // TODO:
-
-      }/*,
-
-      complete: (x: JQueryXHR, textStatus: string) => {
-        Debug.Level3('LoadServers.Complete');
-      }*/
+        App.Redirect('/Error?msg=' + (textStatus || errorThrown));
+      }
     });
   }
 

@@ -54,7 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="AppStart\Init.tsx" />
-    <TypeScriptCompile Include="AppStart\InitServers.tsx" />
+    <TypeScriptCompile Include="Pages\Error.tsx" />
+    <TypeScriptCompile Include="Pages\Init.tsx" />
     <TypeScriptCompile Include="Core\App.tsx" />
     <TypeScriptCompile Include="Core\Config.ts" />
     <TypeScriptCompile Include="Core\CurrentUser.ts" />
@@ -76,7 +77,7 @@
     <TypeScriptCompile Include="Helpers\TextHelper.ts" />
     <TypeScriptCompile Include="Helpers\CookiesHelper.ts" />
     <TypeScriptCompile Include="Helpers\Debug.ts" />
-    <TypeScriptCompile Include="AppStart\Index.tsx" />
+    <TypeScriptCompile Include="Pages\Index.tsx" />
     <TypeScriptCompile Include="Layouts\Main.tsx" />
     <TypeScriptCompile Include="Models\ApiServer.ts" />
     <TypeScriptCompile Include="UI\Dialog\Dialog.ts" />

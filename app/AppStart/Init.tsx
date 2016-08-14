@@ -38,6 +38,7 @@ if (process.env.NODE_ENV === 'production') {
 // routes
 const routes = (
   <Router history={browserHistory}>
+    {/*these pages in the main template*/}
     <Route path="/" component={LayoutMain}>
       <IndexRoute getComponent={(location, callback) => { LoadComponent(location, callback); } } />
 
@@ -55,8 +56,11 @@ const routes = (
       <Route path="/Monitoring" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
     </Route>
 
-    {/* additional inits */}
-    <Route path="/Init/Servers" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+    {/* application init page */}
+    <Route path="/Init" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+
+    {/* error page */}
+    <Route path="/Error" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
   </Router>
 );
 
@@ -75,8 +79,8 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
   App.AbortAllRequests();
 
   // check servers list
-  if (App.Config.ListOfApiServers == null && location.pathname != '/Init/Servers') {
-    App.Redirect('/Init/Servers');
+  if (App.Config.ListOfApiServers == null && location.pathname != '/Init' && location.pathname != '/Error') {
+    App.Redirect('/Init');
     return;
   }
 
@@ -89,11 +93,15 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
   switch (location.pathname) {
     case '/':
     case '/Index':
-      require(['Index'], LoadedComponent.bind(me));
+      require(['Pages/Index'], LoadedComponent.bind(me));
       break;
 
-    case '/Init/Servers':
-      require(['InitServers'], LoadedComponent.bind(me));
+    case '/Init':
+      require(['Pages/Init'], LoadedComponent.bind(me));
+      break;
+
+    case '/Error':
+      require(['Pages/Error'], LoadedComponent.bind(me));
       break;
 
     case '/Users':
