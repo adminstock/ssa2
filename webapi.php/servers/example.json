@@ -1,6 +1,11 @@
 ﻿{
   "name": "Example",
   "description": "Example of configuration file.",
+  "os": {
+    "name": "Debian",
+    "family": "Linux",
+    "version": "8.5"
+  },
   "ssh": {
     "host": "192.168.56.139",
     "port": 22,

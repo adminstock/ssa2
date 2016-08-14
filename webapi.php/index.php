@@ -78,6 +78,12 @@ class API
         throw new ApiException('Invalid method name. Expected: "ModuleName.MethodName".');
       }
 
+      // load server config
+      if (isset($query['Server']) && $query['Server'] != '')
+      {
+        $this->LoadServerConfig($query['Server']);
+      }
+
       // parse class and method name
       $name = explode('.', $query['Method']);
       $moduleName = $name[0];
@@ -96,21 +102,16 @@ class API
         $tokenRequired = !ModuleFlags::HasFlag($instance->GetModuleFlags(), ModuleFlags::ANONYMOUS);
       }
 
+      // check server config
+      if ($serverRequired && !isset($config['server']))
+      {
+        throw new ApiException('Server is required.', ApiErrorCode::SERVER_REQUIRED);
+      }
+
       // check access
       if ($tokenRequired)
       {
         $this->CheckAccess($moduleName);
-      }
-
-      // load server config
-      if ($serverRequired)
-      {
-        if (!isset($query['Server']))
-        {
-          throw new ApiException('Server is required.', ApiErrorCode::SERVER_REQUIRED);
-        }
-
-        $this->LoadServerConfig($query['Server']);
       }
 
       // execution
@@ -237,21 +238,38 @@ class API
    */
   private function GetInstance($moduleName, $methodName)
   {
+    global $config;
+
     $moduleIncluded = FALSE;
 
-    // TODO
     $moduleSearch = [];
-    $moduleSearch[] = $moduleName.'/debian-8.4-x64.php';
-    $moduleSearch[] = $moduleName.'/debian-8.4.php';
-    $moduleSearch[] = $moduleName.'/debian.php';
-    $moduleSearch[] = $moduleName.'/linux.php';
-    // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/windows-6.1.7601.php';
-    // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/windows-6.1.php';
-    // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/windows.php';
-    // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/freebsd-10.3.php';
-    // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/freebsd.php';
-    $moduleSearch[] = $moduleName.'/index.php';
-    //$moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.strtolower($moduleName).'/index.php';
+
+    if (isset($config['server']) && isset($config['server']['os']))
+    {
+      $os = $config['server']['os'];
+      $osName = ''; $osFamily = ''; $osVersion = '';
+
+      if (isset($os['name']) && $os['name'] != '') { $osName = strtolower($os['name']); }
+      if (isset($os['family']) && $os['family'] != '') { $osFamily = strtolower($os['family']); }
+      if (isset($os['version']) && $os['version'] != '') { $osVersion = strtolower($os['version']); }
+
+      if ($osName != '' && $osVersion != '')
+      {
+        $moduleSearch[] = strtolower($moduleName).'/'.$osName.'-'.$osVersion.'.php';
+      }
+
+      if ($osName != '')
+      {
+        $moduleSearch[] = strtolower($moduleName).'/'.$osName.'.php';
+      }
+      
+      if ($osFamily != '')
+      {
+        $moduleSearch[] = strtolower($moduleName).'/'.$osFamily.'.php';
+      }
+    }
+
+    $moduleSearch[] = strtolower($moduleName).'/index.php';
 
     // search and include file
     foreach ($moduleSearch as $modulePath)
