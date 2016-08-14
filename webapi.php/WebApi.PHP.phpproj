@@ -22,6 +22,8 @@
     <Compile Include="config.php" />
     <Compile Include="core\ApiErrorCode.php" />
     <Compile Include="core\ApiException.php" />
+    <Compile Include="core\IModule.php" />
+    <Compile Include="core\ModuleFlags.php" />
     <Compile Include="index.php" />
     <Compile Include="loader.php" />
     <Compile Include="core\Response.php" />

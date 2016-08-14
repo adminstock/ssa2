@@ -38,6 +38,8 @@ require_once 'loader.php';
 
 use \WebAPI\Core\ApiException as ApiException;
 use \WebAPI\Core\ApiErrorCode as ApiErrorCode;
+use \WebAPI\Core\ModuleFlags as ModuleFlags;
+use \WebAPI\Core\IModule as IModule;
 
 /**
  * The SmallServerAdmin API.
@@ -81,18 +83,37 @@ class API
       $moduleName = $name[0];
       $methodName = $name[1];
 
-      // load server config
-      if (isset($query['Server']) && $query['Server'] != '')
-      {
-        $this->LoadServerConfig($query['Server']);
-      }
-
-      // check access
-      $this->CheckAccess($moduleName);
-      
       // create class instance
       $instance = $this->GetInstance($moduleName, $methodName);
 
+      // check flags
+      $serverRequired = TRUE;
+      $tokenRequired = TRUE;
+
+      if ($instance instanceof IModule)
+      {
+        $serverRequired = !ModuleFlags::HasFlag($instance->GetModuleFlags(), ModuleFlags::WITHOUT_SERVER);
+        $tokenRequired = !ModuleFlags::HasFlag($instance->GetModuleFlags(), ModuleFlags::ANONYMOUS);
+      }
+
+      // check access
+      if ($tokenRequired)
+      {
+        $this->CheckAccess($moduleName);
+      }
+
+      // load server config
+      if ($serverRequired)
+      {
+        if (!isset($query['Server']))
+        {
+          throw new ApiException('Server is required.', ApiErrorCode::SERVER_REQUIRED);
+        }
+
+        $this->LoadServerConfig($query['Server']);
+      }
+
+      // execution
       $result = NULL;
 
       if (isset($query['Data']) && is_array($query['Data']) === TRUE)
@@ -166,13 +187,7 @@ class API
     {
       throw new ApiException('$moduleName is required, value cannot be empty.');
     }
-
-    // TODO: list of modules, which allow access without authorization
-    if (strtolower($moduleName) == 'auth')
-    {
-      return;
-    }
-
+    
     $token = '';
 
     if (isset($_SERVER['HTTP_AUTHORIZATION']))
@@ -193,7 +208,7 @@ class API
     
     if (!isset($serverName))
     {
-      throw new ApiException('$serverName is required, value cannot be empty.');
+      throw new ApiException('Server name is required, value cannot be empty.');
     }
 
     if (!isset($config['servers_config_path']) || !is_dir($config['servers_config_path']))

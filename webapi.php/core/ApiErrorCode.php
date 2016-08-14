@@ -28,6 +28,18 @@ abstract class ApiErrorCode
 
   const JSON_PARSE_ERROR = 'JSON_PARSE_ERROR';
 
+  const SERVER_REQUIRED = 'SERVER_REQUIRED';
+
+  /**
+   * Access denied.
+   */
+  const ACCESS_DENIED = 'ACCESS_DENIED';
+
+  /**
+   * Internal/General server error.
+   */
+  const SERVER_ERROR = 'SERVER_ERROR';
+
   /**
    * The argument is not specified or is empty.
    */
@@ -37,16 +49,6 @@ abstract class ApiErrorCode
    * The argument is out of range.
    */
   const ARGUMENT_OUT_OF_RANGE = 'ARGUMENT_OUT_OF_RANGE';
-
-  /**
-   * Internal/General server error.
-   */
-  const SERVER_ERROR = 'SERVER_ERROR';
-
-  /**
-   * Access denied.
-   */
-  const ACCESS_DENIED = 'ACCESS_DENIED';
   
   /**
    * Not found.

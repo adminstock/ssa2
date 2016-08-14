@@ -24,7 +24,7 @@ use \WebAPI\Core\ApiErrorCode as ApiErrorCode;
 /**
  * Processing user authentication requests.
  */
-class Index
+class Index implements \WebAPI\Core\IModule
 {
 
   public function GetToken($username, $password)
@@ -54,4 +54,18 @@ class Index
     return ['Success' => TRUE];
   }
 
+
+  #region WebAPI\Core\IModule Members
+
+  /**
+   * Returns flags of the module.
+   *
+   * @return int
+   */
+  function GetModuleFlags()
+  {
+    return \WebAPI\Core\ModuleFlags::ANONYMOUS | \WebAPI\Core\ModuleFlags::WITHOUT_SERVER;
+  }
+
+  #endregion
 }

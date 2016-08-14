@@ -40,7 +40,12 @@ class Index
   {
     global $config;
 
-    if (!isset($config['server']) || !isset($config['server']['ssh']) || !is_array($config['server']['ssh']))
+    if (!isset($config['server']))
+    {
+      throw new ApiException('The server is not specified. Server configuration is missing. Specify the server and try again.', ApiErrorCode::SERVER_REQUIRED);
+    }
+
+    if (!isset($config['server']['ssh']) || !is_array($config['server']['ssh']))
     {
       throw new ApiException('SSH settings not found. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
     }
