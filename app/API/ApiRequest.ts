@@ -187,7 +187,7 @@ export default class ApiRequest<TRequest, TResponse> {
             let errorResult = JSON.parse(x.responseText);
 
             if (errorResult.Data !== undefined && errorResult.Data.Error !== undefined) {
-              error = new ApiError(errorResult.Data.Error.Text, errorResult.Data.Error.Code);
+              error = new ApiError(errorResult.Data.Error.Text, errorResult.Data.Error.Code, errorResult.Data.Error.Trace);
             } else {
               error = new ApiError(x.responseText);
             }

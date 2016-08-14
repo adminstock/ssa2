@@ -18,6 +18,9 @@ namespace WebAPI\Auth;
  * limitations under the License.
  */
 
+use \WebAPI\Core\ApiException as ApiException;
+use \WebAPI\Core\ApiErrorCode as ApiErrorCode;
+
 /**
  * Processing user authentication requests.
  */
@@ -28,12 +31,12 @@ class Index
   {
     if (!isset($username) || $username == '')
     {
-      throw new \ErrorException('Username is required. Value cannot be empty.');
+      throw new ApiException('Username is required. Value cannot be empty.', ApiErrorCode::ARGUMENT_NULL_OR_EMPY);
     }
 
     if (!isset($password) || $password == '')
     {
-      throw new \ErrorException('Password is required. Value cannot be empty.');
+      throw new ApiException('Password is required. Value cannot be empty.', ApiErrorCode::ARGUMENT_NULL_OR_EMPY);
     }
 
     // TODO
@@ -44,7 +47,7 @@ class Index
   {
     if (!isset($token) || $token == '')
     {
-      $this->Error('Token is required. Value cannot be empty.');
+      throw new ApiException('Token is required. Value cannot be empty.', ApiErrorCode::ARGUMENT_NULL_OR_EMPY);
     }
 
     // TODO

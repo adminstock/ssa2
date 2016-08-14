@@ -242,7 +242,7 @@ export default class App {
 
     api.ErrorCallback = (error) => {
 
-      if (error.Code == 'ERR_FORBIDDEN') {
+      if (error.Code == 'ACCESS_DENIED') {
         // reset token
         CurrentUser.AccessToken = null;
 
@@ -250,7 +250,10 @@ export default class App {
         DialogManager.ShowDialog('login');
       } else {
         // show error message
-        App.Alert({ message: error.Text, title: __('Error') });
+        App.Alert({
+          title: __('Error'),
+          message: <div>{error.Text} {error.Trace != null ? (<div><hr /><pre>{error.Trace}</pre></div>) : ''}</div>
+        });
       }
     }
 

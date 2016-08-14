@@ -18,6 +18,9 @@ namespace WebAPI\SSH;
  * limitations under the License.
  */
 
+use \WebAPI\Core\ApiException as ApiException;
+use \WebAPI\Core\ApiErrorCode as ApiErrorCode;
+
 /**
  * Represents SSH client.
  */
@@ -39,24 +42,24 @@ class Index
 
     if (!isset($config['server']) || !isset($config['server']['ssh']) || !is_array($config['server']['ssh']))
     {
-      throw new \ErrorException('SSH settings not found. Please check config file of the server.');
+      throw new ApiException('SSH settings not found. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
     }
 
     $this->Settings = $config['server']['ssh'];
 
     if (!isset($this->Settings['host']) || $this->Settings['host'] == '')
     {
-      throw new \ErrorException('SSH host is required. Please check config file of the server.');
+      throw new ApiException('SSH host is required. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
     }
 
     if (!isset($this->Settings['user']))
     {
-      throw new \ErrorException('SSH username is required. Please check config file of the server.');
+      throw new ApiException('SSH username is required. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
     }
     
     if (!isset($this->Settings['password']))
     {
-      throw new \ErrorException('SSH password is required. Please check config file of the server.');
+      throw new ApiException('SSH password is required. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
     }
 
     $host = $this->Settings['host'];
@@ -73,12 +76,12 @@ class Index
 
     if (!$this->SshConnection)
     {
-      throw new \ErrorException('Cannot to connect "'.$host.'".');
+      throw new ApiException('Cannot to connect "'.$host.'".', ApiErrorCode::SSH_CONNECTION_FAILED);
     }
 
     if (!ssh2_auth_password($this->SshConnection, $user, $password))
     {
-      throw new \ErrorException('Authentication failed.');
+      throw new ApiException('Authentication failed.', ApiErrorCode::SSH_AUTHENTICATION_FAILED);
     }
   }
         
@@ -96,7 +99,7 @@ class Index
       $stream = ssh2_exec($this->SshConnection, $this->MakeCommand($command));
 
       if ($stream === FALSE) {
-        throw new \ErrorException('Could not open shell exec stream.');
+        throw new ApiException('Could not open shell exec stream.', ApiErrorCode::SSH_ERROR);
       }
 
       //stream_set_timeout($stream, 10);
@@ -138,7 +141,7 @@ class Index
         $stream = ssh2_exec($this->SshConnection, $this->MakeCommand($cmd));
 
         if ($stream === FALSE) {
-          throw new \ErrorException('Could not open shell exec stream.');
+          throw new ApiException('Could not open shell exec stream.', ApiErrorCode::SSH_ERROR);
         }
 
         $stream_error = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
@@ -189,7 +192,7 @@ class Index
       $stream = ssh2_exec($this->SshConnection, $this->MakeCommand($command));
 
       if ($stream === FALSE) {
-        throw new \ErrorException('Could not open shell exec stream.');
+        throw new ApiException('Could not open shell exec stream.', ApiErrorCode::SSH_ERROR);
       }
 
       stream_set_blocking($stream, TRUE);
@@ -216,7 +219,7 @@ class Index
         $stream = ssh2_exec($this->SshConnection, $this->MakeCommand($cmd));
 
         if ($stream === FALSE) {
-          throw new \ErrorException('Could not open shell exec stream.');
+          throw new ApiException('Could not open shell exec stream.', ApiErrorCode::SSH_ERROR);
         }
 
         stream_set_blocking($stream, 1);

@@ -18,52 +18,30 @@ namespace WebAPI;
  * limitations under the License.
  */
 
-require_once 'cors.php';
+#region Cross-origin resource sharing
+
+header('Access-Control-Allow-Origin: *');
+// header('Access-Control-Allow-Origin: http://example.org', false);
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS')
+{
+  header('Access-Control-Allow-Methods: POST, OPTIONS');
+  header('Access-Control-Allow-Headers: Accept, Authorization, Content-Type, Referer, User-Agent');
+  // skip options request
+  return;
+}
+
+#endregion
+
 require_once 'config.php';
+require_once 'loader.php';
 
-spl_autoload_register(function ($class) {
-  $namespace = substr($class, strripos($class, 'WebAPI') + strlen('WebAPI') + 1);
-  $className = substr($class, strripos($class, '\\') + 1);
-
-  $paths = [];
-
-  if ($namespace == $className) 
-  {
-    $paths[] = strtolower($className).'.php';
-    $paths[] = $className.'.php';
-  }
-  else 
-  {
-    $segments = explode('\\', $namespace);
-
-    if (count($segments) <= 2)
-    {
-      $paths[] = str_replace('\\', '/', strtolower($namespace)).'.php';
-      $paths[] = str_replace('\\', '/', $namespace).'.php';
-    }
-    else
-    {
-      array_pop($segments);
-      $folderPath = implode('/', $segments);
-      $paths[] = strtolower($folderPath).'/'.$className.'.php';
-      $paths[] = strtolower($folderPath).'/'.strtolower($className).'.php';
-      $paths[] = $folderPath.'/'.$className.'.php';
-    }
-  }
-
-  foreach ($paths as $path)
-  {
-    if (is_file($path))
-    {
-      require_once $path;
-      break;
-    }  
-  }
-});
+use \WebAPI\Core\ApiException as ApiException;
+use \WebAPI\Core\ApiErrorCode as ApiErrorCode;
 
 /**
-  * The SmallServerAdmin API.
-  */
+ * The SmallServerAdmin API.
+ */
 class API
 {
 
@@ -71,116 +49,56 @@ class API
   {
     global $config;
     
-    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS')
-    {
-      // skip options request
-      return;
-    }
-
-    if ($_SERVER['REQUEST_METHOD'] != 'POST' || (!strrpos($_SERVER['HTTP_CONTENT_TYPE'], '/json') && !strrpos($_SERVER['CONTENT_TYPE'], '/json')))
-    {
-      $this->Error('Supports only the requests by POST. The type of content should be only JSON (application/json).');
-      return;
-    }
-
-    $requestBody = file_get_contents('php://input');
-    $query = json_decode($requestBody, true);
-      
-    if (!$query)
-    {
-      $this->Error('JSON Error: '.json_last_error(), 'JSON_ERROR');
-      return;
-    }
-      
-    if (!isset($query['Method']))
-    {
-      $this->Error('Unknown method.');
-      return;
-    }
-
-    if (strtolower($query['Method']) == 'echo')
-    {
-      $this->Output(['Success' => TRUE]);
-      return;
-    }
-
-    if (preg_match('/[\w\d]+\.[\w\d]+/', $query['Method']) === FALSE)
-    {
-      $this->Error('Invalid method name. Expected: "ModuleName.MethodName".');
-      return;
-    }
+    $requestBody = NULL;
 
     try
     {
+      if ($_SERVER['REQUEST_METHOD'] != 'POST' || (!strrpos($_SERVER['HTTP_CONTENT_TYPE'], '/json') && !strrpos($_SERVER['CONTENT_TYPE'], '/json')))
+      {
+        throw new ApiException('It is expected the POST request method. The type of content should be only JSON (application/json).', ApiErrorCode::BAD_REQUEST);
+      }
+
+      $requestBody = file_get_contents('php://input');
+      $query = json_decode($requestBody, true);
+      
+      if (!$query)
+      {
+        throw new ApiException('JSON Error: '.json_last_error(), ApiErrorCode::JSON_PARSE_ERROR);
+      }
+      
+      if (!isset($query['Method']))
+      {
+        throw new ApiException('Method is required.', ApiErrorCode::ARGUMENT_NULL_OR_EMPY);
+      }
+
+      if (preg_match('/[\w\d]+\.[\w\d]+/', $query['Method']) === FALSE)
+      {
+        throw new ApiException('Invalid method name. Expected: "ModuleName.MethodName".');
+      }
+
+      // parse class and method name
+      $name = explode('.', $query['Method']);
+      $moduleName = $name[0];
+      $methodName = $name[1];
+
       // load server config
       if (isset($query['Server']) && $query['Server'] != '')
       {
         $this->LoadServerConfig($query['Server']);
       }
 
-      // get class and method name
-      $name = explode('.', $query['Method']);
-      $moduleName = $name[0];
-      $methodName = $name[1];    
-
-      $moduleIncluded = FALSE;
-
-      // TODO
-      $moduleSearch = [];
-      $moduleSearch[] = $moduleName.'/debian-8.4-x64.php';
-      $moduleSearch[] = $moduleName.'/debian-8.4.php';
-      $moduleSearch[] = $moduleName.'/debian.php';
-      $moduleSearch[] = $moduleName.'/linux.php';
-      // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/windows-6.1.7601.php';
-      // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/windows-6.1.php';
-      // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/windows.php';
-      // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/freebsd-10.3.php';
-      // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/freebsd.php';
-      $moduleSearch[] = $moduleName.'/index.php';
-      //$moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.strtolower($moduleName).'/index.php';
-
-      // search and include file
-      foreach ($moduleSearch as $modulePath)
-      {
-        if (is_file($modulePath))
-        {
-          require_once $modulePath;
-          $moduleIncluded = TRUE;
-          break;
-        }  
-      }
+      // check access
+      $this->CheckAccess($moduleName);
       
-      if ($moduleIncluded === FALSE)
-      {
-        $this->Error('Module "'.$moduleName.'" not found.');
-      }
-
-      // search and create class instance
-      $instance = NULL;
-      $moduleName = '\\WebAPI\\'.$moduleName.'\\Index';
-
-      if (class_exists($moduleName))
-      {
-        $instance = new $moduleName();
-      }
-      else 
-      {
-        $this->Error('Class "'.$moduleName.'" not found');
-        return;
-      }
-
-      if (!method_exists($instance, $methodName))
-      {
-        $this->Error('Unknown method.');
-        return;
-      }
+      // create class instance
+      $instance = $this->GetInstance($moduleName, $methodName);
 
       $result = NULL;
 
       if (isset($query['Data']) && is_array($query['Data']) === TRUE)
       {
         // check parameters
-        $r = new \ReflectionMethod($moduleName, $methodName);
+        $r = new \ReflectionMethod(get_class($instance), $methodName);
       
         $methodParams = $r->getParameters();
         $paramsToSet = [];
@@ -224,15 +142,46 @@ class API
       // output
       $this->Output($result);
     }
+    catch (ApiException $ex)
+    {
+      $this->WriteToLog($ex->getMessage(), $requestBody);
+      $this->Error($ex->getMessage(), $ex->getTraceAsString(), $ex->getCode2(), $ex->getHttpStatusCode());
+    }
     catch (\Exception $ex)
     {
-      if (isset($config['ssa_log_path']) && $config['ssa_log_path'] != '')
-      {
-        file_put_contents($config['ssa_log_path'], '['.date('Y-m-d H:i:s').'] Error: '.$ex->getMessage()."\nRequest: ".$requestBody, FILE_APPEND | LOCK_EX);
-      }
-
-      $this->Error(($msg = $ex->getMessage()) != NULL ? $msg : 'Server error.', 'SERVER_ERROR', 500);
+      $this->WriteToLog($ex->getMessage(), $requestBody);
+      $this->Error($ex->getMessage(), $ex->getTraceAsString(), ApiErrorCode::SERVER_ERROR, 500);
     }
+  }
+
+  /**
+   * Checks permission to perform the request.
+   * 
+   * @param \string $moduleName Name of module.
+   * @return void
+   */
+  private function CheckAccess($moduleName)
+  {
+    if (!isset($moduleName) || $moduleName == '')
+    {
+      throw new ApiException('$moduleName is required, value cannot be empty.');
+    }
+
+    // TODO: list of modules, which allow access without authorization
+    if (strtolower($moduleName) == 'auth')
+    {
+      return;
+    }
+
+    $token = '';
+
+    if (isset($_SERVER['HTTP_AUTHORIZATION']))
+    {
+      $token = substr($_SERVER['HTTP_AUTHORIZATION'], strrpos($_SERVER['HTTP_AUTHORIZATION'], ' ') + 1);
+    }
+
+    $auth = new \WebAPI\Auth\Index();
+    $auth->TokenIsValid($token);
   }
 
   /**
@@ -244,17 +193,17 @@ class API
     
     if (!isset($serverName))
     {
-      throw new \ErrorException('$serverName is required, value cannot be empty.');
+      throw new ApiException('$serverName is required, value cannot be empty.');
     }
 
     if (!isset($config['servers_config_path']) || !is_dir($config['servers_config_path']))
     {
-      throw new \ErrorException('servers_config_path is required, value cannot be empty. Please check config.php.');
+      throw new ApiException('servers_config_path is required, value cannot be empty. Please check config.php.');
     }
     
     if (!is_file($config['servers_config_path'].'/'.$serverName.'.json'))
     {
-      throw new \ErrorException('File "'.$config['servers_config_path'].'/'.$serverName.'.json'.'" not found.');
+      throw new ApiException('File "'.$config['servers_config_path'].'/'.$serverName.'.json'.'" not found.');
     }
 
     $json = file_get_contents($config['servers_config_path'].'/'.$serverName.'.json');
@@ -264,16 +213,79 @@ class API
   }
 
   /**
-    * Outputs response to the client.
-    * 
-    * @param mixed $data Data to output.
-    * @param int $status The HTTP status code. Default: 200 (OK).
-    */
+   * Seeking a module class and creates an instance of this module.
+   * 
+   * @param mixed $moduleName Module name.
+   * @param mixed $methodName Method name to check.
+   * @throws ApiException 
+   * @return object
+   */
+  private function GetInstance($moduleName, $methodName)
+  {
+    $moduleIncluded = FALSE;
+
+    // TODO
+    $moduleSearch = [];
+    $moduleSearch[] = $moduleName.'/debian-8.4-x64.php';
+    $moduleSearch[] = $moduleName.'/debian-8.4.php';
+    $moduleSearch[] = $moduleName.'/debian.php';
+    $moduleSearch[] = $moduleName.'/linux.php';
+    // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/windows-6.1.7601.php';
+    // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/windows-6.1.php';
+    // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/windows.php';
+    // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/freebsd-10.3.php';
+    // $moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.$moduleName.'/freebsd.php';
+    $moduleSearch[] = $moduleName.'/index.php';
+    //$moduleSearch[] = $_SERVER['DOCUMENT_ROOT'].'/'.strtolower($moduleName).'/index.php';
+
+    // search and include file
+    foreach ($moduleSearch as $modulePath)
+    {
+      if (is_file($modulePath))
+      {
+        require_once $modulePath;
+        $moduleIncluded = TRUE;
+        break;
+      }  
+    }
+      
+    if ($moduleIncluded === FALSE)
+    {
+      throw new ApiException('Module "'.$moduleName.'" not found.', ApiErrorCode::UNKNOWN_MODULE, 404);
+    }
+
+    // search and create class instance
+    $instance = NULL;
+    $moduleName = '\\WebAPI\\'.$moduleName.'\\Index';
+
+    if (class_exists($moduleName))
+    {
+      $instance = new $moduleName();
+    }
+    else 
+    {
+      throw new ApiException('Class "'.$moduleName.'" not found', ApiErrorCode::UNKNOWN_MODULE, 404);
+    }
+
+    if (!method_exists($instance, $methodName))
+    {
+      throw new ApiException('Unknown method.', ApiErrorCode::UNKNOWN_METHOD, 404);
+    }
+    
+    return $instance;
+  }
+
+  /**
+   * Outputs response to the client.
+   * 
+   * @param mixed $data Data to output.
+   * @param int $status The HTTP status code. Default: 200 (OK).
+   */
   private function Output($data, $status = 200)
   {
     http_response_code($status);
 
-    $response = new \WebAPI\Response();
+    $response = new \WebAPI\Core\Response();
     $response->Data = $data;
 
     $result = json_encode($this->NormalizeDataForJsonEncode($response));
@@ -287,12 +299,12 @@ class API
   }
 
   /**
-    * Outputs error message.
-    * 
-    * @param string $message The message text. 
-    * @param int $status The HTTP status code. Default: 400 (Bad Request).
-    */
-  private function Error($message, $code = NULL, $status = 400)
+   * Outputs error message.
+   * 
+   * @param \string $message The message text. 
+   * @param \int $status The HTTP status code. Default: 400 (Bad Request).
+   */
+  private function Error($message, $trace = NULL, $code = NULL, $status = 400)
   {
     $this->Output
     (
@@ -300,7 +312,8 @@ class API
         'Error' => 
         [
           'Code' => $code, 
-          'Text' => $message
+          'Text' => $message,
+          'Trace' => $trace
         ]
       ], 
       $status
@@ -342,6 +355,27 @@ class API
         return $data;
       }
     }
+  }
+
+  // TODO
+  private function WriteToLog($message, $request = NULL)
+  {
+    global $config;
+    
+    if (!isset($config['ssa_log_path']) || $config['ssa_log_path'] == '')
+    {
+      return FALSE;
+    }
+
+    $data = '['.date('Y-m-d H:i:s').'] '.$message;
+
+    if (isset($request) && $request != NULL && $request != '')
+    {
+      $data .= "\nRequest: ";
+      $data .= $request;
+    }
+    
+    return file_put_contents($config['ssa_log_path'], $data, FILE_APPEND | LOCK_EX);
   }
 
 } new API();

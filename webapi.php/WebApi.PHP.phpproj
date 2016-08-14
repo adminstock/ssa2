@@ -20,15 +20,18 @@
   <ItemGroup>
     <Compile Include="auth\index.php" />
     <Compile Include="config.php" />
-    <Compile Include="cors.php" />
+    <Compile Include="core\ApiErrorCode.php" />
+    <Compile Include="core\ApiException.php" />
     <Compile Include="index.php" />
-    <Compile Include="response.php" />
+    <Compile Include="loader.php" />
+    <Compile Include="core\Response.php" />
     <Compile Include="ssh\index.php" />
     <Compile Include="ssh\models\SshResult.php" />
     <Compile Include="users\index.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="auth\" />
+    <Folder Include="core\" />
     <Folder Include="servers\" />
     <Folder Include="ssh\" />
     <Folder Include="ssh\models\" />

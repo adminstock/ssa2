@@ -1,4 +1,7 @@
-﻿/*
+<?php
+namespace WebAPI\Core;
+
+/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
  * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
@@ -15,26 +18,39 @@
  * limitations under the License.
  */
 
-import { ApiMessageType } from 'API/Enums';
+class ApiException extends \Exception
+{
 
-/**
- * Represents API error message.
- */
-export default class ApiError {
+  private $HttpStatusCode = 500;
 
-  /** Error code. */
-  public Code: string;
+  private $Code = '';
 
-  /** Message text. */
-  public Text: string;
+  function __construct($message = 'Server error.', $code = ApiErrorCode::SERVER_ERROR, $httpStatusCode = 500)
+  {
+    if ($message == '')
+    {
+      $message = 'Server error.';
+    }
 
-  /** Stack trace. */
-  public Trace: string;
+    if ($code == '')
+    {
+      $code = ApiErrorCode::SERVER_ERROR;  
+    }
+    
+    parent::__construct($message);
 
-  constructor(text?: string, code?: string, trace?: string) {
-    this.Text = text;
-    this.Code = code || null;
-    this.Trace = trace || null;
+    $this->Code = $code;
+    $this->HttpStatusCode = $httpStatusCode;
+  }
+
+  public function getCode2()
+  {
+    return $this->Code;
+  }
+
+  public function getHttpStatusCode()
+  {
+    return $this->HttpStatusCode;
   }
 
 }
