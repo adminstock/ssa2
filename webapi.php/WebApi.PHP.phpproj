@@ -22,14 +22,22 @@
     <Compile Include="config.php" />
     <Compile Include="core\ApiErrorCode.php" />
     <Compile Include="core\ApiException.php" />
+    <Compile Include="core\HttpStatusCode.php" />
     <Compile Include="core\IModule.php" />
     <Compile Include="core\ModuleFlags.php" />
+    <Compile Include="core\TextHelper.php" />
     <Compile Include="index.php" />
     <Compile Include="loader.php" />
     <Compile Include="core\Response.php" />
     <Compile Include="ssh\index.php" />
     <Compile Include="ssh\models\SshResult.php" />
-    <Compile Include="users\index.php" />
+    <Compile Include="users\linux.php" />
+    <Compile Include="users\models\AccountUpdate.php" />
+    <Compile Include="users\models\CreateUser.php" />
+    <Compile Include="users\models\Group.php" />
+    <Compile Include="users\models\PagedList.php" />
+    <Compile Include="users\models\User.php" />
+    <Compile Include="users\models\UsersList.php" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="auth\" />
@@ -38,6 +46,7 @@
     <Folder Include="ssh\" />
     <Folder Include="ssh\models\" />
     <Folder Include="users\" />
+    <Folder Include="users\models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="servers\192.168.56.139.json" />

@@ -18,17 +18,22 @@ namespace WebAPI\Users;
  * limitations under the License.
  */
 
+use \WebAPI\Core\ApiException as ApiException;
+use \WebAPI\Core\ApiErrorCode as ApiErrorCode;
+use \WebAPI\Core\HttpStatusCode as HttpStatusCode;
+use \WebAPI\Core\TextHelper as TextHelper;
+
 /**
- * API of SmallServerAdmin.
+ * Provides user management.
  */
-class Index
+class Linux
 {
 
   /**
-    * SSH client.
-    * 
-    * @var \WebAPI\SSH\Index
-    */
+   * SSH client.
+   * 
+   * @var \WebAPI\SSH\Index
+   */
   private $SshClient = NULL;
 
   function __construct()
@@ -43,24 +48,20 @@ class Index
     return $this->GetGroupsList();
   }
 
-  public function GetUsers($data)
+  public function GetUsers($search = '', $page = 1, $limit = 100)
   {
-    return $this->GetUsersList
-    (
-      isset($data['page']) ? (int)$data['page'] : 1,
-      isset($data['limit']) ? (int)$data['limit'] : NULL,
-      isset($data['search']) ? $data['search'] : NULL
-    );
+    return $this->GetUsersList((int)$page, (int)$limit, $search);
   }
 
-  public function GetUserByLogin($data)
+  public function GetUserByLogin($login)
   {
-    if (!isset($data['login']) || $data['login'] == '')
+    if ($login == NULL || $login == '')
     {
-      throw new \ErrorException('Login is required. Value cannot be empty.');
+      throw new ApiException('Login is required. Value cannot be empty.', ApiErrorCode::ARGUMENT_NULL_OR_EMPY, HttpStatusCode::BAD_REQUEST);
     }
+
     // get user data
-    $user = $this->GetUsersList(1, 0, $data['login'])->Items;
+    $user = $this->GetUsersList(1, 0, $login)->Items;
       
     if (count($user) == 1)
     {
@@ -70,7 +71,7 @@ class Index
     {
       foreach($user as $u)
       {
-        if ($u->Login == $data['login'])
+        if ($u->Login == $login)
         {
           $user = $u;
           break;
@@ -89,7 +90,7 @@ class Index
 
     if ($user == NULL) 
     {
-      throw new \ErrorException('User "' . $data['login'] . '" not found.');
+      throw new ApiException('User "' . $login . '" not found.', ApiErrorCode::NOT_FOUND, HttpStatusCode::NOT_FOUND);
     }
 
     // get user groups
@@ -98,26 +99,25 @@ class Index
       
     return $user;
   }
+
   /**
     * Creates a new user.
-    * 
-    * @param array $data The user data.
     */
-  public function CreateUser($data)
+  public function CreateUser($login, $password, $shell = '/bin/false', $groups = NULL, $noCreateHome = FALSE, $isSystem = FALSE, $fullName = '', $address = '', $phoneWork = '', $phoneHome = '', $email = '')
   {
     $gecos = 
-      \Nemiro\Text::RemoveChars(\Nemiro\Text::EscapeString($data['FullName'], ['"', ',']), [':', chr(13), chr(10)]).','.
-      \Nemiro\Text::RemoveChars(\Nemiro\Text::EscapeString($data['Address'], ['"', ',']), [':', chr(13), chr(10)]).','.
-      \Nemiro\Text::RemoveChars(\Nemiro\Text::EscapeString($data['PhoneWork'], ['"', ',']), [':', chr(13), chr(10)]).','.
-      \Nemiro\Text::RemoveChars(\Nemiro\Text::EscapeString($data['PhoneHome'], ['"', ',']), [':', chr(13), chr(10)]).','.
-      \Nemiro\Text::RemoveChars(\Nemiro\Text::EscapeString($data['Email'], ['"', ',']), [':', chr(13), chr(10)]);
+    TextHelper::RemoveChars(TextHelper::EscapeString($fullName, ['"', ',']), [':', chr(13), chr(10)]).','.
+    TextHelper::RemoveChars(TextHelper::EscapeString($address, ['"', ',']), [':', chr(13), chr(10)]).','.
+    TextHelper::RemoveChars(TextHelper::EscapeString($phoneWork, ['"', ',']), [':', chr(13), chr(10)]).','.
+    TextHelper::RemoveChars(TextHelper::EscapeString($phoneHome, ['"', ',']), [':', chr(13), chr(10)]).','.
+    TextHelper::RemoveChars(TextHelper::EscapeString($email, ['"', ',']), [':', chr(13), chr(10)]);
 
     $cmd = 
-    'sudo adduser '.$data['Login'].' '.
+    'sudo adduser '.$login.' '.
     '--quiet '. // --force-badname
-    '--shell '.$data['Shell'].
-    ($data['NoCreateHome'] ? ' --no-create-home ' : ' ').
-    ($data['IsSystem'] ? '--system ' : ' ').
+    '--shell '.$shell.
+    ((bool)$noCreateHome ? ' --no-create-home ' : ' ').
+    ((bool)$isSystem ? '--system ' : ' ').
     '--disabled-password --gecos "'.$gecos.'" && '.
     'echo "OK"';
 
@@ -125,48 +125,46 @@ class Index
 
     if ($shell_result->Result != 'OK')
     {
-      throw new \ErrorException($shell_result->Error);
+      throw new ApiException($shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
 
     // set password
-    // '(echo "'.\Nemiro\Text::EscapeString($data['Login']).':'.\Nemiro\Text::EscapeString($data['Password']).'" | sudo chpasswd) && echo "OK"'
-    $login = \Nemiro\Text::EscapeString($data['Login']);
-    $password = \Nemiro\Text::EscapeString($data['Password']);
-    $shell_result = $this->SshClient->Execute('sudo bash -c \'echo -e "'.$password.'\n'.$password.'" | passwd "'.$login.'"\' && echo "OK"');
+    $safeLogin = TextHelper::EscapeString($login);
+    $safePassword = TextHelper::EscapeString($password);
+
+    $shell_result = $this->SshClient->Execute('sudo bash -c \'echo -e "'.$safePassword.'\n'.$safePassword.'" | passwd "'.$safeLogin.'"\' && echo "OK"');
 
     if ($shell_result->Result != 'OK')
     {
-      throw new \ErrorException('Fail to set password for '.$data['Login'].': '.$shell_result->Error);
+      throw new ApiException('Fail to set password for '.$login.': '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
 
     // add to groups
-    if (isset($data['Groups']) && count($data['Groups']) > 0)
+    if ($groups != NULL && count($groups) > 0)
     {
-      $shell_result = $this->SshClient->Execute('sudo usermod --groups '.implode(',', $data['Groups']).' '.$data['Login'].' && echo "OK"');
+      $shell_result = $this->SshClient->Execute('sudo usermod --groups '.implode(',', $groups).' '.$login.' && echo "OK"');
     }
 
     if ($shell_result->Result != 'OK')
     {
-      throw new \ErrorException('Unable to add user '.$data['Login'].' to groups '.implode(', ', $data['Groups']).': '.$shell_result->Error);
+      throw new ApiException('Unable to add user '.$login.' to groups '.implode(', ', $groups).': '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
 
-    $this->GetUserByLogin(['login' => $data['Login']]);
+    $this->GetUserByLogin($login);
   }
 
   /**
     * Deletes user.
-    * 
-    * @param mixed $data User to remove.
     */
-  public function DeleteUser($data)
+  public function DeleteUser($login, $removeHome = FALSE)
   {
-    $cmd = 'sudo userdel '.((bool)$data['RemoveHome'] ? '--remove ' : '').$data['Login'].' && echo "OK"';
+    $cmd = 'sudo userdel '.((bool)$removeHome ? '--remove ' : '').$login.' && echo "OK"';
 
     $shell_result = $this->SshClient->Execute($cmd);
 
     if ($shell_result->Result != 'OK')
     {
-      throw new \ErrorException($shell_result->Error);
+      throw new ApiException($shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
 
     return ['Success' => TRUE];
@@ -174,24 +172,23 @@ class Index
 
   /**
     * Updates user GECOS data.
-    * 
-    * @param mixed $data The user data.
     */
-  public function UpdateUserGECOS($data)
+  public function UpdateUserGECOS($login, $fullName = '', $address = '', $phoneWork = '', $phoneHome = '', $email = '')
   {
-    $gecos = \Nemiro\Text::RemoveChars(\Nemiro\Text::EscapeString($data['FullName'], ['"', ',']), [':', chr(13), chr(10)]).','.
-              \Nemiro\Text::RemoveChars(\Nemiro\Text::EscapeString($data['Address'], ['"', ',']), [':', chr(13), chr(10)]).','.
-              \Nemiro\Text::RemoveChars(\Nemiro\Text::EscapeString($data['PhoneWork'], ['"', ',']), [':', chr(13), chr(10)]).','.
-              \Nemiro\Text::RemoveChars(\Nemiro\Text::EscapeString($data['PhoneHome'], ['"', ',']), [':', chr(13), chr(10)]).','.
-              \Nemiro\Text::RemoveChars(\Nemiro\Text::EscapeString($data['Email'], ['"', ',']), [':', chr(13), chr(10)]);
+    $gecos = 
+    TextHelper::RemoveChars(TextHelper::EscapeString($fullName, ['"', ',']), [':', chr(13), chr(10)]).','.
+    TextHelper::RemoveChars(TextHelper::EscapeString($address, ['"', ',']), [':', chr(13), chr(10)]).','.
+    TextHelper::RemoveChars(TextHelper::EscapeString($phoneWork, ['"', ',']), [':', chr(13), chr(10)]).','.
+    TextHelper::RemoveChars(TextHelper::EscapeString($phoneHome, ['"', ',']), [':', chr(13), chr(10)]).','.
+    TextHelper::RemoveChars(TextHelper::EscapeString($email, ['"', ',']), [':', chr(13), chr(10)]);
 
-    $cmd = 'sudo usermod --comment "'.$gecos.'" '.$data['Login'].' && echo "OK"';
+    $cmd = 'sudo usermod --comment "'.$gecos.'" '.$login.' && echo "OK"';
 
     $shell_result = $this->SshClient->Execute($cmd);
 
     if ($shell_result->Result != 'OK')
     {
-      throw new \ErrorException($shell_result->Error);
+      throw new ApiException($shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
 
     return ['Success' => TRUE];
@@ -200,13 +197,13 @@ class Index
   /**
     * Updates user groups.
     */
-  public function UpdateUserGroups($data)
+  public function UpdateUserGroups($login, $groups)
   {
-    $shell_result = $this->SshClient->Execute('sudo usermod --groups '.implode(',', $data['Groups']).' '.$data['Login'].' && echo "OK"');
+    $shell_result = $this->SshClient->Execute('sudo usermod --groups '.implode(',', $groups).' '.$login.' && echo "OK"');
 
     if ($shell_result->Result != 'OK')
     {
-      throw new \ErrorException('Failed to to update the list of user groups: '.$shell_result->Error);
+      throw new ApiException('Failed to to update the list of user groups: '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
 
     return ['Success' => TRUE];
@@ -214,64 +211,62 @@ class Index
 
   /**
     * Updates user account.
-    * 
-    * @param mixed $data Data to update.
     */
-  public function UpdateUserAccount($data)
+  public function UpdateUserAccount($login, $setLogin = FALSE, $newLogin = NULL, $setPassword = FALSE, $newPassword = NULL, $setShell = FALSE, $newShell = NULL)
   {
-    $shell_result = $this->SshClient->Execute('sudo grep "'.$data['Login'].'" /etc/passwd');
+    $shell_result = $this->SshClient->Execute('sudo grep "'.$login.'" /etc/passwd');
 
     if ($shell_result->Error != '')
     {
-      throw new \ErrorException($shell_result->Error);
+      throw new ApiException($shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
 
     $user = $this->ParseUser($shell_result->Result);
 
     // change username
-    if (isset($data['SetLogin']) && (bool)$data['SetLogin'] && $data['NewLogin'] != $data['Login'])
+    if ((bool)$setLogin && $newLogin != $login)
     {
       // rename
-      $shell_result = $this->SshClient->Execute('sudo usermod --login '.$data['NewLogin'].' '.$data['Login'].' && echo "OK"');
+      $shell_result = $this->SshClient->Execute('sudo usermod --login '.$newLogin.' '.$login.' && echo "OK"');
 
       if ($shell_result->Result != 'OK')
       {
-        throw new \ErrorException('Failed to change the user name: '.$shell_result->Error);
+        throw new ApiException('Failed to change the user name: '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
       }
 
       // change home path
       if ($user->HomePath != ''){
-        $shell_result = $this->SshClient->Execute('sudo usermod --home /home/'.$data['NewLogin'].' --move-home '.$data['NewLogin'].' && echo "OK"');
+        $shell_result = $this->SshClient->Execute('sudo usermod --home /home/'.$newLogin.' --move-home '.$newLogin.' && echo "OK"');
 
         if ($shell_result->Result != 'OK')
         {
-          throw new \ErrorException('Failed to change the user home directory: '.$shell_result->Error);
+          throw new ApiException('Failed to change the user home directory: '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
         }
       }
 
-      $data['Login'] = $data['NewLogin'];
+      $login = $newLogin;
     }
 
     // change password
-    if (isset($data['SetPassword']) && (bool)$data['SetPassword'] && isset($data['NewPassword']) && $data['NewPassword'] != '')
+    if ((bool)$setPassword && isset($newPassword) && $newPassword != '')
     {
       // $shell_result = $this->SshClient->Execute('sudo usermod --password '.$data['NewPassword'].' '.$data['Login'].' && echo "OK"');
-      $shell_result = $this->SshClient->Execute('sudo bash -c \'echo -e "'.$data['NewPassword'].'\n'.$data['NewPassword'].'" | passwd "'.$data['Login'].'"\' && echo "OK"');
+      $shell_result = $this->SshClient->Execute('sudo bash -c \'echo -e "'.$newPassword.'\n'.$newPassword.'" | passwd "'.$login.'"\' && echo "OK"');
 
       if ($shell_result->Result != 'OK')
       {
-        throw new \ErrorException('Failed to set a new password: '.$shell_result->Error);
+        throw new ApiException('Failed to set a new password: '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
       }
     }
 
     // change shell
-    if (isset($data['SetShell']) && (bool)$data['SetShell'] && isset($data['NewShell']) && $data['NewShell'] != '')
+    if ((bool)$setShell && isset($newShell) && $newShell != '')
     {
-      $shell_result = $this->SshClient->Execute('sudo usermod --shell '.$data['NewShell'].' '.$data['Login'].' && echo "OK"');
+      $shell_result = $this->SshClient->Execute('sudo usermod --shell '.$newShell.' '.$login.' && echo "OK"');
 
       if ($shell_result->Result != 'OK')
       {
-        throw new \ErrorException('Failed to set a new shell: '.$shell_result->Error);
+        throw new ApiException('Failed to set a new shell: '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
       }
     }
 
@@ -288,7 +283,7 @@ class Index
     * @param int $page Current page number.
     * @param int $dataPerPage The number of data on a single page.
     * 
-    * @return \Models\UsersList
+    * @return \WebAPI\Users\Models\UsersList
     */
   private function GetUsersList($page, $dataPerPage, $search)
   {
@@ -301,8 +296,8 @@ class Index
     
     if (isset($search) && $search != '')
     {
-      $command[] = 'sudo grep "'.\Nemiro\Text::EscapeString($search).'*" /etc/passwd | wc -l';
-      $command[] = 'sudo cat /etc/passwd | grep "'.\Nemiro\Text::EscapeString($search).'*" | sudo sed -n "'.($page == 0 ? 1 : ($page * $dataPerPage) + 1).','.(($page * $dataPerPage) + $dataPerPage).'"p';
+      $command[] = 'sudo grep "'.TextHelper::EscapeString($search).'*" /etc/passwd | wc -l';
+      $command[] = 'sudo cat /etc/passwd | grep "'.TextHelper::EscapeString($search).'*" | sudo sed -n "'.($page == 0 ? 1 : ($page * $dataPerPage) + 1).','.(($page * $dataPerPage) + $dataPerPage).'"p';
     }
     else
     {
@@ -312,7 +307,7 @@ class Index
 
     $shell_result = $this->SshClient->Execute($command);
 
-    $result = new \Models\UsersList();
+    $result = new \WebAPI\Users\Models\UsersList();
     $result->TotalRecords = (int)$shell_result[0]->Result;
     $result->CurrentPage = (int)$page + 1;
     $result->DataPerPage = (int)$dataPerPage;
@@ -331,7 +326,7 @@ class Index
     * Parses user from string.
     * 
     * @param string $value 
-    * @return \Models\User
+    * @return \WebAPI\Users\Models\User
     */
   private function ParseUser($value)
   {
@@ -339,7 +334,7 @@ class Index
     // aleksey:x:1000:1000:Aleksey Nemiro,,,:/home/aleksey:/bin/bash
     // GECOS: full name, address, work phome, home phone, email
     $fields = explode(':', $value);
-    $u = new \Models\User();
+    $u = new \WebAPI\Users\Models\User();
     $u->Login = isset($fields[0]) ? $fields[0] : NULL;
     $u->Password = isset($fields[1]) ? $fields[1] : NULL;
     $u->Id = isset($fields[2]) ? $fields[2] : NULL;
@@ -364,7 +359,7 @@ class Index
   /**
     * Returns list of groups.
     * 
-    * @return \Models\Group[]
+    * @return \WebAPI\Users\Models\Group[]
     */
   private function GetGroupsList()
   {
@@ -377,7 +372,7 @@ class Index
       // name : password : GID : member1,member2...
       // mysql:x:117:
       $fields = explode(':', $group);
-      $g = new \Models\Group();
+      $g = new \WebAPI\Users\Models\Group();
       $g->Name = $fields[0];
       $g->Password = $fields[1];
       $g->Id = $fields[2];

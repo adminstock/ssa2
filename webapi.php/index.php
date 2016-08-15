@@ -271,12 +271,15 @@ class API
 
     $moduleSearch[] = strtolower($moduleName).'/index.php';
 
+    $className = 'Index';
+
     // search and include file
     foreach ($moduleSearch as $modulePath)
     {
       if (is_file($modulePath))
       {
         require_once $modulePath;
+        $className = basename($modulePath, '.php');
         $moduleIncluded = TRUE;
         break;
       }  
@@ -284,20 +287,27 @@ class API
       
     if ($moduleIncluded === FALSE)
     {
-      throw new ApiException('Module "'.$moduleName.'" not found.', ApiErrorCode::UNKNOWN_MODULE, 404);
+      if (isset($config['server']))
+      {
+        throw new ApiException('Module "'.$moduleName.'" not found.', ApiErrorCode::UNKNOWN_MODULE, 404);
+      }
+      else
+      {
+        throw new ApiException('Module "'.$moduleName.'" not found. Perhaps must specify the server name, for more accurate results.', ApiErrorCode::UNKNOWN_MODULE, 404);
+      }
     }
 
     // search and create class instance
     $instance = NULL;
-    $moduleName = '\\WebAPI\\'.$moduleName.'\\Index';
+    $className = '\\WebAPI\\'.$moduleName.'\\'.$className;
 
-    if (class_exists($moduleName))
+    if (class_exists($className))
     {
-      $instance = new $moduleName();
+      $instance = new $className();
     }
     else 
     {
-      throw new ApiException('Class "'.$moduleName.'" not found', ApiErrorCode::UNKNOWN_MODULE, 404);
+      throw new ApiException('Class "'.$className.'" not found', ApiErrorCode::UNKNOWN_MODULE, 404);
     }
 
     if (!method_exists($instance, $methodName))
@@ -321,7 +331,7 @@ class API
     $response = new \WebAPI\Core\Response();
     $response->Data = $data;
 
-    $result = json_encode($this->NormalizeDataForJsonEncode($response));
+    $result = json_encode($response);
 
     if ($result === FALSE)
     {
@@ -351,43 +361,6 @@ class API
       ], 
       $status
     );
-  }
-
-  private function NormalizeDataForJsonEncode($data)
-  {
-    if (is_null($data))
-    {
-      return NULL;
-    }
-
-    if (is_array($data)) 
-    {
-      foreach ($data as $key => $value) 
-      {
-        $data[$key] = $this->NormalizeDataForJsonEncode($value);
-      }
-      return $data;
-    }
-    else  if (is_object($data))
-    {
-      foreach ($data as $key => $value) 
-      {
-        $data->$key = $this->NormalizeDataForJsonEncode($value);
-      }
-      return $data;
-    }
-    else 
-    {
-      //$dd = mb_detect_encoding($data);
-      if (FALSE && mb_check_encoding($data, 'UTF-8')) 
-      {
-        return utf8_encode($data);
-      }
-      else
-      {
-        return $data;
-      }
-    }
   }
 
   // TODO
