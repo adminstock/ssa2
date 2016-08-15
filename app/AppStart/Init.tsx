@@ -27,6 +27,7 @@ import { Router, Route, Link, IndexRoute, browserHistory } from 'react-router';
 import LayoutMain from 'Layouts/Main';
 import App from 'Core/App';
 import { Overlay, OverlayType } from 'UI/Overlay';
+import ApiServer from 'Models/ApiServer';
 
 if (process.env.NODE_ENV === 'production') {
   console.log('SmallServerAdminV2', 'production');
@@ -56,9 +57,6 @@ const routes = (
       <Route path="/Monitoring" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
     </Route>
 
-    {/* application init page */}
-    <Route path="/Init" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
-
     {/* error page */}
     <Route path="/Error" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
   </Router>
@@ -80,7 +78,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 
   // check servers list
   if (App.Config.ListOfApiServers == null && location.pathname != '/Init' && location.pathname != '/Error') {
-    App.Redirect('/Init');
+    Init(location.pathname);
     return;
   }
 
@@ -94,10 +92,6 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
     case '/':
     case '/Index':
       require(['Pages/Index'], LoadedComponent.bind(me));
-      break;
-
-    case '/Init':
-      require(['Pages/Init'], LoadedComponent.bind(me));
       break;
 
     case '/Error':
@@ -129,6 +123,37 @@ export function LoadedComponent(component: any): void {
   Overlay.Hide();
 
   this.callback(null, props => React.createElement(component.default, this.location.query || this.location.params));
+}
+
+export function Init(returnUrl: string): void {
+  Overlay.Show(OverlayType.Loader | OverlayType.White, __('Initialization...'));
+
+  $.ajax({
+    cache: false,
+    crossDomain: true,
+    type: 'GET',
+    dataType: 'json',
+    url: '/servers.json',
+
+    // handler of request succeeds
+    success: (result: Array<ApiServer>) => {
+      Debug.Response('LoadServers.Success', result);
+
+      App.Config.ListOfApiServers = result;
+
+      if (result != null && result.length > 0) {
+        App.Redirect(returnUrl);
+      } else {
+        App.Redirect('/Error?msg=List of servers is empty...');
+      }
+    },
+
+    // server returned error
+    error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
+      Debug.Response('LoadServers.Error', x, textStatus, errorThrown);
+      App.Redirect('/Error?msg=' + (textStatus || errorThrown));
+    }
+  });
 }
 
 // render

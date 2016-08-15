@@ -70,7 +70,7 @@ export default class Main extends React.Component<any, IMainState> implements IM
   }
   
   render() {
-    Debug.Render('Main.render');
+    Debug.Render('Main');
 
     return (
       <DocumentTitle title={this.props.Title}>
