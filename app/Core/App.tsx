@@ -67,14 +67,23 @@ export default class App {
    * Redirect to a specified URL or to route.
    *
    * @param url The absolute or relative address.
+   * @param query The query parameters.
    */
-  public static Redirect(url: string): void {
-    Debug.Call('App.Redirect', url);
+  public static Redirect(url: string, query?: any): void {
+    Debug.Call('Redirect', url);
 
     if (url.toLowerCase().startsWith('http:') || url.toLowerCase().startsWith('https:')) {
-      window.location.href = url;
+      if (query !== undefined && query != null) {
+        window.location.href = url + '?' + $.param(query);
+      } else {
+        window.location.href = url;
+      }
     } else {
-      browserHistory.push(url);
+      if (query !== undefined && query != null) {
+        browserHistory.push({ pathname: url, query: query });
+      } else {
+        browserHistory.push(url);
+      }
     }
   }
 

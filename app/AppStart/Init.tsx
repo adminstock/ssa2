@@ -108,6 +108,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 
     default:
       console.error('Cannot find module "' + module + '"');
+      App.Redirect('/Error', { msg: 'Cannot find module "' + module + '"' });
   }
 
 }
@@ -144,14 +145,14 @@ export function Init(returnUrl: string): void {
       if (result != null && result.length > 0) {
         App.Redirect(returnUrl);
       } else {
-        App.Redirect('/Error?msg=List of servers is empty...');
+        App.Redirect('/Error', { msg: 'List of servers is empty...' });
       }
     },
 
     // server returned error
     error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
       Debug.Response('LoadServers.Error', x, textStatus, errorThrown);
-      App.Redirect('/Error?msg=' + (textStatus || errorThrown));
+      App.Redirect('/Error', { msg: (textStatus || errorThrown) });
     }
   });
 }
