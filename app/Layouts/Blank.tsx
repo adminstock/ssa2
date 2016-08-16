@@ -16,28 +16,54 @@
  */
 
 import * as React from 'react';
-import IMainContext from 'IMainContext';
+import { render } from 'react-dom';
+import DocumentTitle from 'react-document-title';
+import DialogManager from 'UI/Dialog/DialogManager';
+import IMainContext from 'Core/IMainContext';
 
 /**
- * The base class for pages.
+ * Blank layout.
  */
-export default class Page<P, S> extends React.Component<P, S> {
+export default class Blank extends React.Component<any, any> implements IMainContext {
+
+  public router: ReactRouter.RouterOnContext;
+
+  static contextTypes: React.ValidationMap<any> = {
+    router: React.PropTypes.object.isRequired
+  }
+
+  static childContextTypes: React.ValidationMap<any> = {
+    router: React.PropTypes.object.isRequired
+  }
 
   static defaultProps = {
     Title: 'SmallServerAdminV2'
   }
 
-  context: IMainContext;
-
-  // registration of the context type, already defined into the containing component
-  static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired
-  }
-
   constructor(props, context) {
     super(props, context);
-    
-    Debug.Init('Page', (this.props as any).Title, this);
+
+    Debug.Init(this);
+  }
+
+  public getChildContext(): any {
+    return {
+      router: (this.context as any).router
+    };
+  }
+  
+  render() {
+    Debug.Render('Blank');
+
+    return (
+      <DocumentTitle title={this.props.Title}>
+        <div>
+          {this.props.children}
+
+          <DialogManager />
+        </div>
+      </DocumentTitle>
+    )
   }
 
 }

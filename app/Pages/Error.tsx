@@ -16,13 +16,20 @@
  */
 
 import * as React from 'react';
+import DocumentTitle from 'react-document-title';
 import App from 'Core/App';
+import Page from 'Core/Page';
 import { Overlay, OverlayType } from 'UI/Overlay';
 
 /**
  * Error page.
  */
-export default class Error extends React.Component<any, any> {
+export default class Error extends Page<any, any> {
+
+  static defaultProps = {
+    Title: __('Error'),
+    returnUrl: '/'
+  }
 
   constructor(props, context) {
     super(props, context);
@@ -33,7 +40,11 @@ export default class Error extends React.Component<any, any> {
   }
 
   render() {
-    return <div><h1>TODO: Error page</h1>{this.props.msg}</div>;
+    return (
+      <DocumentTitle title={this.props.Title}>
+        <div><h1>TODO: Error page</h1>{this.props.msg}</div>
+      </DocumentTitle>
+    );
   }
 
 }

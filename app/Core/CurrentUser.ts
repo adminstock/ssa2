@@ -96,7 +96,7 @@ export default class CurrentUser {
       }
 
       if (CurrentUser._ApiServer == null) {
-        if (Config.ListOfApiServers.length > 0) {
+        if (Config.ListOfApiServers != null && Config.ListOfApiServers.length > 0) {
           // select first
           CurrentUser._ApiServer = Config.ListOfApiServers[0];
         } else {

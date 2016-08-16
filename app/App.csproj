@@ -54,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="AppStart\Init.tsx" />
+    <TypeScriptCompile Include="Layouts\Blank.tsx" />
+    <TypeScriptCompile Include="Pages\Login\ILoginState.ts" />
+    <TypeScriptCompile Include="Pages\Login\Index.tsx" />
     <TypeScriptCompile Include="Pages\Error.tsx" />
     <TypeScriptCompile Include="Core\App.tsx" />
     <TypeScriptCompile Include="Core\Config.ts" />
@@ -61,7 +64,6 @@
     <TypeScriptCompile Include="API\Enums.ts" />
     <TypeScriptCompile Include="Core\EventArgs.ts" />
     <TypeScriptCompile Include="Core\Page.tsx" />
-    <TypeScriptCompile Include="Layouts\IMainState.ts" />
     <TypeScriptCompile Include="Core\IMainContext.ts" />
     <TypeScriptCompile Include="API\ApiError.ts" />
     <TypeScriptCompile Include="API\ApiMessage.ts" />
@@ -113,9 +115,7 @@
     <TypeScriptCompile Include="typings\index.d.ts" />
     <TypeScriptCompile Include="UI\Dialog\IDialogManagerState.ts" />
     <TypeScriptCompile Include="UI\Layout\Header.tsx" />
-    <TypeScriptCompile Include="UI\Layout\ILoginState.ts" />
     <TypeScriptCompile Include="UI\Layout\Menu.tsx" />
-    <TypeScriptCompile Include="UI\Layout\Login.tsx" />
     <TypeScriptCompile Include="UI\Overlay.ts" />
   </ItemGroup>
   <ItemGroup>

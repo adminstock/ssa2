@@ -25,6 +25,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Router, Route, Link, IndexRoute, browserHistory } from 'react-router';
 import LayoutMain from 'Layouts/Main';
+import LayoutBlank from 'Layouts/Blank';
 import App from 'Core/App';
 import { Overlay, OverlayType } from 'UI/Overlay';
 import ApiServer from 'Models/ApiServer';
@@ -57,8 +58,12 @@ const routes = (
       <Route path="/Monitoring" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
     </Route>
 
-    {/* error page */}
-    <Route path="/Error" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+    <Route component={LayoutBlank}>
+      {/* login page */}
+      <Route path="/Login" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+      {/* error page */}
+      <Route path="/Error" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+    </Route>
   </Router>
 );
 
@@ -76,10 +81,18 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 
   App.AbortAllRequests();
 
-  // check servers list
-  if (App.Config.ListOfApiServers == null && location.pathname != '/Init' && location.pathname != '/Error') {
-    Init(location.pathname);
-    return;
+  if (location.pathname != '/Init' && location.pathname != '/Login' && location.pathname != '/Error') { // TODO: array
+    // check servers list
+    if (App.Config.ListOfApiServers == null) {
+      Init(location.pathname);
+      return;
+    }
+
+    // check access
+    if (App.CurrentUser.AccessToken == null || !App.CurrentUser.IsValid) {
+      App.Redirect('/Login', { returnUrl: location.pathname });
+      return;
+    }
   }
 
   var me = { location: location, callback: callback };
@@ -92,6 +105,10 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
     case '/':
     case '/Index':
       require(['Pages/Index'], LoadedComponent.bind(me));
+      break;
+
+    case '/Login':
+      require(['Pages/Login/Index'], LoadedComponent.bind(me));
       break;
 
     case '/Error':

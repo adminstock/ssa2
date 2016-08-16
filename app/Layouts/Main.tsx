@@ -24,11 +24,9 @@ import { Modal, Button } from 'react-bootstrap';
 import DialogManager from 'UI/Dialog/DialogManager';
 
 import IMainContext from 'Core/IMainContext';
-import IMainState from 'IMainState';
 
 import Header from 'UI/Layout/Header';
 import Menu from 'UI/Layout/Menu';
-import Login from 'UI/Layout/Login';
 
 import App from 'Core/App';
 import CurrentUser from 'Core/CurrentUser';
@@ -36,9 +34,9 @@ import CurrentUser from 'Core/CurrentUser';
 /**
  * The main layout.
  */
-export default class Main extends React.Component<any, IMainState> implements IMainContext {
+export default class Main extends React.Component<any, any> implements IMainContext {
 
-  public router: any;
+  public router: ReactRouter.RouterOnContext;
 
   static contextTypes: React.ValidationMap<any> = {
     router: React.PropTypes.object.isRequired
@@ -56,11 +54,6 @@ export default class Main extends React.Component<any, IMainState> implements IM
     super(props, context);
 
     Debug.Init(this);
-
-    App.SetContext(this);
-
-    // add login form
-    DialogManager.AddDialog(<Login key="login" />);
   }
 
   public getChildContext(): any {

@@ -37,12 +37,12 @@ import Config from 'Config';
  */
 export default class App {
 
-  private static _Context: IMainContext = null;
+  /* private static _Context: IMainContext = null;
 
-  /** Gets current context. */
+  /** Gets current context. * /
   public static get Context(): IMainContext {
     return App._Context;
-  }
+  }*/
 
   /** Provides current user. */
   public static CurrentUser = CurrentUser;
@@ -58,10 +58,10 @@ export default class App {
    * Sets context. It is used only once in the main application component.
    *
    * @param context
-   */
+   
   public static SetContext(context: IMainContext): void {
     App._Context = context;
-  }
+  }*/
   
   /**
    * Redirect to a specified URL or to route.

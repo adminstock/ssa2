@@ -16,26 +16,30 @@
  */
 
 import * as React from 'react';
+import DocumentTitle from 'react-document-title';
 import { Modal, Button, Row, Col, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import IMainContext from 'Core/IMainContext';
 import ILoginState from 'ILoginState';
 import CurrentUser from 'Core/CurrentUser';
 import App from 'Core/App';
+import Page from 'Core/Page';
 import ApiRequest from 'API/ApiRequest';
 import AuthResult from 'API/AuthResult';
 import Success from 'API/Success';
+import { Overlay, OverlayType } from 'UI/Overlay';
 
 /**
- * Represents login dialog.
+ * Login page.
  */
-export default class Login extends React.Component<any, ILoginState> {
+export default class Index extends Page<any, ILoginState> {
 
-  context: IMainContext;
+  static defaultProps = {
+    Title: __('Login'),
+    returnUrl: '/'
+  }
 
   constructor(props?, context?) {
     super(props, context);
-
-    Debug.Init(this);
 
     let showDialog = false;
     let showForm = false;
@@ -86,21 +90,19 @@ export default class Login extends React.Component<any, ILoginState> {
 
     $this.setState({ LoginProcessing: true });
 
-    var api = new ApiRequest<any, AuthResult>('Auth.GetToken', { Username: $this.state.Username, Password: $this.state.Password }, CurrentUser.ApiServer.AuthUrl);
+    let redirecToHome = false;
+
+    let api = new ApiRequest<any, AuthResult>('Auth.GetToken', { Username: $this.state.Username, Password: $this.state.Password }, CurrentUser.ApiServer.AuthUrl);
 
     api.SuccessCallback = (result) => {
-      // Debug.Log('Login.Success', result);
-
       // set token
       CurrentUser.AccessToken = result.TokenValue;
 
-      // hide login form
-      $this.setState({ ShowDialog: false });
+      // hide login form and redirect to home
+      redirecToHome = true;
     }
 
     api.ErrorCallback = (error) => {
-      // Debug.Log('Login.Error', error);
-
       // show error
       App.Alert({
         message: 'Server error: ' + error.Text,
@@ -108,9 +110,14 @@ export default class Login extends React.Component<any, ILoginState> {
       });
     }
 
-
     api.CompleteCallback = () => {
-      $this.setState({ LoginProcessing: false });
+      if (redirecToHome) {
+        $this.setState({ ShowDialog: false }, () => {
+          App.Redirect($this.props.returnUrl);
+        });
+      } else {
+        $this.setState({ LoginProcessing: false });
+      }
     }
 
     api.Execute();
@@ -121,13 +128,15 @@ export default class Login extends React.Component<any, ILoginState> {
 
     $this.setState({ Checking: true });
 
-    var api = new ApiRequest<any, Success>('Auth.TokenIsValid', { Token: CurrentUser.AccessToken }, CurrentUser.ApiServer.AuthUrl);
+    let redirecToHome = false;
+
+    let api = new ApiRequest<any, Success>('Auth.TokenIsValid', { Token: CurrentUser.AccessToken }, CurrentUser.ApiServer.AuthUrl);
 
     api.SuccessCallback = (result) => {
       CurrentUser.IsValid = true;
 
-      // hide login form
-      $this.setState({ ShowDialog: false });
+      // hide login form and redirect to home
+      redirecToHome = true;
     }
 
     api.ErrorCallback = (error) => {
@@ -142,7 +151,13 @@ export default class Login extends React.Component<any, ILoginState> {
     }
 
     api.CompleteCallback = () => {
-      $this.setState({ Checking: false });
+      if (redirecToHome) {
+        $this.setState({ ShowDialog: false }, () => {
+          App.Redirect($this.props.returnUrl);
+        });
+      } else {
+        $this.setState({ Checking: false });
+      }
     }
 
     api.Execute();
@@ -151,8 +166,6 @@ export default class Login extends React.Component<any, ILoginState> {
   private Input_TextChanged(event: Event): void {
     let input = (event.target as HTMLInputElement);
 
-    //Debug.Log('Input_TextChanged', input.id);
-    
     if (input.id == 'loginFormUsername') {
       this.setState({ Username: input.value });
     }
@@ -166,8 +179,6 @@ export default class Login extends React.Component<any, ILoginState> {
   private Input_LostFocus(event: Event): void {
     let input = (event.target as HTMLInputElement);
 
-    //Debug.Log('Input_LostFocus', input.id);
-    
     if (input.id == 'loginFormUsername') {
       this.setState({
         ValidationStateUsername: (input.value == '' ? 'error' : null),
@@ -183,13 +194,13 @@ export default class Login extends React.Component<any, ILoginState> {
   }
 
   private Leave(): void {
-    this.setState({ LoginProcessing: true });
-
-    window.location.href = 'http://www.adminstock.net';
+    this.setState({ LoginProcessing: true }, () => {
+      App.Redirect('http://www.adminstock.net');
+    });
   }
 
   render() {
-    Debug.Render3('Login.render');
+    Debug.Render('Login');
 
     let disabledForm = this.state.LoginProcessing || this.state.Checking;
 
@@ -207,7 +218,7 @@ export default class Login extends React.Component<any, ILoginState> {
               </ControlLabel>
             </Col>
             <Col xs={12} sm={12} md={12} lg={12}>
-              <FormControl type="text" maxLength={100} required disabled={disabledForm} defaultValue={this.state.Username} onChange={this.Input_TextChanged.bind(this) } onBlur={this.Input_LostFocus.bind(this)} />
+              <FormControl type="text" maxLength={100} required disabled={disabledForm} defaultValue={this.state.Username} onChange={this.Input_TextChanged.bind(this) } onBlur={this.Input_LostFocus.bind(this) } />
               <FormControl.Feedback />
             </Col>
           </FormGroup>
@@ -232,7 +243,7 @@ export default class Login extends React.Component<any, ILoginState> {
             {disabledForm ? <i className="fa fa-refresh fa-spin fa-fw"></i> : null}
             {__('Login') }
           </Button>
-          <Button bsStyle="default" onClick={this.Leave.bind(this)} disabled={disabledForm}>
+          <Button bsStyle="default" onClick={this.Leave.bind(this) } disabled={disabledForm}>
             {__('Leave') }
           </Button>
         </div>
@@ -245,7 +256,7 @@ export default class Login extends React.Component<any, ILoginState> {
         body = (
           <div className="text-center">
             <p><i className="fa fa-spinner fa-pulse fa-5x fa-fw"></i></p>
-            <p>{__('Checking the access...')}</p>
+            <p>{__('Checking the access...') }</p>
           </div>
         );
 
@@ -259,13 +270,15 @@ export default class Login extends React.Component<any, ILoginState> {
     }
 
     return (
-      <Modal show={this.state.ShowDialog} backdrop="static" onHide={null}>
-        <Modal.Header closeButton={false}>
-          <Modal.Title>{title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{body}</Modal.Body>
-        <Modal.Footer>{footer}</Modal.Footer>
-      </Modal>
+      <DocumentTitle title={this.props.Title}>
+        <Modal show={this.state.ShowDialog} backdrop="static" onHide={null}>
+          <Modal.Header closeButton={false}>
+            <Modal.Title>{title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{body}</Modal.Body>
+          <Modal.Footer>{footer}</Modal.Footer>
+        </Modal>
+      </DocumentTitle>
     );
   }
 
