@@ -1,5 +1,5 @@
 <?php
-namespace WebAPI\SSH\Models;
+namespace WebAPI\Remote\Models;
 
 /*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.

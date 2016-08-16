@@ -1,5 +1,5 @@
 <?php
-namespace WebAPI\SSH;
+namespace WebAPI\Remote;
 
 /*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
@@ -24,7 +24,7 @@ use \WebAPI\Core\ApiErrorCode as ApiErrorCode;
 /**
  * Represents SSH client.
  */
-class Index
+class SSH
 {
 
   /**
@@ -34,57 +34,35 @@ class Index
     */
   private $SshConnection = NULL;
 
-  private $Settings = [];
+  private $Config;
 
   function __construct()
   {
-    global $config;
+    $this->Config = new \WebAPI\Remote\Models\SshConfig();
 
-    if (!isset($config['server']))
-    {
-      throw new ApiException('The server is not specified. Server configuration is missing. Specify the server and try again.', ApiErrorCode::SERVER_REQUIRED);
-    }
-
-    if (!isset($config['server']['ssh']) || !is_array($config['server']['ssh']))
-    {
-      throw new ApiException('SSH settings not found. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
-    }
-
-    $this->Settings = $config['server']['ssh'];
-
-    if (!isset($this->Settings['host']) || $this->Settings['host'] == '')
+    if ($this->Config->Host == '')
     {
       throw new ApiException('SSH host is required. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
     }
 
-    if (!isset($this->Settings['user']))
+    if ($this->Config->User == '')
     {
       throw new ApiException('SSH username is required. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
     }
     
-    if (!isset($this->Settings['password']))
+    if ($this->Config->Password == '')
     {
       throw new ApiException('SSH password is required. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
     }
 
-    $host = $this->Settings['host'];
-    $port = 22;
-    $user = $this->Settings['user'];
-    $password = $this->Settings['password'];
-
-    if (isset($this->Settings['port']))
-    {
-      $port = (int)$this->Settings['port'];
-    }
-
-    $this->SshConnection = ssh2_connect($host, $port);
+    $this->SshConnection = ssh2_connect($this->Config->Host, $this->Config->Port);
 
     if (!$this->SshConnection)
     {
-      throw new ApiException('Cannot to connect "'.$host.'".', ApiErrorCode::SSH_CONNECTION_FAILED);
+      throw new ApiException('Cannot to connect "'.$this->Config->Host.'".', ApiErrorCode::SSH_CONNECTION_FAILED);
     }
 
-    if (!ssh2_auth_password($this->SshConnection, $user, $password))
+    if (!ssh2_auth_password($this->SshConnection, $this->Config->User, $this->Config->Password))
     {
       throw new ApiException('Authentication failed.', ApiErrorCode::SSH_AUTHENTICATION_FAILED);
     }
@@ -95,7 +73,7 @@ class Index
     * 
     * @param \string|\string[] $command The command to execute.
     * @param \bool $dontTrim Specifies whether to disable the automatic removal of spaces on the sides.
-    * @return \WebAPI\SSH\Models\SshResult|\WebAPI\SSH\Models\SshResult[]
+    * @return \WebAPI\Remote\Models\SshResult|\WebAPI\Remote\Models\SshResult[]
     */
   public function Execute($command, $dontTrim = FALSE)
   {
@@ -115,7 +93,7 @@ class Index
       stream_set_blocking($stream_error, TRUE);
       stream_set_blocking($stream_io, TRUE);
         
-      $result = new \WebAPI\SSH\Models\SshResult();
+      $result = new \WebAPI\Remote\Models\SshResult();
 
       $result->Error = stream_get_contents($stream_error);
       $result->Result = stream_get_contents($stream_io);
@@ -155,7 +133,7 @@ class Index
         stream_set_blocking($stream_error, TRUE);
         stream_set_blocking($stream_io, TRUE);
 
-        $r = new \WebAPI\SSH\Models\SshResult();
+        $r = new \WebAPI\Remote\Models\SshResult();
         $r->Error = stream_get_contents($stream_error);
         $r->Result = stream_get_contents($stream_io);
 
@@ -208,7 +186,7 @@ class Index
       {
         $read = fread($stream, 4096);
         $result .= $read;
-        if ($result == '' || $read == '') // $read for password required mode ($config['ssh_required_password'] = TRUE)
+        if ($result == '' || $read == '')
         {
           break;
         }
@@ -278,9 +256,9 @@ class Index
 
   private function MakeCommand($command)
   {
-    if (isset($this->Settings['required-password']) && (bool)$this->Settings['required-password'])
+    if ((bool)$this->Config->RequiredPassword)
     {
-      return 'echo "' . str_replace('"', '\\"', $this->Settings['password']) . '" | sudo -S bash -c "' . str_replace('"', '\\"', $command) . '"';
+      return 'echo "' . str_replace('"', '\\"', $this->Config->Password) . '" | sudo -S bash -c "' . str_replace('"', '\\"', $command) . '"';
     }
     else
     {

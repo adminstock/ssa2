@@ -32,13 +32,13 @@ class Linux
   /**
    * SSH client.
    * 
-   * @var \WebAPI\SSH\Index
+   * @var \WebAPI\Remote\SSH
    */
   private $SshClient = NULL;
 
   function __construct()
   {
-    $this->SshClient = new \WebAPI\SSH\Index();
+    $this->SshClient = new \WebAPI\Remote\SSH();
   }
 
   #region ..Public methods..

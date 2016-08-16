@@ -29,8 +29,9 @@
     <Compile Include="index.php" />
     <Compile Include="loader.php" />
     <Compile Include="core\Response.php" />
-    <Compile Include="ssh\index.php" />
-    <Compile Include="ssh\models\SshResult.php" />
+    <Compile Include="remote\models\SshConfig.php" />
+    <Compile Include="remote\ssh.php" />
+    <Compile Include="remote\models\SshResult.php" />
     <Compile Include="users\linux.php" />
     <Compile Include="users\models\AccountUpdate.php" />
     <Compile Include="users\models\CreateUser.php" />
@@ -42,9 +43,9 @@
   <ItemGroup>
     <Folder Include="auth\" />
     <Folder Include="core\" />
+    <Folder Include="remote\" />
     <Folder Include="servers\" />
-    <Folder Include="ssh\" />
-    <Folder Include="ssh\models\" />
+    <Folder Include="remote\models\" />
     <Folder Include="users\" />
     <Folder Include="users\models\" />
   </ItemGroup>
