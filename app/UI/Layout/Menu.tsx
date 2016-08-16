@@ -36,7 +36,7 @@ export default class Menu extends React.Component<any, any> {
           <ul className="nav navmenu-nav">
             <li><a>TODO</a></li>
             <li>
-              <Link to="/Users">test</Link>
+              <Link to="/users">test</Link>
             </li>
             <li className="nav-divider"></li>
             <li>

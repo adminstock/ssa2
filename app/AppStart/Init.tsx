@@ -45,24 +45,24 @@ const routes = (
       <IndexRoute getComponent={(location, callback) => { LoadComponent(location, callback); } } />
 
       {/* modules */}
-      <Route path="/Users">
+      <Route path="/users">
         <IndexRoute getComponent={(location, callback) => { LoadComponent(location, callback); } } />
-        <Route path="/Users/Edit" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
-        <Route path="/Users/Edit?id=:id" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+        <Route path="/users/edit" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+        <Route path="/users/edit?id=:id" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
       </Route>
 
-      <Route path="/Services" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+      <Route path="/services" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
 
-      <Route path="/Files" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+      <Route path="/files" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
 
-      <Route path="/Monitoring" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+      <Route path="/monitoring" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
     </Route>
 
     <Route component={LayoutBlank}>
       {/* login page */}
-      <Route path="/Login" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+      <Route path="/login" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
       {/* error page */}
-      <Route path="/Error" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+      <Route path="/error" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
     </Route>
   </Router>
 );
@@ -90,7 +90,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 
     // check access
     if (App.CurrentUser.AccessToken == null || !App.CurrentUser.IsValid) {
-      App.Redirect('/Login', { returnUrl: location.pathname });
+      App.Redirect('/login', { returnUrl: location.pathname });
       return;
     }
   }
@@ -103,29 +103,29 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 
   switch (location.pathname) {
     case '/':
-    case '/Index':
+    case '/index':
       require(['Pages/Index'], LoadedComponent.bind(me));
       break;
 
-    case '/Login':
+    case '/login':
       require(['Pages/Login/Index'], LoadedComponent.bind(me));
       break;
 
-    case '/Error':
+    case '/error':
       require(['Pages/Error'], LoadedComponent.bind(me));
       break;
 
-    case '/Users':
+    case '/users':
       require(['Modules/Users/Index'], LoadedComponent.bind(me));
       break;
 
-    case '/Users/Edit':
+    case '/users/edit':
       require(['Modules/Users/Edit'], LoadedComponent.bind(me));
       break;
 
     default:
       console.error('Cannot find module "' + module + '"');
-      App.Redirect('/Error', { msg: 'Cannot find module "' + module + '"' });
+      App.Redirect('/error', { msg: 'Cannot find module "' + module + '"' });
   }
 
 }
@@ -162,14 +162,14 @@ export function Init(returnUrl: string): void {
       if (result != null && result.length > 0) {
         App.Redirect(returnUrl);
       } else {
-        App.Redirect('/Error', { msg: 'List of servers is empty...' });
+        App.Redirect('/error', { msg: 'List of servers is empty...' });
       }
     },
 
     // server returned error
     error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
       Debug.Response('LoadServers.Error', x, textStatus, errorThrown);
-      App.Redirect('/Error', { msg: (textStatus || errorThrown) });
+      App.Redirect('/error', { msg: (textStatus || errorThrown) });
     }
   });
 }

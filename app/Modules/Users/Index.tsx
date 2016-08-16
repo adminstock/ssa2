@@ -40,8 +40,8 @@ export default class Index extends Page<any, any> {
       <DocumentTitle title={this.props.Title}>
         <div>
         TODO<br /><i className="fa fa-spinner fa-spin fa-3x fa-fw"></i><br />
-        <Link to="/Users/Edit">New</Link><br />
-        <Link to="/Users/Edit?id=123">Edit</Link>
+        <Link to="/users/edit">New</Link><br />
+        <Link to="/users/edit?id=123">Edit</Link>
         </div>
       </DocumentTitle>
     );
