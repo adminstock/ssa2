@@ -16,12 +16,15 @@
  */
 
 import Server from 'Models/Server';
+import { OutputMode } from 'OutputMode';
 
 export interface IServersListState {
 
   Servers?: Array<Server>;
 
   Loading?: boolean;
+
+  OutputMode?: OutputMode;
 
 }
 

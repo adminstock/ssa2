@@ -7,6 +7,7 @@ var spritesmithPlugin = require('webpack-spritesmith');
 var i18nPlugin = require('i18n-webpack-plugin');
 var htmlWebpackPlugin = require('html-webpack-plugin');
 var webpackStrip = require('strip-loader');
+var copyWebpackPlugin = require('copy-webpack-plugin');
 
 var logLevels = {
   log: ['background-color: #008000; color: white; border-radius: 4px; padding: 1px 4px 1px 4px;', 'color: #000000;'],
@@ -192,9 +193,14 @@ module.exports = Object.keys(languages).map(function(language) {
         'apiOptions': {
           'cssImageRef': '/dist/images/web-servers.png'
         }
-      })
+      }),
 
       // #endregion
+
+      // https://www.npmjs.com/package/copy-webpack-plugin
+      new copyWebpackPlugin([
+        { 'from': path.resolve(__dirname, 'Content', 'Images'), 'to': path.resolve(__dirname, 'dist', 'images') }
+      ])
     ],
 
     module: {

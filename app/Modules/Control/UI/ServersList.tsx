@@ -19,27 +19,46 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import App from 'Core/App';
 import Component from 'Core/Component';
-import { Button } from 'react-bootstrap';
 import Server from 'Models/Server';
-import IServersListState from 'IServersListState';
 import ProcessingIndicator from 'UI/ProcessingIndicator';
+import IServersListState from 'IServersListState';
+import IServersListProps from 'IServersListProps';
+import ServerItem from 'ServerItem';
+import { OutputMode } from 'OutputMode';
+
+import {
+  Table,
+  Button,
+  Grid,
+  Row,
+  Col
+} from 'react-bootstrap';
 
 /**
  * Represents a list of servers to manage.
  */
-export default class ServersList extends Component<any, IServersListState> {
+export default class ServersList extends Component<IServersListProps, IServersListState> {
 
   constructor(props, context) {
     super(props, context);
 
     this.state = {
       Servers: new Array<Server>(),
-      Loading: true
+      Loading: true,
+      OutputMode: this.props.OutputMode || OutputMode.List
     };
   }
 
   componentWillMount() {
     this.LoadServers();
+  }
+
+  componentWillReceiveProps(nextProps: IServersListProps) {
+    Debug.Call3('ServersList.componentWillReceiveProps', nextProps);
+
+    if (nextProps.OutputMode != this.state.OutputMode) {
+      this.setState({ OutputMode: nextProps.OutputMode });
+    }
   }
 
   /**
@@ -55,7 +74,7 @@ export default class ServersList extends Component<any, IServersListState> {
   }
 
   render() {
-    Debug.Render3('ServersList', this.state.Loading);
+    Debug.Render2('ServersList', this.state.Loading);
 
     if (this.state.Loading) {
       return (<ProcessingIndicator Text={ __('Loading. Please wait...') } />);
@@ -63,48 +82,26 @@ export default class ServersList extends Component<any, IServersListState> {
 
     let list = [];
 
-    //ng-class="{'success': (server.Address == Config.ServerAddress && server.Name == Config.ServerName) && !CurrentServerConnectionError && !ConnectionTesting, 'danger': (server.Address == Config.ServerAddress && server.Name == Config.ServerName) && CurrentServerConnectionError, 'warning': (server.Address == Config.ServerAddress && server.Name == Config.ServerName) && ConnectionTesting, 'text-muted': server.Disabled}"
-
-    let currentServer = App.CurrentUser.ManagedServer;
-
     this.state.Servers.forEach((server, index) => {
-      let className = 'col-xs-8 col-sm-8 col-md-8 col-lg-8';
-      let serverName = (<h4>{server.Address}</h4>);
-
-      if (server.Name != null && server.Name != '') {
-        serverName = (<h4>{server.Name} <small>({server.Address})</small></h4>);
-      }
-
-      let serverDescription = null;
-
-      if (server.Description != null && server.Description != '') {
-        serverDescription = (<small>{server.Description}</small>);
-      }
-
-      // <?=($this->NoControl != 'TRUE' ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-10 col-sm-10 col-md-10 col-lg-10')?>
-      list.push(
-        <tr key={'server' + index} className={className}>
-          <td className="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-            {serverName}
-            {serverDescription}
-
-            {(() => {
-              if (server.Address == currentServer) {
-                return (<small className="red"><span class="glyphicon glyphicon-exclamation-sign"></span> {__('Unable to connect to the server.')}</small>);
-              }
-            })()}
-          </td>
-          <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
-
-          </td>
-        </tr>
-      );
+      list.push(<ServerItem Server={server} OutputMode={ this.state.OutputMode } key={'server-' + index} />);
     });
 
+    let servers = null;
+
+    if (this.state.OutputMode == OutputMode.List) {
+      servers = (
+        <Table hover>
+          <tbody>{list}</tbody>
+        </Table>
+      );
+    } else {
+      servers = (<Grid><Row>{list}</Row></Grid>);
+    }
+
     return (
-      <table class="table table-hover cell-align-middle">
-        <tbody>{list}</tbody>
-      </table>
+      <div>
+        {servers}
+      </div>
     );
   }
 

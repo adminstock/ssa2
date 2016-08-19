@@ -15,28 +15,8 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import Component from 'Core/Component';
-import IProcessingIndicatorProps from 'IProcessingIndicatorProps';
-
-export default class ProcessingIndicator extends Component<IProcessingIndicatorProps, any> {
-
-  static defaultProps = {
-    Text: __('Please wait...')
-  }
-
-  constructor(props, context) {
-    super(props, context);
-  }
-
-  render() {
-    return (
-      <div className="processing">
-        <span className="glyphicon glyphicon-refresh fa-spin"></span>
-        &nbsp;
-        { this.props.Text }
-      </div>
-    );
-  }
-
+/** Output Mode server list. */
+export enum OutputMode {
+  List = 0,
+  Thumbnail = 1
 }

@@ -22,6 +22,7 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\server.png" />
     <Content Include="Content\Sprites\lang\de.png" />
     <Content Include="Content\Sprites\lang\en.png" />
     <Content Include="Content\Sprites\lang\globe.png" />
@@ -58,8 +59,12 @@
     <TypeScriptCompile Include="Core\IMakeRequestProps.ts" />
     <TypeScriptCompile Include="Layouts\Blank.tsx" />
     <TypeScriptCompile Include="Modules\Control\Servers.tsx" />
+    <TypeScriptCompile Include="Modules\Control\UI\IServerItemProps.ts" />
+    <TypeScriptCompile Include="Modules\Control\UI\IServersListProps.ts" />
     <TypeScriptCompile Include="Modules\Control\UI\IServersListState.ts" />
+    <TypeScriptCompile Include="Modules\Control\UI\ServerItem.tsx" />
     <TypeScriptCompile Include="Modules\Control\UI\ServersList.tsx" />
+    <TypeScriptCompile Include="Modules\Control\UI\OutputMode.ts" />
     <TypeScriptCompile Include="Pages\Login\ILoginState.ts" />
     <TypeScriptCompile Include="Pages\Login\Index.tsx" />
     <TypeScriptCompile Include="Pages\Error.tsx" />
@@ -126,7 +131,6 @@
     <TypeScriptCompile Include="UI\ProcessingIndicator.tsx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\Images\" />
     <Folder Include="Modules\Files\" />
     <Folder Include="Modules\Monitoring\" />
     <Folder Include="Modules\Services\" />
