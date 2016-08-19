@@ -1,5 +1,5 @@
 <?php
-namespace WebAPI\Remote;
+namespace WebAPI\Core;
 
 /*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
@@ -24,35 +24,45 @@ use \WebAPI\Core\ApiErrorCode as ApiErrorCode;
 /**
  * Represents SSH client.
  */
-class SSH
+class SshClient implements IRemoteClient
 {
 
   /**
-    * Active SSH connection.
-    * 
-    * @var resource
-    */
+   * Active SSH connection.
+   * 
+   * @var resource
+   */
   private $SshConnection = NULL;
 
   private $Config;
-
-  function __construct()
+ 
+  /**
+   * Initializes a new instance of the SshClient.
+   * 
+   * @param ConnectionConfig $connectionSettings Connection settings.
+   */
+  function __construct($connectionSettings)
   {
-    $this->Config = new \WebAPI\Remote\Models\SshConfig();
+    if (!isset($connectionSettings))
+    {
+      throw new ApiException('Connection settings is required, value cannot be empty.');
+    }
+
+    $this->Config = $connectionSettings;
 
     if ($this->Config->Host == '')
     {
-      throw new ApiException('SSH host is required. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
+      throw new ApiException('Server host is required. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
     }
 
     if ($this->Config->User == '')
     {
-      throw new ApiException('SSH username is required. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
+      throw new ApiException('Username is required. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
     }
     
     if ($this->Config->Password == '')
     {
-      throw new ApiException('SSH password is required. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
+      throw new ApiException('Password is required. Please check config file of the server.', ApiErrorCode::SSH_ERROR);
     }
 
     $this->SshConnection = ssh2_connect($this->Config->Host, $this->Config->Port);
@@ -67,21 +77,34 @@ class SSH
       throw new ApiException('Authentication failed.', ApiErrorCode::SSH_AUTHENTICATION_FAILED);
     }
   }
-        
+
   /**
-    * Execute a command on a remote server.
-    * 
-    * @param \string|\string[] $command The command to execute.
-    * @param \bool $dontTrim Specifies whether to disable the automatic removal of spaces on the sides.
-    * @return \WebAPI\Remote\Models\SshResult|\WebAPI\Remote\Models\SshResult[]
-    */
-  public function Execute($command, $dontTrim = FALSE)
+   * Tests the connection.
+   * 
+   * @return bool
+   */
+  public function Test()
+  {
+    // testing is done in the constructor
+    return TRUE;
+  }
+
+  /**
+   * Executes the specified command on the remote server.
+   * 
+   * @param string|string[] $command Command or an array of commands to execution.
+   * @param mixed $settings Additional options.
+   * 
+   * @return CommandResult|CommandResult[]
+   */
+  public function Execute($command, $settings = NULL)
   {
     if (gettype($command) !== 'array')
     {
       $stream = ssh2_exec($this->SshConnection, $this->MakeCommand($command));
 
-      if ($stream === FALSE) {
+      if ($stream === FALSE) 
+      {
         throw new ApiException('Could not open shell exec stream.', ApiErrorCode::SSH_ERROR);
       }
 
@@ -92,27 +115,21 @@ class SSH
 
       stream_set_blocking($stream_error, TRUE);
       stream_set_blocking($stream_io, TRUE);
-        
-      $result = new \WebAPI\Remote\Models\SshResult();
 
-      $result->Error = stream_get_contents($stream_error);
-      $result->Result = stream_get_contents($stream_io);
+      $error = stream_get_contents($stream_error);
+      $output = stream_get_contents($stream_io);
 
-      if (!isset($dontTrim) || (bool)$dontTrim !== TRUE)
-      {
-        $result->Error = trim($result->Error);
-        $result->Result = trim($result->Result);
-      }
-
-      if (($result->Result != '' && !$this->IsError($result->Result)) || !$this->IsError($result->Error)) 
+      if (($output != '' && !$this->IsError($output)) || !$this->IsError($error)) 
       {
         // result not empty, remove error message
-        $result->Error = '';
+        $error = '';
       }
       else
       {
-        $result->Error = $this->NormalizeErrorMessage($result->Error);
+        $error = $this->NormalizeErrorMessage($error);
       }
+
+      $result = new \WebAPI\Core\CommandResult($output, $error);
 
       fclose($stream);
     }
@@ -123,7 +140,8 @@ class SSH
       {
         $stream = ssh2_exec($this->SshConnection, $this->MakeCommand($cmd));
 
-        if ($stream === FALSE) {
+        if ($stream === FALSE) 
+        {
           throw new ApiException('Could not open shell exec stream.', ApiErrorCode::SSH_ERROR);
         }
 
@@ -133,27 +151,20 @@ class SSH
         stream_set_blocking($stream_error, TRUE);
         stream_set_blocking($stream_io, TRUE);
 
-        $r = new \WebAPI\Remote\Models\SshResult();
-        $r->Error = stream_get_contents($stream_error);
-        $r->Result = stream_get_contents($stream_io);
+        $error = stream_get_contents($stream_error);
+        $output = stream_get_contents($stream_io);
 
-        if (!isset($dontTrim) || (bool)$dontTrim !== TRUE)
-        {
-          $r->Error = trim($r->Error);
-          $r->Result = trim($r->Result);
-        }
-
-        if ($r->Result != '' || !$this->IsError($r->Error)) 
+        if ($output != '' || !$this->IsError($error)) 
         {
           // result not empty, remove error message
-          $r->Error = '';
+          $error = '';
         }
         else
         {
-          $r->Error = $this->NormalizeErrorMessage($r->Error);
+          $error = $this->NormalizeErrorMessage($error);
         }
 
-        $result[] = $r;
+        $result[] = new \WebAPI\Core\CommandResult($output, $error);
 
         fclose($stream);
       }
@@ -161,13 +172,14 @@ class SSH
 
     return $result;
   }
-    
+
   /**
-    * Execute a command on a remote server.
-    * 
-    * @param \string|\string[] $command The command to execute.
-    * @return \string|\string[]
-    */
+   * Executes the specified command on the remote server.
+   * 
+   * @param string|string[] $command Command or an array of commands to execution.
+   *  
+   * @return string|string[]
+   */
   public function Execute2($command)
   {
     if (gettype($command) !== 'array')
@@ -186,6 +198,7 @@ class SSH
       {
         $read = fread($stream, 4096);
         $result .= $read;
+
         if ($result == '' || $read == '')
         {
           break;
@@ -205,7 +218,7 @@ class SSH
           throw new ApiException('Could not open shell exec stream.', ApiErrorCode::SSH_ERROR);
         }
 
-        stream_set_blocking($stream, 1);
+        stream_set_blocking($stream, TRUE);
           
         $r = '';
 
@@ -213,6 +226,7 @@ class SSH
         {
           $read = fread($stream, 4096);
           $r .= fread($stream, 4096);
+
           if ($r == '' || $read == '')
           {
             break;
@@ -229,11 +243,12 @@ class SSH
   }
 
   /**
-    * Checks message to real error.
-    * 
-    * @param \string $value 
-    * @return bool
-    */
+   * Checks message to real error.
+   * 
+   * @param string $value 
+   * 
+   * @return bool
+   */
   private function IsError($value)
   {
     if ($value == NULL || $value == '')

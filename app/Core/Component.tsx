@@ -19,13 +19,9 @@ import * as React from 'react';
 import IMainContext from 'IMainContext';
 
 /**
- * The base class for pages.
+ * The base class for user controls.
  */
-export default class Page<P, S> extends React.Component<P, S> {
-
-  static defaultProps = {
-    Title: 'SmallServerAdminV2'
-  }
+export default class Component<P, S> extends React.Component<P, S> {
 
   context: IMainContext;
 
@@ -36,8 +32,7 @@ export default class Page<P, S> extends React.Component<P, S> {
 
   constructor(props, context) {
     super(props, context);
-    
-    Debug.Init2('Page', (this.props as any).Title, this);
+    Debug.Init3('Component', this);
   }
 
 }

@@ -97,6 +97,7 @@ export default class Index extends Page<any, ILoginState> {
     api.SuccessCallback = (result) => {
       // set token
       CurrentUser.AccessToken = result.TokenValue;
+      CurrentUser.IsValid = true;
 
       // hide login form and redirect to home
       redirecToHome = true;

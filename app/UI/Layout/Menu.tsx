@@ -18,15 +18,12 @@
 import * as React from 'react';
 import { Link } from 'react-router';
 import IMainContext from 'Core/IMainContext';
+import Component from 'Core/Component';
 
-export default class Menu extends React.Component<any, any> {
-
-  context: IMainContext;
+export default class Menu extends Component<any, any> {
 
   constructor(props, context) {
     super(props, context);
-
-    Debug.Init(this);
   }
 
   render() {

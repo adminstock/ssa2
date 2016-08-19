@@ -18,15 +18,12 @@
 import * as React from 'react';
 import IMainContext from 'Core/IMainContext';
 import CurrentUser from 'Core/CurrentUser';
+import Component from 'Core/Component';
 
-export default class Header extends React.Component<any, any> {
-
-  context: IMainContext;
+export default class Header extends Component<any, any> {
   
   constructor(props, context) {
     super(props, context);
-
-    Debug.Init(this);
   }
   
   /**

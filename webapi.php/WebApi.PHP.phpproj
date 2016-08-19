@@ -20,18 +20,25 @@
   <ItemGroup>
     <Compile Include="auth\index.php" />
     <Compile Include="config.php" />
+    <Compile Include="control\index.php" />
+    <Compile Include="control\models\Server.php" />
+    <Compile Include="control\models\Version.php" />
     <Compile Include="core\ApiErrorCode.php" />
     <Compile Include="core\ApiException.php" />
     <Compile Include="core\HttpStatusCode.php" />
-    <Compile Include="core\IModule.php" />
+    <Compile Include="core\IModuleFlags.php" />
+    <Compile Include="core\IRemoteClient.php" />
+    <Compile Include="core\Module.php" />
     <Compile Include="core\ModuleFlags.php" />
+    <Compile Include="core\OS.php" />
+    <Compile Include="core\ServerConfig.php" />
     <Compile Include="core\TextHelper.php" />
     <Compile Include="index.php" />
     <Compile Include="loader.php" />
     <Compile Include="core\Response.php" />
-    <Compile Include="remote\models\SshConfig.php" />
-    <Compile Include="remote\ssh.php" />
-    <Compile Include="remote\models\SshResult.php" />
+    <Compile Include="core\ConnectionConfig.php" />
+    <Compile Include="core\SshClient.php" />
+    <Compile Include="core\CommandResult.php" />
     <Compile Include="users\linux.php" />
     <Compile Include="users\models\AccountUpdate.php" />
     <Compile Include="users\models\CreateUser.php" />
@@ -42,14 +49,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="auth\" />
+    <Folder Include="control\models\" />
     <Folder Include="core\" />
-    <Folder Include="remote\" />
+    <Folder Include="control\" />
     <Folder Include="servers\" />
-    <Folder Include="remote\models\" />
     <Folder Include="users\" />
     <Folder Include="users\models\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".version" />
     <Content Include="servers\192.168.56.139.json" />
     <Content Include="servers\example.json" />
   </ItemGroup>

@@ -1,7 +1,7 @@
 <?php
-namespace WebAPI\Remote\Models;
+namespace WebAPI\Core;
 
-/*
+/* 
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
  * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
@@ -18,27 +18,34 @@ namespace WebAPI\Remote\Models;
  * limitations under the License.
  */
 
-class SshResult
+/**
+ * Describes the client for remote command execution.
+ */
+interface IRemoteClient
 {
-    
+ 
   /**
-    * SSH result.
-    * 
-    * @var string
-    */
-  public $Result;
+   * Initializes a new instance of the class.
+   * 
+   * @param ConnectionConfig $connectionSettings Connection settings.
+   */
+  function __construct($connectionSettings);
 
   /**
-    * SSH error message.
-    * 
-    * @var string
-    */
-  public $Error;
+   * Executes the specified command on the remote server.
+   * 
+   * @param string|string[] $command Command or an array of commands to execution.
+   * @param mixed $settings Additional options.
+   * 
+   * @return CommandResult
+   */
+  function Execute($command, $settings = NULL);
 
-  function __construct()
-  {
-    $this->Result = '';
-    $this->Error = '';
-  }
+  /**
+   * Tests the connection.
+   * 
+   * @return bool
+   */
+  function Test();
 
 }

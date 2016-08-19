@@ -16,28 +16,36 @@
  */
 
 import * as React from 'react';
-import IMainContext from 'IMainContext';
+import { Link } from 'react-router';
+import DocumentTitle from 'react-document-title';
+import Page from 'Core/Page';
+import App from 'Core/App';
+import ServersList from 'Modules/Control/UI/ServersList';
 
-/**
- * The base class for pages.
- */
-export default class Page<P, S> extends React.Component<P, S> {
+export default class Servers extends Page<any, any> {
 
   static defaultProps = {
-    Title: 'SmallServerAdminV2'
-  }
-
-  context: IMainContext;
-
-  // registration of the context type, already defined into the containing component
-  static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired
+    Title: __('Servers')
   }
 
   constructor(props, context) {
     super(props, context);
-    
-    Debug.Init2('Page', (this.props as any).Title, this);
+  }
+
+  componentWillMount() {
+    //App.MakeRequest('Users.GetUsers', {page: 1 });
+  }
+
+  render() {
+    Debug.Render2('Servers');
+
+    return (
+      <DocumentTitle title={this.props.Title}>
+        <div>
+          <ServersList />
+        </div>
+      </DocumentTitle>
+    );
   }
 
 }

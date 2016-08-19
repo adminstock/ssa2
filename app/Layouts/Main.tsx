@@ -83,6 +83,9 @@ export default class Main extends React.Component<any, any> implements IMainCont
             <hr />
             SmallServerAdmin v{SSA_VERSION} ({SSA_DATE_RELEASE})
             <br />
+            WebAPI.PHP v2.0.0-alpha (unreleased)
+            <br />
+            Debian GNU/Linux 8.4 (jessie) &middot; PHP v5.4.0
           </footer>
 
           <DialogManager />

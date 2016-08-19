@@ -28,14 +28,13 @@ export default class CurrentUser {
    * Gets or sets access token.
    */
   public static get AccessToken(): string {
-    return window.sessionStorage.getItem('AccessToken') || null;
+    return CurrentUser.GetSession<string>('AccessToken');
   }
   public static set AccessToken(value: string) {
+    CurrentUser.SetSession('AccessToken', value);
+
     if (value == null) {
-      window.sessionStorage.removeItem('AccessToken');
       CurrentUser.IsValid = false;
-    } else {
-      window.sessionStorage.setItem('AccessToken', value);
     }
   }
 
@@ -43,14 +42,10 @@ export default class CurrentUser {
    * Gets or sets the status of the relevance of the access token.
    */
   public static get IsValid(): boolean {
-    if (window.sessionStorage.getItem('IsValid') == null || window.sessionStorage.getItem('IsValid') == '') {
-      return false;
-    } else {
-      return JSON.parse(window.sessionStorage.getItem('IsValid'));
-    }
+    return CurrentUser.GetSession<boolean>('IsValid', false);
   }
   public static set IsValid(value: boolean) {
-    window.sessionStorage.setItem('IsValid', JSON.stringify(value));
+    CurrentUser.SetSession('IsValid', value);
   }
 
   /**
@@ -126,6 +121,37 @@ export default class CurrentUser {
 
   constructor() {
     Debug.Warn('"CurrentUser" is static class. No need to create an instance of this class.');
+  }
+
+  /**
+   * Gets data from sessionStorage.
+   *
+   * @param key
+   */
+  private static GetSession<T>(key: string, defaultValue?: any): T {
+    if (window.sessionStorage.getItem(key) == null || window.sessionStorage.getItem(key) == '') {
+      if (defaultValue !== undefined) {
+        return defaultValue;
+      } else {
+        return null;
+      }
+    } else {
+      return JSON.parse(window.sessionStorage.getItem(key));
+    }
+  }
+
+  /**
+   * Sets data to sessionStorage.
+   *
+   * @param key
+   * @param value
+   */
+  private static SetSession(key: string, value: any): void {
+    if (value == null) {
+      window.sessionStorage.removeItem(key);
+    } else {
+      window.sessionStorage.setItem(key, JSON.stringify(value));
+    }
   }
 
 }

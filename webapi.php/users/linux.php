@@ -26,19 +26,12 @@ use \WebAPI\Core\TextHelper as TextHelper;
 /**
  * Provides user management.
  */
-class Linux
+class Linux extends \WebAPI\Core\Module
 {
 
-  /**
-   * SSH client.
-   * 
-   * @var \WebAPI\Remote\SSH
-   */
-  private $SshClient = NULL;
-
-  function __construct()
+  function __construct($server = NULL)
   {
-    $this->SshClient = new \WebAPI\Remote\SSH();
+    parent::__construct($server);
   }
 
   #region ..Public methods..
@@ -94,7 +87,7 @@ class Linux
     }
 
     // get user groups
-    $shell_result = $this->SshClient->Execute('sudo groups '.$user->Login)->Result;
+    $shell_result = $this->ExecuteCommand('sudo groups '.$user->Login)->Output;
     $user->Groups = explode(' ', trim(explode(':', $shell_result)[1]));
       
     return $user;
@@ -121,9 +114,9 @@ class Linux
     '--disabled-password --gecos "'.$gecos.'" && '.
     'echo "OK"';
 
-    $shell_result = $this->SshClient->Execute($cmd);
+    $shell_result = $this->ExecuteCommand($cmd);
 
-    if ($shell_result->Result != 'OK')
+    if (!$shell_result->OutputAre('OK'))
     {
       throw new ApiException($shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
@@ -132,9 +125,9 @@ class Linux
     $safeLogin = TextHelper::EscapeString($login);
     $safePassword = TextHelper::EscapeString($password);
 
-    $shell_result = $this->SshClient->Execute('sudo bash -c \'echo -e "'.$safePassword.'\n'.$safePassword.'" | passwd "'.$safeLogin.'"\' && echo "OK"');
+    $shell_result = $this->ExecuteCommand('sudo bash -c \'echo -e "'.$safePassword.'\n'.$safePassword.'" | passwd "'.$safeLogin.'"\' && echo "OK"');
 
-    if ($shell_result->Result != 'OK')
+    if (!$shell_result->OutputAre('OK'))
     {
       throw new ApiException('Fail to set password for '.$login.': '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
@@ -142,10 +135,10 @@ class Linux
     // add to groups
     if ($groups != NULL && count($groups) > 0)
     {
-      $shell_result = $this->SshClient->Execute('sudo usermod --groups '.implode(',', $groups).' '.$login.' && echo "OK"');
+      $shell_result = $this->ExecuteCommand('sudo usermod --groups '.implode(',', $groups).' '.$login.' && echo "OK"');
     }
 
-    if ($shell_result->Result != 'OK')
+    if (!$shell_result->OutputAre('OK'))
     {
       throw new ApiException('Unable to add user '.$login.' to groups '.implode(', ', $groups).': '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
@@ -160,9 +153,9 @@ class Linux
   {
     $cmd = 'sudo userdel '.((bool)$removeHome ? '--remove ' : '').$login.' && echo "OK"';
 
-    $shell_result = $this->SshClient->Execute($cmd);
+    $shell_result = $this->ExecuteCommand($cmd);
 
-    if ($shell_result->Result != 'OK')
+    if (!$shell_result->OutputAre('OK'))
     {
       throw new ApiException($shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
@@ -184,9 +177,9 @@ class Linux
 
     $cmd = 'sudo usermod --comment "'.$gecos.'" '.$login.' && echo "OK"';
 
-    $shell_result = $this->SshClient->Execute($cmd);
+    $shell_result = $this->ExecuteCommand($cmd);
 
-    if ($shell_result->Result != 'OK')
+    if (!$shell_result->OutputAre('OK'))
     {
       throw new ApiException($shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
@@ -199,9 +192,9 @@ class Linux
     */
   public function UpdateUserGroups($login, $groups)
   {
-    $shell_result = $this->SshClient->Execute('sudo usermod --groups '.implode(',', $groups).' '.$login.' && echo "OK"');
+    $shell_result = $this->ExecuteCommand('sudo usermod --groups '.implode(',', $groups).' '.$login.' && echo "OK"');
 
-    if ($shell_result->Result != 'OK')
+    if (!$shell_result->OutputAre('OK'))
     {
       throw new ApiException('Failed to to update the list of user groups: '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
@@ -214,31 +207,31 @@ class Linux
     */
   public function UpdateUserAccount($login, $setLogin = FALSE, $newLogin = NULL, $setPassword = FALSE, $newPassword = NULL, $setShell = FALSE, $newShell = NULL)
   {
-    $shell_result = $this->SshClient->Execute('sudo grep "'.$login.'" /etc/passwd');
+    $shell_result = $this->ExecuteCommand('sudo grep "'.$login.'" /etc/passwd');
 
     if ($shell_result->Error != '')
     {
       throw new ApiException($shell_result->Error, ApiErrorCode::COMMAND_ERROR);
     }
 
-    $user = $this->ParseUser($shell_result->Result);
+    $user = $this->ParseUser($shell_result->Output);
 
     // change username
     if ((bool)$setLogin && $newLogin != $login)
     {
       // rename
-      $shell_result = $this->SshClient->Execute('sudo usermod --login '.$newLogin.' '.$login.' && echo "OK"');
+      $shell_result = $this->ExecuteCommand('sudo usermod --login '.$newLogin.' '.$login.' && echo "OK"');
 
-      if ($shell_result->Result != 'OK')
+      if (!$shell_result->OutputAre('OK'))
       {
         throw new ApiException('Failed to change the user name: '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
       }
 
       // change home path
       if ($user->HomePath != ''){
-        $shell_result = $this->SshClient->Execute('sudo usermod --home /home/'.$newLogin.' --move-home '.$newLogin.' && echo "OK"');
+        $shell_result = $this->ExecuteCommand('sudo usermod --home /home/'.$newLogin.' --move-home '.$newLogin.' && echo "OK"');
 
-        if ($shell_result->Result != 'OK')
+        if (!$shell_result->OutputAre('OK'))
         {
           throw new ApiException('Failed to change the user home directory: '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
         }
@@ -250,10 +243,10 @@ class Linux
     // change password
     if ((bool)$setPassword && isset($newPassword) && $newPassword != '')
     {
-      // $shell_result = $this->SshClient->Execute('sudo usermod --password '.$data['NewPassword'].' '.$data['Login'].' && echo "OK"');
-      $shell_result = $this->SshClient->Execute('sudo bash -c \'echo -e "'.$newPassword.'\n'.$newPassword.'" | passwd "'.$login.'"\' && echo "OK"');
+      // $shell_result = $this->ExecuteCommand('sudo usermod --password '.$data['NewPassword'].' '.$data['Login'].' && echo "OK"');
+      $shell_result = $this->ExecuteCommand('sudo bash -c \'echo -e "'.$newPassword.'\n'.$newPassword.'" | passwd "'.$login.'"\' && echo "OK"');
 
-      if ($shell_result->Result != 'OK')
+      if (!$shell_result->OutputAre('OK'))
       {
         throw new ApiException('Failed to set a new password: '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
       }
@@ -262,9 +255,9 @@ class Linux
     // change shell
     if ((bool)$setShell && isset($newShell) && $newShell != '')
     {
-      $shell_result = $this->SshClient->Execute('sudo usermod --shell '.$newShell.' '.$login.' && echo "OK"');
+      $shell_result = $this->ExecuteCommand('sudo usermod --shell '.$newShell.' '.$login.' && echo "OK"');
 
-      if ($shell_result->Result != 'OK')
+      if (!$shell_result->OutputAre('OK'))
       {
         throw new ApiException('Failed to set a new shell: '.$shell_result->Error, ApiErrorCode::COMMAND_ERROR);
       }
@@ -305,14 +298,14 @@ class Linux
       $command[] = 'sed -n "'.($page == 0 ? 1 : ($page * $dataPerPage) + 1).','.(($page * $dataPerPage) + $dataPerPage).'"p /etc/passwd';
     }
 
-    $shell_result = $this->SshClient->Execute($command);
+    $shell_result = $this->ExecuteCommand($command);
 
     $result = new \WebAPI\Users\Models\UsersList();
-    $result->TotalRecords = (int)$shell_result[0]->Result;
+    $result->TotalRecords = (int)$shell_result[0]->Output;
     $result->CurrentPage = (int)$page + 1;
     $result->DataPerPage = (int)$dataPerPage;
 
-    $users = preg_split('/[\r\n]+/', $shell_result[1]->Result, -1, PREG_SPLIT_NO_EMPTY);
+    $users = preg_split('/[\r\n]+/', $shell_result[1]->Output, -1, PREG_SPLIT_NO_EMPTY);
 
     foreach ($users as $user)
     {
@@ -363,7 +356,7 @@ class Linux
     */
   private function GetGroupsList()
   {
-    $shell_result = $this->SshClient->Execute('sudo cat /etc/group')->Result;
+    $shell_result = $this->ExecuteCommand('sudo cat /etc/group')->Output;
     $groups = preg_split('/[\r\n]+/', $shell_result, -1, PREG_SPLIT_NO_EMPTY);
     $result = array();
 

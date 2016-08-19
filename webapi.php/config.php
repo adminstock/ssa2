@@ -1,8 +1,9 @@
 <?php
 // TODO
-$root_path = $_SERVER['DOCUMENT_ROOT'];
 
-$config = [];
+// root path
+define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 
 // path to the configuration files of servers
-$config['servers_config_path'] = $root_path.'/servers';
+// default: ./servers
+define('SSA_SERVERS_PATH', implode(DIRECTORY_SEPARATOR, [ROOT_PATH, 'servers']));

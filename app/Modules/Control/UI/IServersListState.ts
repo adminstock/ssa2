@@ -15,29 +15,14 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import IMainContext from 'IMainContext';
+import Server from 'Models/Server';
 
-/**
- * The base class for pages.
- */
-export default class Page<P, S> extends React.Component<P, S> {
+export interface IServersListState {
 
-  static defaultProps = {
-    Title: 'SmallServerAdminV2'
-  }
+  Servers?: Array<Server>;
 
-  context: IMainContext;
-
-  // registration of the context type, already defined into the containing component
-  static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired
-  }
-
-  constructor(props, context) {
-    super(props, context);
-    
-    Debug.Init2('Page', (this.props as any).Title, this);
-  }
+  Loading?: boolean;
 
 }
+
+export default IServersListState;

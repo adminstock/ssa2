@@ -54,7 +54,11 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="AppStart\Init.tsx" />
+    <TypeScriptCompile Include="Core\Component.tsx" />
     <TypeScriptCompile Include="Layouts\Blank.tsx" />
+    <TypeScriptCompile Include="Modules\Control\Servers.tsx" />
+    <TypeScriptCompile Include="Modules\Control\UI\IServersListState.ts" />
+    <TypeScriptCompile Include="Modules\Control\UI\ServersList.tsx" />
     <TypeScriptCompile Include="Pages\Login\ILoginState.ts" />
     <TypeScriptCompile Include="Pages\Login\Index.tsx" />
     <TypeScriptCompile Include="Pages\Error.tsx" />

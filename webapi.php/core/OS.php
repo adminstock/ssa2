@@ -1,6 +1,9 @@
-﻿/*
+<?php
+namespace WebAPI\Core;
+
+/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +18,16 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import IMainContext from 'IMainContext';
-
 /**
- * The base class for pages.
+ * Represents information about the operating system.
  */
-export default class Page<P, S> extends React.Component<P, S> {
+class OS
+{
 
-  static defaultProps = {
-    Title: 'SmallServerAdminV2'
-  }
+  public $Name;
 
-  context: IMainContext;
+  public $Family;
 
-  // registration of the context type, already defined into the containing component
-  static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired
-  }
-
-  constructor(props, context) {
-    super(props, context);
-    
-    Debug.Init2('Page', (this.props as any).Title, this);
-  }
+  public $Version;
 
 }

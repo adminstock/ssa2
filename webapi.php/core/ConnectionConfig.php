@@ -1,7 +1,7 @@
 <?php
 namespace WebAPI\Core;
 
-/*
+/* 
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
  * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
@@ -19,24 +19,55 @@ namespace WebAPI\Core;
  */
 
 /**
- * Allows specify individual properties of modules.
+ * Represents the connection settings.
  */
-interface IModule
+class ConnectionConfig
 {
 
   /**
-   * Returns flags of the module.
+   * Client name of remote access.
    * 
-   * For example:
-   * 
-   *   return \WebAPI\Core\ModuleFlags::ANONYMOUS;
-   *   
-   * or
-   * 
-   *   return \WebAPI\Core\ModuleFlags::ANONYMOUS | \WebAPI\Core\ModuleFlags::WITHOUT_SERVER
-   * 
-   * @return \int
+   * @var string
    */
-  public function GetModuleFlags();
+  public $Client = 'SshClient';
+
+  /**
+   * Server address.
+   * 
+   * @var string
+   */
+  public $Host = '';
+
+  /**
+   * Connection port.
+   * 
+   * @var int
+   */
+  public $Port = 22;
+
+  /**
+   * Username.
+   * 
+   * @var string
+   */
+  public $User = '';
+
+  /**
+   * Password.
+   * 
+   * @var string
+   */
+  public $Password = '';
+
+  /**
+   * Password required for each commands.
+   * 
+   * @var bool
+   */
+  public $RequiredPassword = TRUE;
+
+  function __construct()
+  {
+  }
 
 }

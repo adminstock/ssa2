@@ -23,7 +23,7 @@ require('jquery');
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Router, Route, Link, IndexRoute, browserHistory } from 'react-router';
+import { Router, Route, Link, IndexRoute, IndexRedirect, browserHistory } from 'react-router';
 import LayoutMain from 'Layouts/Main';
 import LayoutBlank from 'Layouts/Blank';
 import App from 'Core/App';
@@ -45,6 +45,12 @@ const routes = (
       <IndexRoute getComponent={(location, callback) => { LoadComponent(location, callback); } } />
 
       {/* modules */}
+
+      <Route path="/control">
+        <IndexRedirect to="/error?code=HTTP404" />
+        <Route path="/control/servers" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+      </Route>
+
       <Route path="/users">
         <IndexRoute getComponent={(location, callback) => { LoadComponent(location, callback); } } />
         <Route path="/users/edit" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
@@ -64,6 +70,9 @@ const routes = (
       {/* error page */}
       <Route path="/error" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
     </Route>
+
+    {/* unknown routes */}
+    <Route path="*" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
   </Router>
 );
 
@@ -81,7 +90,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 
   App.AbortAllRequests();
 
-  if (location.pathname != '/Init' && location.pathname != '/Login' && location.pathname != '/Error') { // TODO: array
+  if (location.pathname != '/init' && location.pathname != '/login' && location.pathname != '/error') { // TODO: array
     // check servers list
     if (App.Config.ListOfApiServers == null) {
       Init(location.pathname);
@@ -115,6 +124,10 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
       require(['Pages/Error'], LoadedComponent.bind(me));
       break;
 
+    case '/control/servers':
+      require(['Modules/Control/Servers'], LoadedComponent.bind(me));
+      break;
+
     case '/users':
       require(['Modules/Users/Index'], LoadedComponent.bind(me));
       break;
@@ -124,8 +137,8 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
       break;
 
     default:
-      console.error('Cannot find module "' + module + '"');
-      App.Redirect('/error', { msg: 'Cannot find module "' + module + '"' });
+      //console.error('Cannot find path "' + location.pathname + '"');
+      App.Redirect('/error', { msg: 'Cannot find path "' + location.pathname + '"', code: 'HTTP404' });
   }
 
 }

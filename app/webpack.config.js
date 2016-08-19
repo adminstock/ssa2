@@ -50,13 +50,6 @@ module.exports = Object.keys(languages).map(function(language) {
         'default-theme': path.join(__dirname, 'Content/Styles/v1/bundle.scss'),
 
         // you can use
-        // import Debug from 'debug';
-        // instead
-        // import Debug from 'Helpers/Debug';
-        // see also /local.d.ts
-        'debug': 'Helpers/Debug',
-
-        // you can use
         // import Header from 'UI/Header';
         // instead
         // import Header from '../UI/Header';
@@ -143,7 +136,7 @@ module.exports = Object.keys(languages).map(function(language) {
         'React': 'react',
         'ReactDOM': 'react-dom',
         'ReactUpdate': 'react-addons-update',
-        'Debug': 'debug', // see alias 'Helpers/Debug'
+        'Debug': 'Helpers/Debug',
         'IMainContext': 'Layouts/IMainContext'
       }),
 

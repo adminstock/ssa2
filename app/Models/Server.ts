@@ -6,7 +6,7 @@
 export default class Server {
 
   /** Config file name. */
-  public Config: string;
+  public FileName: string;
 
   /** Server name. */
   public Name: string;

@@ -39,7 +39,8 @@ require_once 'loader.php';
 use \WebAPI\Core\ApiException as ApiException;
 use \WebAPI\Core\ApiErrorCode as ApiErrorCode;
 use \WebAPI\Core\ModuleFlags as ModuleFlags;
-use \WebAPI\Core\IModule as IModule;
+use \WebAPI\Core\IModuleFlags as IModuleFlags;
+use \WebAPI\Core\ServerConfig as ServerConfig;
 
 /**
  * The SmallServerAdmin API.
@@ -78,10 +79,12 @@ class API
         throw new ApiException('Invalid method name. Expected: "ModuleName.MethodName".');
       }
 
+      $server = NULL;
+
       // load server config
       if (isset($query['Server']) && $query['Server'] != '')
       {
-        $this->LoadServerConfig($query['Server']);
+        $server = new ServerConfig($query['Server']);
       }
 
       // parse class and method name
@@ -90,20 +93,20 @@ class API
       $methodName = $name[1];
 
       // create class instance
-      $instance = $this->GetInstance($moduleName, $methodName);
+      $instance = $this->GetInstance($server, $moduleName, $methodName);
 
       // check flags
       $serverRequired = TRUE;
       $tokenRequired = TRUE;
 
-      if ($instance instanceof IModule)
+      if ($instance instanceof IModuleFlags)
       {
         $serverRequired = !ModuleFlags::HasFlag($instance->GetModuleFlags(), ModuleFlags::WITHOUT_SERVER);
         $tokenRequired = !ModuleFlags::HasFlag($instance->GetModuleFlags(), ModuleFlags::ANONYMOUS);
       }
 
       // check server config
-      if ($serverRequired && !isset($config['server']))
+      if ($serverRequired && !isset($server))
       {
         throw new ApiException('Server is required.', ApiErrorCode::SERVER_REQUIRED);
       }
@@ -154,11 +157,11 @@ class API
       }
       else if (isset($query['Data']))
       {
-        $result = $this->Output($instance->{$methodName}($query['Data']));
+        $result = $instance->{$methodName}($query['Data']);
       }
       else
       {
-        $result = $this->Output($instance->{$methodName}());
+        $result = $instance->{$methodName}();
       }
 
       // output
@@ -201,57 +204,28 @@ class API
   }
 
   /**
-   * Loads server config.
-   */
-  private function LoadServerConfig($serverName)
-  {
-    global $config;
-    
-    if (!isset($serverName))
-    {
-      throw new ApiException('Server name is required, value cannot be empty.');
-    }
-
-    if (!isset($config['servers_config_path']) || !is_dir($config['servers_config_path']))
-    {
-      throw new ApiException('servers_config_path is required, value cannot be empty. Please check config.php.');
-    }
-    
-    if (!is_file($config['servers_config_path'].'/'.$serverName.'.json'))
-    {
-      throw new ApiException('File "'.$config['servers_config_path'].'/'.$serverName.'.json'.'" not found.');
-    }
-
-    $json = file_get_contents($config['servers_config_path'].'/'.$serverName.'.json');
-    $json = str_replace("\xEF\xBB\xBF", '', $json);
-
-    $config['server'] = json_decode($json, TRUE);
-  }
-
-  /**
    * Seeking a module class and creates an instance of this module.
    * 
-   * @param mixed $moduleName Module name.
-   * @param mixed $methodName Method name to check.
+   * @param \WebAPI\Core\ServerConfig $server Server config.
+   * @param string $moduleName Module name.
+   * @param string $methodName Method name to check.
    * @throws ApiException 
    * @return object
    */
-  private function GetInstance($moduleName, $methodName)
+  private function GetInstance($server, $moduleName, $methodName)
   {
-    global $config;
-
     $moduleIncluded = FALSE;
 
     $moduleSearch = [];
 
-    if (isset($config['server']) && isset($config['server']['os']))
+    if (isset($server) && isset($server->OS))
     {
-      $os = $config['server']['os'];
+      $os = $server->OS;
       $osName = ''; $osFamily = ''; $osVersion = '';
 
-      if (isset($os['name']) && $os['name'] != '') { $osName = strtolower($os['name']); }
-      if (isset($os['family']) && $os['family'] != '') { $osFamily = strtolower($os['family']); }
-      if (isset($os['version']) && $os['version'] != '') { $osVersion = strtolower($os['version']); }
+      if (isset($os->Name) && $os->Name != '') { $osName = strtolower($os->name); }
+      if (isset($os->Family) && $os->Family != '') { $osFamily = strtolower($os->Family); }
+      if (isset($os->Version) && $os->Version != '') { $osVersion = strtolower($os->Version); }
 
       if ($osName != '' && $osVersion != '')
       {
@@ -303,7 +277,7 @@ class API
 
     if (class_exists($className))
     {
-      $instance = new $className();
+      $instance = new $className($server);
     }
     else 
     {

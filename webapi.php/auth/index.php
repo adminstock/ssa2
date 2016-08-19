@@ -24,7 +24,7 @@ use \WebAPI\Core\ApiErrorCode as ApiErrorCode;
 /**
  * Processing user authentication requests.
  */
-class Index implements \WebAPI\Core\IModule
+class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
 {
 
   public function GetToken($username, $password)
