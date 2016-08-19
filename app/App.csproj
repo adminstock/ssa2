@@ -55,6 +55,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="AppStart\Init.tsx" />
     <TypeScriptCompile Include="Core\Component.tsx" />
+    <TypeScriptCompile Include="Core\IMakeRequestProps.ts" />
     <TypeScriptCompile Include="Layouts\Blank.tsx" />
     <TypeScriptCompile Include="Modules\Control\Servers.tsx" />
     <TypeScriptCompile Include="Modules\Control\UI\IServersListState.ts" />

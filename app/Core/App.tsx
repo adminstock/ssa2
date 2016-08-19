@@ -21,8 +21,10 @@ import { Modal, Button } from 'react-bootstrap';
 
 import ApiServer from 'Models/ApiServer';
 import ApiRequest from 'API/ApiRequest';
+import ApiError from 'API/ApiError';
 
 import IMainContext from 'IMainContext';
+import IMakeRequestProps from 'IMakeRequestProps';
 
 import Dialog from 'UI/Dialog/Dialog';
 import DialogManager from 'UI/Dialog/DialogManager';
@@ -245,13 +247,15 @@ export default class App {
   // #endregion
   // #region ..API Requests..
 
-  public static MakeRequest<TRequest, TResponse>(method: string, data?: TRequest, successCallback?, errorCallback?): void {
-    let api = new ApiRequest<any, TResponse>(method, data);
+  public static MakeRequest<TRequest, TResponse>(settings: IMakeRequestProps<TRequest, TResponse>): void {
+    let api = new ApiRequest<any, TResponse>(settings.Method, settings.Data);
 
-    api.SuccessCallback = () => {
-      if (typeof successCallback === 'function') {
-        successCallback();
+    api.SuccessCallback = (result) => {
+
+      if (typeof settings.SuccessCallback === 'function') {
+        settings.SuccessCallback(result);
       }
+
     }
 
     api.ErrorCallback = (error) => {
@@ -260,18 +264,35 @@ export default class App {
         // reset token
         CurrentUser.AccessToken = null;
 
-        // show login form
-        DialogManager.ShowDialog('login');
-      } else {
-        // show error message
-        App.Alert({
-          title: __('Error'),
-          message: <div>{error.Text} {error.Trace != null ? (<div><hr /><pre>{error.Trace}</pre></div>) : ''}</div>
-        });
+        // redirect to login
+        App.Redirect('/login', { query: window.location.href });
+        return;
       }
+
+      if (typeof settings.ErrorCallback === 'function') {
+        // custom handler
+        settings.ErrorCallback(error);
+      }
+      else {
+        // show error message
+        App.DefaultApiErrorHandler(error);
+      }
+
     }
 
     api.Execute();
+  }
+
+  /**
+   * Default API error handler.
+   *
+   * @param error Error instance.
+   */
+  public static DefaultApiErrorHandler(error: ApiError): void {
+    App.Alert({
+      title: __('Error'),
+      message: <div>{error.Text} {error.Trace != null ? (<div><hr /><pre>{error.Trace}</pre></div>) : ''}</div>
+    });
   }
 
   public static AbortAllRequests(): void {

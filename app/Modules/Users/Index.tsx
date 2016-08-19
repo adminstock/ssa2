@@ -32,7 +32,7 @@ export default class Index extends Page<any, any> {
   }
 
   componentWillMount() {
-    App.MakeRequest('Users.GetUsers', {page: 1 });
+    App.MakeRequest({ Method: 'Users.GetUsers', Data: { page: 1 } });
   }
 
   render() {

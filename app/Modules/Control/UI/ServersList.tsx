@@ -46,7 +46,12 @@ export default class ServersList extends Component<any, IServersListState> {
    * Loads list of servers.
    */
   private LoadServers(): void {
-    App.MakeRequest('Control.GetServers');
+    App.MakeRequest<any, Array<Server>>({
+      Method: 'Control.GetServers',
+      SuccessCallback: (result) => {
+        this.setState({ Servers: result, Loading: false });
+      }
+    });
   }
 
   render() {
