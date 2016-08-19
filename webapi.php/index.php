@@ -223,7 +223,7 @@ class API
       $os = $server->OS;
       $osName = ''; $osFamily = ''; $osVersion = '';
 
-      if (isset($os->Name) && $os->Name != '') { $osName = strtolower($os->name); }
+      if (isset($os->Name) && $os->Name != '') { $osName = strtolower($os->Name); }
       if (isset($os->Family) && $os->Family != '') { $osFamily = strtolower($os->Family); }
       if (isset($os->Version) && $os->Version != '') { $osVersion = strtolower($os->Version); }
 

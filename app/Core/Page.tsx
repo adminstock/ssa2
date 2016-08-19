@@ -34,7 +34,7 @@ export default class Page<P, S> extends React.Component<P, S> {
     router: React.PropTypes.object.isRequired
   }
 
-  constructor(props, context) {
+  constructor(props?, context?) {
     super(props, context);
     
     Debug.Init2('Page', (this.props as any).Title, this);

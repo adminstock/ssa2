@@ -16,23 +16,27 @@
  */
 
 import * as React from 'react';
-import IMainContext from 'IMainContext';
+import Component from 'Core/Component';
+import IProcessingIndicatorProps from 'IProcessingIndicatorProps';
 
-/**
- * The base class for user controls.
- */
-export default class Component<P, S> extends React.Component<P, S> {
+export default class ProcessingIndicator extends Component<IProcessingIndicatorProps, any> {
 
-  context: IMainContext;
-
-  // registration of the context type, already defined into the containing component
-  static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired
+  static defaultProps = {
+    Text: __('Please wait...')
   }
 
-  constructor(props?, context?) {
+  constructor(props, context) {
     super(props, context);
-    Debug.Init3('Component', this);
+  }
+
+  render() {
+    return (
+      <div className="loading">
+        <span className="glyphicon glyphicon-refresh fa-spin"></span>
+        &nbsp;
+        { this.props.Text }
+      </div>
+    );
   }
 
 }

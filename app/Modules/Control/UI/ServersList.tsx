@@ -22,6 +22,7 @@ import Component from 'Core/Component';
 import { Button } from 'react-bootstrap';
 import Server from 'Models/Server';
 import IServersListState from 'IServersListState';
+import ProcessingIndicator from 'UI/ProcessingIndicator';
 
 /**
  * Represents a list of servers to manage.
@@ -52,13 +53,7 @@ export default class ServersList extends Component<any, IServersListState> {
     Debug.Render3('ServersList', this.state.Loading);
 
     if (this.state.Loading) {
-      return (
-        <div className="loading">
-          <span className="glyphicon glyphicon-refresh fa-spin"></span>
-          &nbsp;
-          { __('Loading. Please wait...') }
-        </div>
-      );
+      return (<ProcessingIndicator Text={ __('Loading. Please wait...') } />);
     }
 
     let list = [];

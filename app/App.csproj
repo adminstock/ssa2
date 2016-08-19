@@ -118,9 +118,11 @@
     <TypeScriptCompile Include="typings\globals\webpack\index.d.ts" />
     <TypeScriptCompile Include="typings\index.d.ts" />
     <TypeScriptCompile Include="UI\Dialog\IDialogManagerState.ts" />
+    <TypeScriptCompile Include="UI\IProcessingIndicatorProps.ts" />
     <TypeScriptCompile Include="UI\Layout\Header.tsx" />
     <TypeScriptCompile Include="UI\Layout\Menu.tsx" />
     <TypeScriptCompile Include="UI\Overlay.ts" />
+    <TypeScriptCompile Include="UI\ProcessingIndicator.tsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Images\" />

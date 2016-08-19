@@ -15,24 +15,10 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import IMainContext from 'IMainContext';
+export interface IProcessingIndicatorProps {
 
-/**
- * The base class for user controls.
- */
-export default class Component<P, S> extends React.Component<P, S> {
-
-  context: IMainContext;
-
-  // registration of the context type, already defined into the containing component
-  static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired
-  }
-
-  constructor(props?, context?) {
-    super(props, context);
-    Debug.Init3('Component', this);
-  }
+  Text: string;
 
 }
+
+export default IProcessingIndicatorProps;
