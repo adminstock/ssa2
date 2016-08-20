@@ -35,7 +35,75 @@ export default class Header extends Component<any, any> {
     CurrentUser.Language = newLanguage;
   }
 
+  private GetServerIcon(): string {
+    if (CurrentUser.ManagedServer == null) {
+      return null;
+    }
+
+    let result = '';
+    
+    let server = CurrentUser.ManagedServer;
+
+    if (server.OS) {
+      let name = '';
+      let family = '';
+
+      if (server.OS.Name != null) {
+        name = server.OS.Name.toLowerCase();
+      }
+
+      if (server.OS.Family != null) {
+        family = server.OS.Family.toLowerCase();
+      }
+
+      if (name.indexOf('debian') != -1) {
+        result = 'os-icon24-debian';
+      }
+      else if (name.indexOf('ubuntu') != -1) {
+        result = 'os-icon24-ubuntu';
+      }
+      else if (name.indexOf('freebsd') != -1) {
+        result = 'os-icon24-freebsd';
+      }
+      else if (name.indexOf('redhat') != -1) {
+        result = 'os-icon24-redhat';
+      }
+      else if (name.indexOf('centos') != -1) {
+        result = 'os-icon24-centos';
+      }
+      else if (name.indexOf('windows') != -1) {
+        result = 'os-icon24-windows';
+
+        if (name.indexOf('2012') != -1 || name.indexOf('2016') != -1) {
+          result = 'os-icon24-windows2012';
+        }
+      }
+      else if (name.indexOf('osx') != -1 || name.indexOf('os x') != -1 || name.indexOf('mac') != -1) {
+        result = 'os-icon24-osx';
+      }
+
+      if (result == '' && family != '') {
+        if (family.indexOf('linux') != -1) {
+          result = 'os-icon24-linux';
+        }
+      }
+    }
+
+    return 'os-icon24 ' + result;
+  }
+
+
   render() {
+    let serverName = '';
+
+    if (CurrentUser.ManagedServer != null) {
+      serverName = CurrentUser.ManagedServer.FileName;
+
+      if (CurrentUser.ManagedServer.Name != null && CurrentUser.ManagedServer.Name != '') {
+        serverName = CurrentUser.ManagedServer.Name;
+      }
+    }
+
     return (
       <nav className="navbar navbar-default">
         <div className="container">
@@ -47,7 +115,8 @@ export default class Header extends Component<any, any> {
             </button>
             <a className="navbar-brand" title="All servers"><span className="fa fa-server"></span></a>
             <a href="/" className="navbar-brand" title="Dashboard">
-              TODO SERVER NAME
+              <i className={this.GetServerIcon()}></i>
+              {serverName}
             </a>
             <span className="navbar-brand hidden-xs">/</span>
             <span className="navbar-brand hidden-xs">

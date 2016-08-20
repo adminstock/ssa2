@@ -1,0 +1,53 @@
+﻿@import ".sprites/os-icons24";
+
+.os-icon24 {
+	display: inline-block;
+}
+
+.os-icon24-centos {
+  @include sprite($centos);
+}
+
+.os-icon24-debian {
+  @include sprite($debian);
+}
+
+.os-icon24-freebsd {
+  @include sprite($freebsd);
+}
+
+.os-icon24-linux {
+  @include sprite($linux);
+}
+
+.os-icon24-mandriva {
+  @include sprite($mandriva);
+}
+
+.os-icon24-osx {
+  @include sprite($osx);
+}
+
+.os-icon24-redhat {
+  @include sprite($redhat);
+}
+
+.os-icon24-suse {
+  @include sprite($suse);
+}
+
+.os-icon24-ubuntu {
+  @include sprite($ubuntu);
+}
+
+.os-icon24-unix {
+  @include sprite($unix);
+}
+
+.os-icon24-windows {
+  @include sprite($windows);
+}
+
+.os-icon24-windows2012 {
+  @include sprite($windows2012);
+}

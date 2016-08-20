@@ -1,6 +1,6 @@
-﻿/*
+﻿/* 
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,26 @@
  * limitations under the License.
  */
 
-import Server from 'Models/Server';
-import { OutputMode } from 'OutputMode';
+/**
+ * Represents the connection settings.
+ */
+export default class ConnectionSettings {
 
-export interface IServerItemProps {
+  /**
+   * Client name of remote access. For example: SshClient.
+   */
+  public Client: string;
 
-  Server: Server;
+  /** Server host or IP address. */
+  public Host: string;
 
-  OutputMode: OutputMode;
+  /** Connection port. For example: 22. */
+  public Port: number;
+
+  /** Username. */
+  public Username: string;
+
+  /** User password. */
+  public Password: string;
 
 }
-
-export default IServerItemProps;

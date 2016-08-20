@@ -195,6 +195,34 @@ module.exports = Object.keys(languages).map(function(language) {
         }
       }),
 
+      new spritesmithPlugin({
+        'src': {
+          'cwd': path.resolve(__dirname, 'Content', 'Sprites', 'os-icons24'),
+          'glob': '*.png'
+        },
+        'target': {
+          'image': path.resolve(__dirname, 'dist', 'images', 'os-icons24.png'),
+          'css': path.resolve(__dirname, 'Content', 'Styles', 'v1', '.sprites', 'os-icons24.scss')
+        },
+        'apiOptions': {
+          'cssImageRef': '/dist/images/os-icons24.png'
+        }
+      }),
+
+      new spritesmithPlugin({
+        'src': {
+          'cwd': path.resolve(__dirname, 'Content', 'Sprites', 'os-icons48'),
+          'glob': '*.png'
+        },
+        'target': {
+          'image': path.resolve(__dirname, 'dist', 'images', 'os-icons48.png'),
+          'css': path.resolve(__dirname, 'Content', 'Styles', 'v1', '.sprites', 'os-icons48.scss')
+        },
+        'apiOptions': {
+          'cssImageRef': '/dist/images/os-icons48.png'
+        }
+      }),
+
       // #endregion
 
       // https://www.npmjs.com/package/copy-webpack-plugin

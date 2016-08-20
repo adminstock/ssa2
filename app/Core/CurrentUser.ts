@@ -17,6 +17,7 @@
 
 import CookiesHelper from 'Helpers/CookiesHelper';
 import ApiServer from 'Models/ApiServer';
+import { Server } from 'Models/Server';
 import Config from 'Config';
 
 /**
@@ -110,17 +111,38 @@ export default class CurrentUser {
   }
 
   /**
-   * Gets or sets config file of the server to manage.
+   * Gets or sets config file name of the server to manage.
    */
-  public static get ManagedServer(): string {
+  public static get ManagedServerName(): string {
     return CookiesHelper.Get('managed-server');
   }
-  public static set ManagedServer(value: string) {
-    CookiesHelper.Add('managed-server', value, 365);
+
+  /**
+   * Gets or sets server to manage.
+   */
+  public static get ManagedServer(): Server {
+    return CurrentUser.GetSession<Server>('ManagedServer');
+  }
+
+  public static get ManagedServerLoaded(): boolean {
+    return CurrentUser.GetSession<boolean>('ManagedServerLoaded', false);
+  }
+  public static set ManagedServerLoaded(value: boolean) {
+    CurrentUser.SetSession('ManagedServerLoaded', value);
   }
 
   constructor() {
     Debug.Warn('"CurrentUser" is static class. No need to create an instance of this class.');
+  }
+
+  public static SetManagedServer(server: Server): void {
+    if (server == null || server.FileName == null || server.FileName == '') {
+      CookiesHelper.Delete('managed-server');
+      CurrentUser.SetSession('ManagedServer', null);
+    } else {
+      CookiesHelper.Add('managed-server', server.FileName, 365);
+      CurrentUser.SetSession('ManagedServer', server);
+    }
   }
 
   /**

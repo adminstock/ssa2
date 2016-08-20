@@ -98,7 +98,7 @@ export default class ApiRequest<TRequest, TResponse> {
     this._Method = method;
     this._Data = data || null;
     this._Key = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-    this._Server = CurrentUser.ManagedServer;
+    this._Server = CurrentUser.ManagedServerName;
     this.Token = CurrentUser.AccessToken;
   }
 

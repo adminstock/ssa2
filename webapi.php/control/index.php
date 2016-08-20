@@ -40,7 +40,9 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
    */
   public function Version()
   {
-
+    //['WebAPI' => ['Name'=>'WebAPI.PHP', 'Version' =>'2.0', 'DateRelease' => 'unreleased']]
+    //['OS' => ['Name'=>'Debian', 'Version' =>'8.4', 'DateRelease' => 'unreleased']]
+    //['Software' => ['Name'=>'PHP', 'Version' =>'5.4']]
     //php_uname('s');
     //'r'
     //'m'
@@ -52,7 +54,14 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
 
   public function ConnectionTest()
   {
-    return ['Success' => $this->TestConnection()];
+    if ($this->TestConnection())
+    {
+      return ['Success' => TRUE];
+    }
+    else
+    {
+      throw new ApiException('Connection failed.');
+    }
   }
 
   /**

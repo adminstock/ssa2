@@ -280,6 +280,12 @@ export default class App {
 
     }
 
+    api.CompleteCallback = () => {
+      if (typeof settings.CompleteCallback === 'function') {
+        settings.CompleteCallback();
+      }
+    }
+
     api.Execute();
   }
 

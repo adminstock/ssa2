@@ -20,8 +20,8 @@ import { Link } from 'react-router';
 import DocumentTitle from 'react-document-title';
 import Page from 'Core/Page';
 import App from 'Core/App';
-import ServersList from 'Modules/Control/UI/ServersList';
-import { OutputMode } from 'Modules/Control/UI/OutputMode';
+import ServersList from 'Modules/Control/Components/ServersList';
+import { OutputMode } from 'Modules/Control/Components/OutputMode';
 
 import {
   Table,
@@ -68,9 +68,9 @@ export default class Servers extends Page<any, any> {
             <ButtonToolbar>
               <ButtonGroup>
                 <Button active={ this.state.OutputMode == OutputMode.List } onClick={ this.OutputMode_Click.bind(this, OutputMode.List) }><Glyphicon glyph="th-list" /></Button>
-                <Button active={ this.state.OutputMode == OutputMode.Thumbnail } onClick={ this.OutputMode_Click.bind(this, OutputMode.Thumbnail) }><Glyphicon glyph="th-large" /></Button>
+                <Button active={ this.state.OutputMode == OutputMode.Thumbnail } onClick={ this.OutputMode_Click.bind(this, OutputMode.Thumbnail) }><Glyphicon glyph="th" /></Button>
+                <Button active={ this.state.OutputMode == OutputMode.ThumbnailLarge } onClick={ this.OutputMode_Click.bind(this, OutputMode.ThumbnailLarge) }><Glyphicon glyph="th-large" /></Button>
               </ButtonGroup>
-
               <ButtonGroup>
                 <Button bsStyle="primary"><Glyphicon glyph="plus" /> { __('Add server') }</Button>
               </ButtonGroup>

@@ -128,7 +128,7 @@ class ServerConfig
     // clear username and password
     if (isset($server['connection']) && $notHidePassword !== TRUE)
     {
-      $server['connection']['user'] = NULL;
+      //$server['connection']['user'] = NULL;
       $server['connection']['password'] = NULL;
     }
 
@@ -169,5 +169,5 @@ class ServerConfig
       }
     }
   }
-
+    
 }

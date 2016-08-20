@@ -15,8 +15,19 @@
  * limitations under the License.
  */
 
-/** Output Mode server list. */
-export enum OutputMode {
-  List = 0,
-  Thumbnail = 1
+import { Server } from 'Models/Server';
+import { OutputMode } from 'OutputMode';
+
+export interface IServersListState {
+
+  Servers?: Array<Server>;
+
+  Loading?: boolean;
+
+  Testing?: boolean;
+
+  OutputMode?: OutputMode;
+
 }
+
+export default IServersListState;

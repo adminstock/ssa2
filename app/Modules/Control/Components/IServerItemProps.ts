@@ -1,6 +1,6 @@
-﻿/* 
+﻿/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro, 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,19 @@
  * limitations under the License.
  */
 
-/**
- * Represents information about an operating system.
- */
-export default class OperatingSystem {
+import { Server } from 'Models/Server';
+import { OutputMode } from 'OutputMode';
 
-  /** Name. For example: Windows 7, Debian, Ubuntu, OS X. */
-  public Name: string;
+export interface IServerItemProps {
 
-  /** The family of operating systems. For example: Linux, MacOSX, Win32 */
-  public Family: string;
+  Server: Server;
 
-  /** Version number of the operating system. For example: 6.1.7601 */
-  public Version: string;
+  OutputMode: OutputMode;
+
+  Disabled: boolean;
+
+  OnConnect: { (server: Server): void; };
 
 }
+
+export default IServerItemProps;

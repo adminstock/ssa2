@@ -1,0 +1,10 @@
+﻿{
+  // https://github.com/shakacode/bootstrap-loader
+  "bootstrapVersion": 3,
+  //"loglevel": "debug",
+  // https://github.com/shakacode/bootstrap-loader/issues/108
+  //"preBootstrapCustomizations": "./Content/Styles/v1/_bs-variables.scss",
+  "styleLoaders": [ "style", "css", "sass" ],
+  "styles": true,
+  "extractStyles": false
+}

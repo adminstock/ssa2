@@ -59,6 +59,10 @@
   <ItemGroup>
     <Content Include=".version" />
     <Content Include="servers\192.168.56.139.json" />
+    <Content Include="servers\test5.json" />
+    <Content Include="servers\test3.json" />
+    <Content Include="servers\test2.json" />
+    <Content Include="servers\test.json" />
     <Content Include="servers\example.json" />
   </ItemGroup>
 </Project>

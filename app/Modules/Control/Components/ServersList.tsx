@@ -19,7 +19,7 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import App from 'Core/App';
 import Component from 'Core/Component';
-import Server from 'Models/Server';
+import { Server, ServerStatus } from 'Models/Server';
 import ProcessingIndicator from 'UI/ProcessingIndicator';
 import IServersListState from 'IServersListState';
 import IServersListProps from 'IServersListProps';
@@ -29,7 +29,6 @@ import { OutputMode } from 'OutputMode';
 import {
   Table,
   Button,
-  Grid,
   Row,
   Col
 } from 'react-bootstrap';
@@ -45,7 +44,8 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     this.state = {
       Servers: new Array<Server>(),
       Loading: true,
-      OutputMode: this.props.OutputMode || OutputMode.List
+      Testing: false,
+      OutputMode: this.props.OutputMode || OutputMode.List,
     };
   }
 
@@ -73,6 +73,37 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     });
   }
 
+  private ConnectToServer(server: Server): void {
+    Debug.Call3('ConnectToServer', server);
+
+    App.CurrentUser.SetManagedServer(server);
+
+    server.Status = ServerStatus.Connecting;
+    
+    this.setState({ Testing: true }, () => {
+      this.TestConnection(server);
+    });
+  }
+
+  private TestConnection(server: Server): void {
+    Debug.Call3('TestConnection', server);
+
+    App.MakeRequest({
+      Method: 'Control.ConnectionTest',
+      SuccessCallback: (result) => {
+        Debug.Level3('TestConnection.Success', server);
+        server.Status = ServerStatus.Connected;
+      },
+      ErrorCallback: () => {
+        Debug.Level3('TestConnection.Error', server);
+        server.Status = ServerStatus.ConnectionError;
+      },
+      CompleteCallback: () => {
+        this.setState({ Testing: false });
+      }
+    });
+  }
+
   render() {
     Debug.Render2('ServersList', this.state.Loading);
 
@@ -83,19 +114,28 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     let list = [];
 
     this.state.Servers.forEach((server, index) => {
-      list.push(<ServerItem Server={server} OutputMode={ this.state.OutputMode } key={'server-' + index} />);
+      list.push(
+        <ServerItem
+          Server={server}
+          OutputMode={ this.state.OutputMode }
+          key={'server-' + index}
+          OnConnect={ this.ConnectToServer.bind(this) }
+          Disabled={ this.state.Testing }
+        />);
     });
 
     let servers = null;
 
     if (this.state.OutputMode == OutputMode.List) {
+      // list
       servers = (
-        <Table hover>
+        <Table hover className="cell-align-middle">
           <tbody>{list}</tbody>
         </Table>
       );
     } else {
-      servers = (<Grid><Row>{list}</Row></Grid>);
+      // thumbs
+      servers = (<Row>{list}</Row>);
     }
 
     return (

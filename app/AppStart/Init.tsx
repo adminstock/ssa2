@@ -29,6 +29,7 @@ import LayoutBlank from 'Layouts/Blank';
 import App from 'Core/App';
 import { Overlay, OverlayType } from 'UI/Overlay';
 import ApiServer from 'Models/ApiServer';
+import { Server } from 'Models/Server';
 
 if (process.env.NODE_ENV === 'production') {
   console.log('SmallServerAdminV2', 'production');
@@ -90,7 +91,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 
   App.AbortAllRequests();
 
-  if (location.pathname != '/init' && location.pathname != '/login' && location.pathname != '/error') { // TODO: array
+  if (location.pathname != '/login' && location.pathname != '/error') { // TODO: array
     // check servers list
     if (App.Config.ListOfApiServers == null) {
       Init(location.pathname);
@@ -100,6 +101,12 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
     // check access
     if (App.CurrentUser.AccessToken == null || !App.CurrentUser.IsValid) {
       App.Redirect('/login', { returnUrl: location.pathname });
+      return;
+    }
+
+    // check managed server
+    if (App.CurrentUser.ManagedServerName != null && App.CurrentUser.ManagedServer == null && !App.CurrentUser.ManagedServerLoaded) {
+      LoadManagedServer(location.pathname);
       return;
     }
   }
@@ -183,6 +190,25 @@ export function Init(returnUrl: string): void {
     error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
       Debug.Response('LoadServers.Error', x, textStatus, errorThrown);
       App.Redirect('/error', { msg: (textStatus || errorThrown) });
+    }
+  });
+}
+
+export function LoadManagedServer(returnUrl: string): void {
+  Overlay.Show(OverlayType.Loader | OverlayType.White, __('Loading server info...'));
+
+  App.MakeRequest<any, Server>({
+    Method: 'Control.GetServer',
+    Data: { FileName: App.CurrentUser.ManagedServerName },
+    SuccessCallback: (result) => {
+      App.CurrentUser.SetManagedServer(result);
+      App.CurrentUser.ManagedServerLoaded = true;
+    },
+    ErrorCallback: () => {
+      App.CurrentUser.SetManagedServer(null);
+    },
+    CompleteCallback: () => {
+      App.Redirect(returnUrl);
     }
   });
 }
