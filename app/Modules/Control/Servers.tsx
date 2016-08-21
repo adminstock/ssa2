@@ -41,8 +41,10 @@ export default class Servers extends Page<any, any> {
   constructor(props, context) {
     super(props, context);
 
+    let outputMode = App.CurrentUser.GetValue<OutputMode>('Control.Servers.OutputMode');
+
     this.state = {
-      OutputMode: OutputMode.List
+      OutputMode: outputMode || OutputMode.List
     };
   }
 
@@ -51,7 +53,9 @@ export default class Servers extends Page<any, any> {
   }
 
   private OutputMode_Click(newMode: OutputMode) {
-    this.setState({ OutputMode: newMode });
+    this.setState({ OutputMode: newMode }, () => {
+      App.CurrentUser.SetValue('Control.Servers.OutputMode', newMode);
+    });
   }
 
   render() {

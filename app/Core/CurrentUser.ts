@@ -150,7 +150,7 @@ export default class CurrentUser {
    *
    * @param key
    */
-  private static GetSession<T>(key: string, defaultValue?: any): T {
+  public static GetSession<T>(key: string, defaultValue?: any): T {
     if (window.sessionStorage.getItem(key) == null || window.sessionStorage.getItem(key) == '') {
       if (defaultValue !== undefined) {
         return defaultValue;
@@ -168,11 +168,42 @@ export default class CurrentUser {
    * @param key
    * @param value
    */
-  private static SetSession(key: string, value: any): void {
+  public static SetSession(key: string, value: any): void {
     if (value == null) {
       window.sessionStorage.removeItem(key);
     } else {
       window.sessionStorage.setItem(key, JSON.stringify(value));
+    }
+  }
+
+  /**
+   * Gets data from localStorage.
+   *
+   * @param key
+   */
+  public static GetValue<T>(key: string, defaultValue?: any): T {
+    if (window.localStorage.getItem(key) == null || window.localStorage.getItem(key) == '') {
+      if (defaultValue !== undefined) {
+        return defaultValue;
+      } else {
+        return null;
+      }
+    } else {
+      return JSON.parse(window.localStorage.getItem(key));
+    }
+  }
+
+  /**
+   * Sets data to localStorage.
+   *
+   * @param key
+   * @param value
+   */
+  public static SetValue(key: string, value: any): void {
+    if (value == null) {
+      window.localStorage.removeItem(key);
+    } else {
+      window.localStorage.setItem(key, JSON.stringify(value));
     }
   }
 
