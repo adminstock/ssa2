@@ -80,7 +80,7 @@ export default class Servers extends Page<any, any> {
 
           <div className="clearfix"></div>
 
-          <ServersList OutputMode={ this.state.OutputMode } />
+          <ServersList OutputMode={ this.state.OutputMode } ShowControl={ true } />
         </div>
       </DocumentTitle>
     );

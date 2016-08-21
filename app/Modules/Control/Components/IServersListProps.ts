@@ -21,6 +21,8 @@ export interface IServersListProps {
 
   OutputMode: OutputMode;
 
+  ShowControl: boolean;
+
 }
 
 export default IServersListProps;

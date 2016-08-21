@@ -50,7 +50,28 @@ export default class ServersList extends Component<IServersListProps, IServersLi
   }
 
   componentWillMount() {
+    Debug.Call3('ServersList.componentWillMount');
+
     this.LoadServers();
+  }
+
+  componentDidMount() {
+    Debug.Call3('ServersList.componentDidMount');
+
+    if (this.props.OutputMode != OutputMode.Thumbnail && this.props.OutputMode != OutputMode.ThumbnailLarge) {
+      return;
+    }
+
+    // height correction
+    // TODO: find the best solution
+
+    let maxHeight = 0;
+
+    $('.server-item-wrapper').each((index, element) => {
+      if ($(element).height() > maxHeight) { maxHeight = $(element).height(); }
+    });
+
+    $('.server-item-wrapper').height(maxHeight);
   }
 
   componentWillReceiveProps(nextProps: IServersListProps) {
@@ -96,6 +117,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
 
         // set status to tested server
         server.Status = ServerStatus.Connected; // TODO: Tested
+        server.StatusMessage = null;
 
         if (setServer) {
           // reset status of all servers
@@ -109,9 +131,10 @@ export default class ServersList extends Component<IServersListProps, IServersLi
           App.CurrentUser.SetManagedServer(server);
         }
       },
-      ErrorCallback: () => {
+      ErrorCallback: (error) => {
         Debug.Level3('TestConnection.Error', server);
         server.Status = ServerStatus.ConnectionError;
+        server.StatusMessage = error.Text || error.Code;
       },
       CompleteCallback: () => {
         this.setState({ Testing: false });
@@ -173,7 +196,9 @@ export default class ServersList extends Component<IServersListProps, IServersLi
           key={'server-' + index}
           OnConnect={ this.ConnectToServer.bind(this) }
           Disabled={ this.state.Testing }
-        />);
+          ShowControl={ this.props.ShowControl }
+        />
+      );
     });
 
     let servers = null;

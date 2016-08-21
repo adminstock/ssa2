@@ -63,5 +63,6 @@ export class Server {
   public OS: OperatingSystem;
 
   public Status: ServerStatus;
+  public StatusMessage: string;
 
 }

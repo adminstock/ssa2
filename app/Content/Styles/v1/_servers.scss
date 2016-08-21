@@ -3,14 +3,62 @@
 	cursor: pointer;
 	padding-top: 8px;
 
-	&:hover {
-		background-color: #eeeeee;
+	.server-item-control-wrapper {
+		position: relative;
 	}
 
-	h4 { 
-		text-align: center;
+	.server-item-control {
+		position: absolute;
+		background-color: rgba(238, 238, 238, 0.30);
+		display: none;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
 	}
+
+	.server-item-content {
+		display: inline;
+    top: 42%;
+    position: relative;
 	
+		.alert {
+			padding: 4px;
+			font-size: 75%;
+			margin-top: -28px;
+			margin-bottom: 8px;
+		}
+	}
+
+	&:hover {
+		background-color: #eeeeee;
+		.server-item-control {
+			display: inline;
+		}
+	}
+
+	.server-item-title { 
+		text-align: center;
+		font-size: 18px;
+		margin-top: 10px;
+    margin-bottom: 10px;
+		font-family: inherit;
+    font-weight: 500;
+
+		i {
+			position: static;
+			display: inline-block;
+		}
+
+		small {
+			font-size: 75%;
+			font-weight: normal;
+			line-height: 1;
+			color: #777777;
+		}
+
+	}
+
 	img {
 		max-width: 100%;
 	}

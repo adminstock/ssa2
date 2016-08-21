@@ -60,10 +60,11 @@
     <Content Include=".version" />
     <Content Include="servers\192.168.56.140.test.json" />
     <Content Include="servers\192.168.56.139.test.json" />
-    <Content Include="servers\5.test.json" />
-    <Content Include="servers\3.test.json" />
-    <Content Include="servers\2.test.json" />
-    <Content Include="servers\1.test.json" />
+    <Content Include="servers\osx.test.json" />
+    <Content Include="servers\freebsd.test.json" />
+    <Content Include="servers\ubuntu.test.json" />
+    <Content Include="servers\osx-test.test.json" />
+    <Content Include="servers\windows2012r2.test.json" />
     <Content Include="servers\example.json" />
   </ItemGroup>
 </Project>

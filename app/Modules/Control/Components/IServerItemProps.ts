@@ -26,6 +26,8 @@ export interface IServerItemProps {
 
   Disabled: boolean;
 
+  ShowControl: boolean;
+
   OnConnect: { (server: Server): void; };
 
 }

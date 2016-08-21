@@ -19,7 +19,7 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import App from 'Core/App';
 import Component from 'Core/Component';
-import { Button, Col, Image } from 'react-bootstrap';
+import { ButtonToolbar, ButtonGroup, Button, Col, Image, Alert } from 'react-bootstrap';
 import { Server, ServerStatus } from 'Models/Server';
 import IServerItemProps from 'IServerItemProps';
 import { OutputMode } from 'OutputMode';
@@ -117,23 +117,102 @@ export default class ServerRow extends Component<IServerItemProps, any> {
         xs = 12, sm = 6, md = 4, lg = 4;
       }
 
-      let serverName = null;
+      let disabled = (
+        server.Disabled || this.props.Disabled ||
+        ((server.Status & ServerStatus.Connected) == ServerStatus.Connected) ||
+        ((server.Status & ServerStatus.Connecting) == ServerStatus.Connecting) ||
+        ((server.Status & ServerStatus.Testing) == ServerStatus.Testing)
+      );
 
+      let serverName = null, serverNameClass = 'server-item-title';
+      let serverNameIcon = null;
+      let btnConnectClassName = '';
+      let btnConnectTitle = '';
+
+      let errorMessage = null;
+
+      // connection button
+      if (server.Disabled) {
+        btnConnectTitle = __('Disabled');
+        btnConnectClassName += ' btn-default';
+        serverNameIcon = (<i className="glyphicon glyphicon-ban-circle"></i>);
+      } else {
+        if (server.Status & ServerStatus.ConnectionError) {
+          btnConnectTitle = __('Connect'); // __('Try again');
+          btnConnectClassName += ' btn-default';
+          serverNameIcon = (<i className="glyphicon glyphicon-exclamation-sign"></i>);
+          serverNameClass += ' red';
+
+          if (server.StatusMessage && server.StatusMessage != '') {
+            errorMessage = (<Alert bsStyle="danger">{ server.StatusMessage }</Alert>);
+          }
+          else {
+            errorMessage = (<Alert bsStyle="danger">{ __('Unable to connect to the server.') }</Alert>);
+          }
+        }
+        else if (server.Status & ServerStatus.Connecting || server.Status & ServerStatus.Testing) {
+          btnConnectClassName += ' btn-warning';
+          btnConnectTitle = (server.Status & ServerStatus.Connecting ? __('Connecting...') : __('Testing...'));
+          serverNameIcon = (<i className="fa fa-spinner fa-pulse fa-fw"></i>);
+          serverNameClass += ' brown';
+        }
+        else if (server.Status & ServerStatus.Connected) {
+          btnConnectClassName += ' btn-success';
+          btnConnectTitle = __('Connected');
+          serverNameIcon = (<i className="glyphicon glyphicon-ok-sign"></i>);
+          serverNameClass += ' green';
+        }
+        else {
+          btnConnectTitle = __('Connect');
+          btnConnectClassName += ' btn-default';
+        }
+      }
+
+      // server name
       if (server.Connection != null && server.Connection.Host != '') {
-        serverName = (<h4>{server.Connection.Host}</h4>);
+        serverName = (<div className={serverNameClass}>{serverNameIcon} {server.Connection.Host}</div>);
       }
 
       if (server.Name != null && server.Name != '' && (server.Connection == null || server.Name != server.Connection.Host)) {
-        serverName = (<h4>{server.Name} <small>({server.Connection.Host}) </small></h4>);
+        serverName = (<div className={serverNameClass}>{serverNameIcon} {server.Name}<br /><small>({server.Connection.Host})</small></div>);
       }
 
       if (serverName == null) {
-        serverName = (<h4>{server.FileName}</h4>);
+        serverName = (<div className={serverNameClass}>{serverNameIcon} {server.FileName}</div>);
+      }
+
+      // edit and delete buttons
+      let editControl = null, deleteControl = null;
+
+      if (this.props.ShowControl) {
+        let controlTitleHidden = 'hidden-xs hidden-sm hidden-md';
+
+        if (this.props.OutputMode == OutputMode.Thumbnail) {
+          controlTitleHidden = 'hidden';
+        }
+
+        editControl = (<Button bsSize="small" bsStyle="primary" disabled={ this.props.Disabled }><i className="glyphicon glyphicon-edit"></i><span className={controlTitleHidden}> { __('Edit') }</span></Button>);
+        deleteControl = (<Button bsSize="small" bsStyle="danger" disabled={ this.props.Disabled }><i className="glyphicon glyphicon-trash"></i><span className={controlTitleHidden}> { __('Delete') }</span></Button>);
       }
 
       return (
         <Col xs={xs} sm={sm} md={md} lg={lg} className="server-item-wrapper">
-          <Image src={ this.GetServerImage(server) } responsive />
+          <div className="server-item-control-wrapper">
+            <div className="server-item-control">
+              <div className="server-item-content">
+                <ButtonGroup>
+                  {errorMessage}
+
+                  <Button id={'btn-server-' + server.FileName} bsSize="small" bsStyle={ null } className={ btnConnectClassName } disabled={ disabled } onClick={ this.props.OnConnect.bind(this, server) }>
+                    {btnConnectTitle}
+                  </Button>
+                  {editControl}
+                  {deleteControl}
+                </ButtonGroup>
+              </div>
+            </div>
+            <Image src={ this.GetServerImage(server) } responsive />
+          </div>
           {serverName}
         </Col>
       );
@@ -196,17 +275,46 @@ export default class ServerRow extends Component<IServerItemProps, any> {
         }
       }
 
-      // <?=($this->NoControl != 'TRUE' ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-10 col-sm-10 col-md-10 col-lg-10')?>
-
       let connectionStatus = null;
 
       if (server.Status & ServerStatus.ConnectionError) {
-        connectionStatus = (<div><small className="red"><span className="glyphicon glyphicon-exclamation-sign"></span> { __('Unable to connect to the server.') }</small></div>);
+        connectionStatus = (
+          <small className="red">
+            <i className="glyphicon glyphicon-exclamation-sign"></i> { ' ' }
+            {(() => {
+              if (server.StatusMessage && server.StatusMessage != '') {
+                return (<span>{server.StatusMessage}</span>);
+              }
+              else {
+                return (<span>__('Unable to connect to the server.')</span>);
+              }
+            })()}
+          </small>
+        );
+      }
+
+      let serverInfoCellClass = 'col-xs-10 col-sm-10 col-md-10 col-lg-10';
+      let editControl = null, deleteControl = null;
+
+      if (this.props.ShowControl) {
+        serverInfoCellClass = 'col-xs-8 col-sm-8 col-md-8 col-lg-8';
+
+        editControl = (
+          <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+            <Button bsSize="small" bsStyle="primary" disabled={ this.props.Disabled }><i className="glyphicon glyphicon-edit"></i><span className="hidden-xs hidden-sm hidden-md"> { __('Edit') }</span></Button>
+          </td>
+        );
+
+        deleteControl = (
+          <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+            <Button bsSize="small" bsStyle="danger" disabled={ this.props.Disabled }><i className="glyphicon glyphicon-trash"></i><span className="hidden-xs hidden-sm hidden-md"> { __('Delete') }</span></Button>
+          </td>
+        );
       }
 
       return (
         <tr className={rowClass}>
-          <td className="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+          <td className={serverInfoCellClass}>
             {serverName}
             {serverDescription}
             {connectionStatus}
@@ -226,6 +334,8 @@ export default class ServerRow extends Component<IServerItemProps, any> {
               { __('Connecting...') }
             </div>
           </td>
+          {editControl}
+          {deleteControl}
         </tr>
       );
 
