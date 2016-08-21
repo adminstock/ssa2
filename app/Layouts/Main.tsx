@@ -25,8 +25,8 @@ import DialogManager from 'UI/Dialog/DialogManager';
 
 import IMainContext from 'Core/IMainContext';
 
-import Header from 'UI/Layout/Header';
-import Menu from 'UI/Layout/Menu';
+import Header from 'Layouts/Components/Header';
+import Menu from 'Layouts/Components/Menu';
 
 import App from 'Core/App';
 import CurrentUser from 'Core/CurrentUser';
