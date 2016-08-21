@@ -74,7 +74,7 @@ export default class ApiRequest<TRequest, TResponse> {
   /** Access token of the current user. */
   private Token: string;
   
-  constructor(method: string, data?: TRequest, url?: string) {
+  constructor(method: string, data?: TRequest, url?: string, server?: string) {
     if (method === null || method == '') {
       throw new Error('Method is required. Value cannot be empty.');
     }
@@ -94,11 +94,15 @@ export default class ApiRequest<TRequest, TResponse> {
       url += 'XDEBUG_SESSION_START=1';
     }
 
+    if (server == undefined || server == null || server == '') {
+      server = CurrentUser.ManagedServerName;
+    }
+
     this._Url = url;
     this._Method = method;
     this._Data = data || null;
     this._Key = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
-    this._Server = CurrentUser.ManagedServerName;
+    this._Server = server;
     this.Token = CurrentUser.AccessToken;
   }
 

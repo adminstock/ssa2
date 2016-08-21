@@ -84,7 +84,14 @@ class API
       // load server config
       if (isset($query['Server']) && $query['Server'] != '')
       {
-        $server = new ServerConfig($query['Server'], TRUE);
+        try
+        {
+          $server = new ServerConfig($query['Server'], TRUE);
+        }
+        catch (\Exception $ex)
+        {
+          // TODO
+        }
       }
 
       // parse class and method name

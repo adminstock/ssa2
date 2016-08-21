@@ -163,7 +163,7 @@ export default class ServerRow extends Component<IServerItemProps, any> {
       }
 
       if (server.Name != null && server.Name != '' && (server.Connection == null || server.Name != server.Connection.Host)) {
-        serverName = (<h4>{server.Name} <small>({server.Connection.Host}) </small></h4>);
+        serverName = (<h4>{server.Name} <small>({server.Connection.Host})</small></h4>);
       }
 
       if (serverName == null) {
@@ -177,10 +177,23 @@ export default class ServerRow extends Component<IServerItemProps, any> {
       }
 
       let btnConnectClassName = 'col-xs-12 col-sm-12 col-md-12 col-lg-12';
-      btnConnectClassName += (server.Disabled ? ' btn-gray' : ' btn-silver');
-      
-      if (server.FileName == App.CurrentUser.ManagedServerName) {
-        btnConnectClassName += ' hidden';
+
+      let btnConnectTitle = '';
+
+      if (server.Disabled) {
+        btnConnectTitle = __('Disabled');
+        btnConnectClassName += ' btn-gray';
+      } else {
+        if (server.Status & ServerStatus.ConnectionError) {
+          btnConnectTitle = __('Try again');
+          btnConnectClassName += ' btn-danger';
+        }
+        else if (server.Status & ServerStatus.Connecting || server.Status & ServerStatus.Testing || server.FileName == App.CurrentUser.ManagedServerName) {
+          btnConnectClassName += ' hidden';
+        } else {
+          btnConnectTitle = __('Connect');
+          btnConnectClassName += ' btn-silver';
+        }
       }
 
       // <?=($this->NoControl != 'TRUE' ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8' : 'col-xs-10 col-sm-10 col-md-10 col-lg-10')?>
@@ -200,19 +213,17 @@ export default class ServerRow extends Component<IServerItemProps, any> {
           </td>
           <td className="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
             <Button bsSize="small" bsStyle={ null } className={btnConnectClassName} disabled={ server.Disabled || this.props.Disabled } onClick={ this.props.OnConnect.bind(this, server) }>
-              <span className={ !server.Disabled ? 'hidden' : '' }>{ __('Disabled') }</span>
-              <span className={ server.Disabled ? 'hidden' : '' }>{ __('Connect') }</span>
+              {btnConnectTitle}
             </Button>
             
-            <div className={ (server.Status & ServerStatus.Connected ? 'green' : 'hidden') }>Connected</div>
-            <div className={ (server.Status & ServerStatus.ConnectionError ? 'red' : 'hidden') }>Connection error</div>
+            <div className={ (server.Status & ServerStatus.Connected ? 'green' : 'hidden') }>{ __('Connected') }</div>
             <div className={ (server.Status & ServerStatus.Testing ? 'brown' : 'hidden') }>
               <span className="fa fa-spinner fa-pulse fa-fw"></span> { ' ' }
-              Testing...
+              { __('Testing...') }
             </div>
             <div className={ (server.Status & ServerStatus.Connecting ? 'brown' : 'hidden') }>
               <span className="fa fa-spinner fa-pulse fa-fw"></span> { ' ' }
-              Connecting...
+              { __('Connecting...') }
             </div>
           </td>
         </tr>

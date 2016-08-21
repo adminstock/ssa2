@@ -28,6 +28,12 @@ export interface IMakeRequestProps<TRequest, TResponse> {
   /** Request parameters. */
   Data?: TRequest;
 
+  /** Server name. Default: ManagedServerName. */
+  Server?: string;
+
+  /** API endpoint. */
+  Url?: string;
+
   /** Handler for successful response. */
   SuccessCallback?: { (result: TResponse): void; };
 

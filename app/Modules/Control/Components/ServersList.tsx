@@ -69,6 +69,8 @@ export default class ServersList extends Component<IServersListProps, IServersLi
       Method: 'Control.GetServers',
       SuccessCallback: (result) => {
         this.setState({ Servers: result, Loading: false });
+
+        this.TestCurrentServerConnection();
       }
     });
   }
@@ -76,23 +78,36 @@ export default class ServersList extends Component<IServersListProps, IServersLi
   private ConnectToServer(server: Server): void {
     Debug.Call3('ConnectToServer', server);
 
-    App.CurrentUser.SetManagedServer(server);
-
     server.Status = ServerStatus.Connecting;
     
     this.setState({ Testing: true }, () => {
-      this.TestConnection(server);
+      this.TestConnection(server, true);
     });
   }
 
-  private TestConnection(server: Server): void {
+  private TestConnection(server: Server, setServer: boolean): void {
     Debug.Call3('TestConnection', server);
 
     App.MakeRequest({
       Method: 'Control.ConnectionTest',
+      Server: server.FileName,
       SuccessCallback: (result) => {
         Debug.Level3('TestConnection.Success', server);
-        server.Status = ServerStatus.Connected;
+
+        // set status to tested server
+        server.Status = ServerStatus.Connected; // TODO: Tested
+
+        if (setServer) {
+          // reset status of all servers
+          this.state.Servers.forEach((s) => {
+            if (s.FileName != server.FileName && (s.Status & ServerStatus.Connected)) {
+              s.Status = ServerStatus.None;
+            }
+          });
+
+          // set tested server as current server
+          App.CurrentUser.SetManagedServer(server);
+        }
       },
       ErrorCallback: () => {
         Debug.Level3('TestConnection.Error', server);
@@ -104,6 +119,41 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     });
   }
 
+  private TestCurrentServerConnection(): void {
+    if (App.CurrentUser.ManagedServer == null) {
+      return;
+    }
+
+    let currentServerName = App.CurrentUser.ManagedServerName;
+
+    for (let i = 0; i < this.state.Servers.length; i++) {
+      if (this.state.Servers[i].FileName == currentServerName) {
+        this.state.Servers[i].Status = ServerStatus.Testing;
+
+        this.setState({ Testing: true }, () => {
+          this.TestConnection(this.state.Servers[i], false);
+        });
+
+        break;
+      }
+    }
+  }
+
+  private SetStatusToCurrentServer(newStatus: ServerStatus): void {
+    if (App.CurrentUser.ManagedServer == null) {
+      return;
+    }
+
+    let currentServerName = App.CurrentUser.ManagedServerName;
+
+    for (let i = 0; i < this.state.Servers.length; i++) {
+      if (this.state.Servers[i].FileName == currentServerName) {
+        this.state.Servers[i].Status = newStatus;
+        break;
+      }
+    }
+  }
+
   render() {
     Debug.Render2('ServersList', this.state.Loading);
 
@@ -112,6 +162,8 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     }
 
     let list = [];
+
+    let currentServer = App.CurrentUser.ManagedServerName;
 
     this.state.Servers.forEach((server, index) => {
       list.push(

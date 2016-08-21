@@ -248,7 +248,7 @@ export default class App {
   // #region ..API Requests..
 
   public static MakeRequest<TRequest, TResponse>(settings: IMakeRequestProps<TRequest, TResponse>): void {
-    let api = new ApiRequest<any, TResponse>(settings.Method, settings.Data);
+    let api = new ApiRequest<any, TResponse>(settings.Method, settings.Data, settings.Url, settings.Server);
 
     api.SuccessCallback = (result) => {
 

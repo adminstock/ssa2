@@ -138,7 +138,7 @@ export default class Header extends Component<any, any> {
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
             </button>
-            <a className="navbar-brand" title="All servers"><span className="fa fa-server"></span></a>
+            <a className="navbar-brand" title="All servers"><i className="fa fa-server" style={ { float: 'none' } }></i></a>
             <Link to="/" className="navbar-brand" title="Dashboard">
               <i className={this.GetServerIcon()}></i>
               <span>{serverName}</span>

@@ -29,7 +29,7 @@ import LayoutBlank from 'Layouts/Blank';
 import App from 'Core/App';
 import { Overlay, OverlayType } from 'UI/Overlay';
 import ApiServer from 'Models/ApiServer';
-import { Server } from 'Models/Server';
+import { Server, ServerStatus } from 'Models/Server';
 
 if (process.env.NODE_ENV === 'production') {
   console.log('SmallServerAdminV2', 'production');

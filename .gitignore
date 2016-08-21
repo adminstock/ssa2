@@ -10,8 +10,5 @@
 .sprites
 /app/index.html
 /webapi.php/servers/192.168.56.139.json
-/webapi.php/servers/test.json
-/webapi.php/servers/test2.json
-/webapi.php/servers/test3.json
-/webapi.php/servers/test5.json
+/webapi.php/servers/*.test.json
 /os-icons.psd
