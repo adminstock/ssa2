@@ -24,6 +24,7 @@ import ProcessingIndicator from 'UI/ProcessingIndicator';
 import IServersListState from 'IServersListState';
 import IServersListProps from 'IServersListProps';
 import ServerItem from 'ServerItem';
+import ServerEditor from 'ServerEditor';
 import { OutputMode } from 'OutputMode';
 
 import {
@@ -46,6 +47,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
       Loading: true,
       Testing: false,
       OutputMode: this.props.OutputMode || OutputMode.List,
+      ShowEditor: false
     };
   }
 
@@ -177,6 +179,44 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     }
   }
 
+  public NewServer(): void {
+    Debug.Call2('NewServer');
+
+    this.setState({
+      ShowEditor: true
+    });
+  }
+
+  private EditServer(server: Server): void {
+    Debug.Call('EditServer', server);
+  }
+
+  private DeleteServer(server: Server): void {
+    Debug.Call('DeleteServer', server);
+
+    let serverName = null;
+
+    if (server.Connection != null && server.Connection.Host != '') {
+      serverName = server.Connection.Host;
+    }
+
+    if (server.Name != null && server.Name != '' && (server.Connection == null || server.Name != server.Connection.Host)) {
+      serverName = server.Name + ' (' + server.Connection.Host + ')';
+    }
+
+    if (serverName == null) {
+      serverName = server.FileName;
+    }
+
+    App.Confirm({
+      message: <div>{ __('Are you sure you want to delete the') } <strong>{ serverName }</strong>?</div>,
+      buttonOkTitle: __('Yes, delete the server'),
+      callback: (d, confirmed) => {
+
+      }
+    });
+  }
+
   render() {
     Debug.Render2('ServersList', this.state.Loading);
 
@@ -195,6 +235,8 @@ export default class ServersList extends Component<IServersListProps, IServersLi
           OutputMode={ this.state.OutputMode }
           key={'server-' + index}
           OnConnect={ this.ConnectToServer.bind(this) }
+          OnEdit={ this.EditServer.bind(this) }
+          OnDelete={ this.DeleteServer.bind(this) }
           Disabled={ this.state.Testing }
           ShowControl={ this.props.ShowControl }
         />
@@ -218,6 +260,8 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     return (
       <div>
         {servers}
+
+        <ServerEditor Visible={ this.state.ShowEditor } />
       </div>
     );
   }

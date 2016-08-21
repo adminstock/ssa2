@@ -26,6 +26,8 @@ export interface IServersListState {
 
   Testing?: boolean;
 
+  ShowEditor?: boolean;
+
   OutputMode?: OutputMode;
 
 }

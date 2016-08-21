@@ -191,8 +191,8 @@ export default class ServerRow extends Component<IServerItemProps, any> {
           controlTitleHidden = 'hidden';
         }
 
-        editControl = (<Button bsSize="small" bsStyle="primary" disabled={ this.props.Disabled }><i className="glyphicon glyphicon-edit"></i><span className={controlTitleHidden}> { __('Edit') }</span></Button>);
-        deleteControl = (<Button bsSize="small" bsStyle="danger" disabled={ this.props.Disabled }><i className="glyphicon glyphicon-trash"></i><span className={controlTitleHidden}> { __('Delete') }</span></Button>);
+        editControl = (<Button bsSize="small" bsStyle="primary" disabled={ this.props.Disabled } onClick={ this.props.OnEdit.bind(this, server) }><i className="glyphicon glyphicon-edit"></i><span className={controlTitleHidden}> { __('Edit') }</span></Button>);
+        deleteControl = (<Button bsSize="small" bsStyle="danger" disabled={ this.props.Disabled } onClick={ this.props.OnDelete.bind(this, server) }><i className="glyphicon glyphicon-trash"></i><span className={controlTitleHidden}> { __('Delete') }</span></Button>);
       }
 
       return (
@@ -301,13 +301,13 @@ export default class ServerRow extends Component<IServerItemProps, any> {
 
         editControl = (
           <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-            <Button bsSize="small" bsStyle="primary" disabled={ this.props.Disabled }><i className="glyphicon glyphicon-edit"></i><span className="hidden-xs hidden-sm hidden-md"> { __('Edit') }</span></Button>
+            <Button bsSize="small" bsStyle="primary" disabled={ this.props.Disabled } onClick={ this.props.OnEdit.bind(this, server) }><i className="glyphicon glyphicon-edit"></i><span className="hidden-xs hidden-sm hidden-md"> { __('Edit') }</span></Button>
           </td>
         );
 
         deleteControl = (
           <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-            <Button bsSize="small" bsStyle="danger" disabled={ this.props.Disabled }><i className="glyphicon glyphicon-trash"></i><span className="hidden-xs hidden-sm hidden-md"> { __('Delete') }</span></Button>
+            <Button bsSize="small" bsStyle="danger" disabled={ this.props.Disabled } onClick={ this.props.OnDelete.bind(this, server) }><i className="glyphicon glyphicon-trash"></i><span className="hidden-xs hidden-sm hidden-md"> { __('Delete') }</span></Button>
           </td>
         );
       }

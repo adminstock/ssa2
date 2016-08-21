@@ -21,6 +21,7 @@ import DocumentTitle from 'react-document-title';
 import Page from 'Core/Page';
 import App from 'Core/App';
 import ServersList from 'Modules/Control/Components/ServersList';
+//import ServerEditor from 'Modules/Control/Components/ServerEditor';
 import { OutputMode } from 'Modules/Control/Components/OutputMode';
 
 import {
@@ -38,6 +39,8 @@ export default class Servers extends Page<any, any> {
     Title: __('Servers')
   }
 
+  private List: ServersList;
+
   constructor(props, context) {
     super(props, context);
 
@@ -52,10 +55,16 @@ export default class Servers extends Page<any, any> {
     //App.MakeRequest('Users.GetUsers', {page: 1 });
   }
 
-  private OutputMode_Click(newMode: OutputMode) {
+  private OutputMode_Click(newMode: OutputMode): void {
     this.setState({ OutputMode: newMode }, () => {
       App.CurrentUser.SetValue('Control.Servers.OutputMode', newMode);
     });
+  }
+
+  private NewServer(): void {
+    Debug.Call('NewServer');
+
+    this.List.NewServer();
   }
 
   render() {
@@ -67,7 +76,7 @@ export default class Servers extends Page<any, any> {
           <h2 className="pull-left">
             <ButtonToolbar>
               <ButtonGroup>
-                <Button bsStyle="primary"><Glyphicon glyph="plus" /> { __('Add server') }</Button>
+                <Button bsStyle="primary" onClick={ this.NewServer.bind(this) }><Glyphicon glyph="plus" /> { __('Add server') }</Button>
               </ButtonGroup>
             </ButtonToolbar>
           </h2>
@@ -84,7 +93,11 @@ export default class Servers extends Page<any, any> {
 
           <div className="clearfix"></div>
 
-          <ServersList OutputMode={ this.state.OutputMode } ShowControl={ true } />
+          <ServersList
+            OutputMode={ this.state.OutputMode }
+            ShowControl={ true }
+            ref={ (ref) => this.List = ref }
+          />
         </div>
       </DocumentTitle>
     );

@@ -30,6 +30,10 @@ export interface IServerItemProps {
 
   OnConnect: { (server: Server): void; };
 
+  OnEdit: { (server: Server): void; };
+
+  OnDelete: { (server: Server): void; };
+
 }
 
 export default IServerItemProps;

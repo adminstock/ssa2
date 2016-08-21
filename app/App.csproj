@@ -96,6 +96,7 @@
     <TypeScriptCompile Include="Core\IMakeRequestProps.ts" />
     <TypeScriptCompile Include="Layouts\Blank.tsx" />
     <TypeScriptCompile Include="Models\ConnectionSettings.ts" />
+    <TypeScriptCompile Include="Modules\Control\Components\ServerEditor.tsx" />
     <TypeScriptCompile Include="Modules\Control\Servers.tsx" />
     <TypeScriptCompile Include="Modules\Control\Components\IServerItemProps.ts" />
     <TypeScriptCompile Include="Modules\Control\Components\IServersListProps.ts" />
