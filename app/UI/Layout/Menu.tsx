@@ -17,7 +17,6 @@
 
 import * as React from 'react';
 import { Link } from 'react-router';
-import IMainContext from 'Core/IMainContext';
 import Component from 'Core/Component';
 
 export default class Menu extends Component<any, any> {
@@ -27,6 +26,8 @@ export default class Menu extends Component<any, any> {
   }
 
   render() {
+    Debug.Render3('Menu');
+
     return (
       <div className="collapse navbar-collapse panel-nav">
         <nav className="navmenu navmenu-default" role="navigation">

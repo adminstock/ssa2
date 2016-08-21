@@ -227,8 +227,12 @@ ul.no-padding {
 	}
 }
 
-[ng\:cloak], [ng-cloak], .ng-cloak {
-  display: none !important;
+.navbar-brand {
+	line-height: 24px;
+
+	span, i {
+		float: left;
+	}
 }
 
 treecontrol ul {

@@ -61,7 +61,11 @@ export default class Servers extends Page<any, any> {
       <DocumentTitle title={this.props.Title}>
         <div>
           <h2 className="pull-left">
-            { __('Servers') }
+            <ButtonToolbar>
+              <ButtonGroup>
+                <Button bsStyle="primary"><Glyphicon glyph="plus" /> { __('Add server') }</Button>
+              </ButtonGroup>
+            </ButtonToolbar>
           </h2>
 
           <h2 className="pull-right">
@@ -70,9 +74,6 @@ export default class Servers extends Page<any, any> {
                 <Button active={ this.state.OutputMode == OutputMode.List } onClick={ this.OutputMode_Click.bind(this, OutputMode.List) }><Glyphicon glyph="th-list" /></Button>
                 <Button active={ this.state.OutputMode == OutputMode.Thumbnail } onClick={ this.OutputMode_Click.bind(this, OutputMode.Thumbnail) }><Glyphicon glyph="th" /></Button>
                 <Button active={ this.state.OutputMode == OutputMode.ThumbnailLarge } onClick={ this.OutputMode_Click.bind(this, OutputMode.ThumbnailLarge) }><Glyphicon glyph="th-large" /></Button>
-              </ButtonGroup>
-              <ButtonGroup>
-                <Button bsStyle="primary"><Glyphicon glyph="plus" /> { __('Add server') }</Button>
               </ButtonGroup>
             </ButtonToolbar>
           </h2>

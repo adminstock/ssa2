@@ -63,7 +63,7 @@ export default class Main extends React.Component<any, any> implements IMainCont
   }
   
   render() {
-    Debug.Render('Main');
+    Debug.Render('Main', this.props.children);
 
     return (
       <DocumentTitle title={this.props.Title}>

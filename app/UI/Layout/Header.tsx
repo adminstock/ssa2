@@ -16,7 +16,7 @@
  */
 
 import * as React from 'react';
-import IMainContext from 'Core/IMainContext';
+import { Link } from 'react-router';
 import CurrentUser from 'Core/CurrentUser';
 import Component from 'Core/Component';
 
@@ -24,6 +24,29 @@ export default class Header extends Component<any, any> {
   
   constructor(props, context) {
     super(props, context);
+
+    // Debug.Init3('Header', props, context);
+
+    this.state = {
+      CurrentPageTitle: document.title
+    };
+
+  }
+
+  componentWillMount() {
+    window.setTimeout(() => { this.CheckPageTitle(); }, 100);
+  }
+
+  private CheckPageTitle(): void {
+    if (this.state.CurrentPageTitle != document.title) {
+      this.setState({
+        CurrentPageTitle: document.title
+      }, () => {
+        window.setTimeout(() => { this.CheckPageTitle(); }, 100);
+      });
+    } else {
+      window.setTimeout(() => { this.CheckPageTitle(); }, 100);
+    }
   }
   
   /**
@@ -94,6 +117,8 @@ export default class Header extends Component<any, any> {
 
 
   render() {
+    Debug.Render3('Header');
+
     let serverName = '';
 
     if (CurrentUser.ManagedServer != null) {
@@ -114,13 +139,13 @@ export default class Header extends Component<any, any> {
               <span className="icon-bar"></span>
             </button>
             <a className="navbar-brand" title="All servers"><span className="fa fa-server"></span></a>
-            <a href="/" className="navbar-brand" title="Dashboard">
+            <Link to="/" className="navbar-brand" title="Dashboard">
               <i className={this.GetServerIcon()}></i>
-              {serverName}
-            </a>
+              <span>{serverName}</span>
+            </Link>
             <span className="navbar-brand hidden-xs">/</span>
             <span className="navbar-brand hidden-xs">
-              TODO Page title
+              {this.state.CurrentPageTitle}
             </span>
           </div>
           <ul className="nav navbar-nav navbar-right collapse navbar-collapse panel-nav lang">
