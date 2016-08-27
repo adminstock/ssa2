@@ -17,8 +17,8 @@
 
 import * as React from 'react';
 import { Router, Route, Link, IndexRoute, IndexRedirect, browserHistory } from 'react-router';
-import { LoadServer, SetServer } from 'Actions/Global';
-import { Overlay, OverlayType } from 'UI/Overlay';
+import { LoadServer, SetServer, ShowOverlay, HideOverlay } from 'Actions/Global';
+import { OverlayType } from 'UI/Overlay/OverlayType';
 import { Cookies } from 'Helpers/Storage';
 import App from 'Core/App';
 import LayoutMain from 'Layouts/Main';
@@ -34,7 +34,7 @@ import LayoutBlank from 'Layouts/Blank';
 export function LoadComponent(location: any, callback: (error: any, component?: string | React.ComponentClass<any> | React.StatelessComponent<any>) => void): void {
   Debug.Call('Loading', location.pathname, location);
 
-  Overlay.Show(OverlayType.White | OverlayType.Loader | OverlayType.Opacity90);
+  App.Store.dispatch(ShowOverlay(OverlayType.White | OverlayType.Loader | OverlayType.Opacity90));
 
   App.AbortAllRequests();
 
@@ -123,7 +123,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 export function LoadedComponent(component: any): void {
   Debug.Call('Loaded', this.location.pathname);
 
-  Overlay.Hide();
+  App.Store.dispatch(HideOverlay());
 
   this.callback(null, props => React.createElement(component.default, this.location.query || this.location.params));
 }

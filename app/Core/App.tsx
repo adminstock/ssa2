@@ -97,6 +97,10 @@ export default class App {
       ActiveApiServer: null,
       AvailableApiServers: null,
       AppError: null,
+      Overlay: {
+        OverlayType: 0,
+        Text: null
+      },
       Visible: true
     };
 

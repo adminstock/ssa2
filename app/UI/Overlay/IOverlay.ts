@@ -15,38 +15,14 @@
  * limitations under the License.
  */
 
-import { Server } from 'Models/Server';
-import ApiServer from 'Models/ApiServer';
-import ICurrentUser from 'ICurrentUser';
-import IErrorContext from 'IErrorContext';
-import IOverlay from 'UI/Overlay/IOverlay';
+import { OverlayType } from 'OverlayType';
 
-/**
- * Application context.
- */
-export interface IAppContext {
+export interface IOverlay {
 
-  /** Current user. */
-  CurrentUser: ICurrentUser;
+  OverlayType: OverlayType;
 
-  /** Current server to manage. */
-  CurrentServer: Server;
-
-  /** Current server of API. */
-  ActiveApiServer: ApiServer;
-
-  /** List of available API servers. */
-  AvailableApiServers: Array<ApiServer>;
-
-  /** Context of the current page. */
-  CurrentPage: { Breadcrumbs?: any, State?: any };
-
-  Visible: boolean;
-
-  AppError: IErrorContext;
-
-  Overlay: IOverlay;
+  Text?: string
 
 }
 
-export default IAppContext;
+export default IOverlay;

@@ -20,6 +20,8 @@ import { connect } from 'react-redux';
 import App from 'Core/App';
 import { SetVisible, SetActiveApiServer, LoadApiServers, SetError } from 'Actions/Global';
 import Error from 'Pages/Error';
+import DialogManager from 'UI/Dialog/DialogManager';
+import { Overlay } from 'UI/Overlay/index';
 
 /**
  * SmallServerAdmin.
@@ -92,27 +94,42 @@ export class SmallServerAdmin extends React.Component<any, any> {
   }
 
   render() {
+    let children = null;
+    let allowRender = true;
+
     let { Visible, AppError, AvailableApiServers, ActiveApiServer } = App.Context;
 
     Debug.Render('SmallServerAdmin', Visible); // , AvailableApiServers, ActiveApiServer, CurrentServer
 
     if (AppError != null) {
-      return this.Error(AppError.Title, AppError.Text);
+      children = this.Error(AppError.Title, AppError.Text);
+      allowRender = false;
     }
 
     if (AvailableApiServers == null) {
-      return null;
+      allowRender = false;
     }
 
     if (ActiveApiServer == null) {
-      return null;      
+      allowRender = false
     }
 
     if (!Visible) {
-      return null;
+      allowRender = false;
     }
 
-    return (<div>{this.props.children}</div>);
+    if (allowRender) {
+      children = this.props.children;
+    }
+
+    return (
+      <div>
+        {children}
+
+        <Overlay />
+        <DialogManager />
+      </div>
+    );
   }
 
 }

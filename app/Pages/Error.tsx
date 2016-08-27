@@ -19,7 +19,6 @@ import * as React from 'react';
 import DocumentTitle from 'react-document-title';
 import App from 'Core/App';
 import Page from 'Core/Page';
-import { Overlay, OverlayType } from 'UI/Overlay';
 import { Grid, PageHeader, Alert, Button } from 'react-bootstrap';
 
 /**

@@ -15,38 +15,25 @@
  * limitations under the License.
  */
 
-import { Server } from 'Models/Server';
-import ApiServer from 'Models/ApiServer';
-import ICurrentUser from 'ICurrentUser';
-import IErrorContext from 'IErrorContext';
-import IOverlay from 'UI/Overlay/IOverlay';
+/** Overlay type. */
+export enum OverlayType {
+  Invisible = 0,
+  Loader = 1 << 0,
 
-/**
- * Application context.
- */
-export interface IAppContext {
+  /** Default. */
+  White = 1 << 1,
+  Black = 1 << 2,
 
-  /** Current user. */
-  CurrentUser: ICurrentUser;
+  /** Default. */
+  TextBlack = 1 << 3,
+  TextWhite = 1 << 4,
+  TextYellow = 1 << 5,
+  TextRed = 1 << 6,
+  TextGreen = 1 << 7,
 
-  /** Current server to manage. */
-  CurrentServer: Server;
-
-  /** Current server of API. */
-  ActiveApiServer: ApiServer;
-
-  /** List of available API servers. */
-  AvailableApiServers: Array<ApiServer>;
-
-  /** Context of the current page. */
-  CurrentPage: { Breadcrumbs?: any, State?: any };
-
-  Visible: boolean;
-
-  AppError: IErrorContext;
-
-  Overlay: IOverlay;
-
+  Opacity15 = 1 << 8,
+  Opacity25 = 1 << 9,
+  Opacity50 = 1 << 10,
+  Opacity75 = 1 << 11,
+  Opacity90 = 1 << 12,
 }
-
-export default IAppContext;

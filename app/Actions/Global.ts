@@ -18,7 +18,7 @@
 import ActionType from 'ActionType';
 import { Server } from 'Models/Server';
 
-import { Overlay, OverlayType } from 'UI/Overlay';
+import { OverlayType } from 'UI/Overlay/OverlayType';
 
 import App from 'Core/App';
 
@@ -84,15 +84,9 @@ export function ShowOverlay(type: OverlayType, text?: string) {
   Debug.Action('ShowOverlay', type, text);
 
   return {
-    type: ActionType.SET_LANGUAGE,
-  };
-}
-
-export function HideOverlay() {
-  Debug.Action('HideOverlay');
-
-  return {
-    type: ActionType.SET_LANGUAGE,
+    type: ActionType.SHOW_OVERLAY,
+    OverlayType: type,
+    Text: text
   };
 }
 
@@ -100,7 +94,16 @@ export function SetOverlayText(text?: string) {
   Debug.Action('SetOverlayText', text);
 
   return {
-    type: ActionType.SET_LANGUAGE,
+    type: ActionType.SET_OVERLAY_TEXT,
+    Text: text
+  };
+}
+
+export function HideOverlay() {
+  Debug.Action('HideOverlay');
+
+  return {
+    type: ActionType.HIDE_OVERLAY
   };
 }
 

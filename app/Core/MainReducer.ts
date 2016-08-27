@@ -66,15 +66,17 @@ export default function MainReducer(state, action) {
       let currentPage = Object.assign({}, state.CurrentPage, { Breadcrumbs: action.Breadcrumbs });
       return Object.assign({}, state, { CurrentPage: currentPage });
 
-    /*case 'SET_API_SERVERS':
-      return [...state, {}];
+    case ActionType.SHOW_OVERLAY:
+      let overlay = Object.assign({}, state.Overlay, { OverlayType: action.OverlayType, Text: action.Text });
+      return Object.assign({}, state, { Overlay: overlay });
 
-    case 'SET_API_SERVER':
-      return [...state, {}];
-      
-    case 'SET_ACCESS_TOKEN':
-      return [...state, { IsValid: true }];
-      */
+    case ActionType.SET_OVERLAY_TEXT:
+      let overlay2 = Object.assign({}, state.Overlay, { Text: action.Text });
+      return Object.assign({}, state, { Overlay: overlay2 });
+
+    case ActionType.HIDE_OVERLAY:
+      let overlay3 = Object.assign({}, state.Overlay, { OverlayType: 0 });
+      return Object.assign({}, state, { Overlay: overlay3 });
 
     default:
       return state;

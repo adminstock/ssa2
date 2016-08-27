@@ -191,10 +191,13 @@
     <TypeScriptCompile Include="typings.local\_constants.d.ts" />
     <TypeScriptCompile Include="typings.local\index.d.ts" />
     <TypeScriptCompile Include="UI\Dialog\IDialogManagerState.ts" />
+    <TypeScriptCompile Include="UI\Overlay\index.ts" />
+    <TypeScriptCompile Include="UI\Overlay\IOverlay.ts" />
     <TypeScriptCompile Include="UI\IProcessingIndicatorProps.ts" />
     <TypeScriptCompile Include="Layouts\Components\Header.tsx" />
     <TypeScriptCompile Include="Layouts\Components\Menu.tsx" />
-    <TypeScriptCompile Include="UI\Overlay.ts" />
+    <TypeScriptCompile Include="UI\Overlay\Overlay.tsx" />
+    <TypeScriptCompile Include="UI\Overlay\OverlayType.ts" />
     <TypeScriptCompile Include="UI\ProcessingIndicator.tsx" />
   </ItemGroup>
   <ItemGroup>

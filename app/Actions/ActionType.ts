@@ -38,4 +38,10 @@ export default class ActionType {
 
   public static get SET_BREADCRUMBS(): string { return 'SET_BREADCRUMBS'; }
 
+  public static get SHOW_OVERLAY(): string { return 'SHOW_OVERLAY'; }
+
+  public static get SET_OVERLAY_TEXT(): string { return 'SET_OVERLAY_TEXT'; }
+
+  public static get HIDE_OVERLAY(): string { return 'HIDE_OVERLAY'; }
+    
 }

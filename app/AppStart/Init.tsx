@@ -35,7 +35,6 @@ import thunk from 'redux-thunk';
 import { ReduxDevTools, ReduxEnhancer } from 'ReduxDevTools';
 
 import App from 'Core/App';
-import DialogManager from 'UI/Dialog/DialogManager';
 import SmallServerAdmin from 'SmallServerAdmin';
 import RouteConfig from 'RouteConfig';
 
@@ -50,11 +49,12 @@ App.Init(ReduxEnhancer);
 // render
 ReactDOM.render((
   <Provider store={App.Store}>
-    <SmallServerAdmin>
-      <RouteConfig />
+    <div>
+      <SmallServerAdmin>
+        <RouteConfig />
+      </SmallServerAdmin>
 
-      <DialogManager />
       <ReduxDevTools />
-    </SmallServerAdmin>
+    </div>
   </Provider>
 ), document.getElementById('app'));

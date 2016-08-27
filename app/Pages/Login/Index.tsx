@@ -24,7 +24,6 @@ import Page from 'Core/Page';
 import ApiRequest from 'API/ApiRequest';
 import AuthResult from 'API/AuthResult';
 import Success from 'API/Success';
-import { Overlay, OverlayType } from 'UI/Overlay';
 import { SetAccessToken } from 'Actions/Global';
 
 /**
