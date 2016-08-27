@@ -35,6 +35,9 @@ interface DebugStatic {
   Request(message?: any, ...params: any[]): void;
   Response(message?: any, ...params: any[]): void;
 
+  Action(message?: any, ...params: any[]): void;
+  Reducer(message?: any, ...params: any[]): void;
+
   Error(message?: any, ...params: any[]): void;
   Warn(message?: any, ...params: any[]): void;
   Warning(message?: any, ...params: any[]): void;

@@ -18,7 +18,6 @@
 import * as React from 'react';
 import DocumentTitle from 'react-document-title';
 import { Modal, Button, Row, Col, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import IMainContext from 'Core/IMainContext';
 import ILoginState from 'ILoginState';
 import App from 'Core/App';
 import Page from 'Core/Page';

@@ -20,7 +20,7 @@ import ActionType from 'Actions/ActionType';
 import { Session, Cookies } from 'Helpers/Storage';
 
 export default function MainReducer(state, action) {
-  Debug.Log('MainReducer', action.type);
+  Debug.Reducer('MainReducer', action.type);
 
   switch (action.type) {
     case ActionType.SET_VISIBLE:

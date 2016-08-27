@@ -27,7 +27,7 @@ import ApiRequest from 'API/ApiRequest';
 import ApiError from 'API/ApiError';
 
 export function SetVisible(visible: boolean) {
-  Debug.Call('SetVisible', visible);
+  Debug.Action('SetVisible', visible);
 
   return {
     type: ActionType.SET_VISIBLE,
@@ -36,7 +36,7 @@ export function SetVisible(visible: boolean) {
 }
 
 export function SetError(title: string, text: string | JSX.Element) {
-  Debug.Call('SetError', title, text);
+  Debug.Action('SetError', title, text);
 
   return {
     type: ActionType.SET_ERROR,
@@ -46,7 +46,7 @@ export function SetError(title: string, text: string | JSX.Element) {
 }
 
 export function ClearError() {
-  Debug.Call('ClearError');
+  Debug.Action('ClearError');
 
   return {
     type: ActionType.CLEAR_ERROR
@@ -54,7 +54,7 @@ export function ClearError() {
 }
 
 export function SetAccessToken(accessToken: string) {
-  Debug.Call('SetAccessToken', accessToken);
+  Debug.Action('SetAccessToken', accessToken);
 
   return {
     type: ActionType.SET_ACCESS_TOKEN,
@@ -63,7 +63,7 @@ export function SetAccessToken(accessToken: string) {
 }
 
 export function SetLanguage(newLanguage: string) {
-  Debug.Call('SetLanguage', newLanguage);
+  Debug.Action('SetLanguage', newLanguage);
 
   return {
     type: ActionType.SET_LANGUAGE,
@@ -72,7 +72,7 @@ export function SetLanguage(newLanguage: string) {
 }
 
 export function SetServer(newServer: Server) {
-  Debug.Call('SetServer', newServer);
+  Debug.Action('SetServer', newServer);
 
   return {
     type: ActionType.SET_SERVER,
@@ -81,7 +81,7 @@ export function SetServer(newServer: Server) {
 }
 
 export function ShowOverlay(type: OverlayType, text?: string) {
-  Debug.Call('ShowOverlay', type, text);
+  Debug.Action('ShowOverlay', type, text);
 
   return {
     type: ActionType.SET_LANGUAGE,
@@ -89,7 +89,7 @@ export function ShowOverlay(type: OverlayType, text?: string) {
 }
 
 export function HideOverlay() {
-  Debug.Call('HideOverlay');
+  Debug.Action('HideOverlay');
 
   return {
     type: ActionType.SET_LANGUAGE,
@@ -97,7 +97,7 @@ export function HideOverlay() {
 }
 
 export function SetOverlayText(text?: string) {
-  Debug.Call('SetOverlayText', text);
+  Debug.Action('SetOverlayText', text);
 
   return {
     type: ActionType.SET_LANGUAGE,
@@ -105,7 +105,7 @@ export function SetOverlayText(text?: string) {
 }
 
 export function SetApiServers(servers: Array<ApiServer>) {
-  Debug.Call('SetApiServers', servers);
+  Debug.Action('SetApiServers', servers);
 
   return {
     type: ActionType.SET_API_SERVERS,
@@ -114,7 +114,7 @@ export function SetApiServers(servers: Array<ApiServer>) {
 }
 
 export function SetActiveApiServer(server: ApiServer) {
-  Debug.Call('SetActiveApiServer', server);
+  Debug.Action('SetActiveApiServer', server);
 
   return {
     type: ActionType.SET_ACTIVE_API_SERVER,
@@ -123,7 +123,7 @@ export function SetActiveApiServer(server: ApiServer) {
 }
 
 export function LoadApiServers() {
-  Debug.Call('LoadApiServers');
+  Debug.Action('LoadApiServers');
 
   return (dispatch: Redux.Dispatch<any>) => {
     Debug.Request('LoadApiServers');
@@ -157,7 +157,7 @@ export function LoadApiServers() {
 }
 
 export function LoadServer(fileName: string, successCallback?: (server: Server) => void, errorCallback?: (error: ApiError) => void) {
-  Debug.Call('LoadServer', fileName);
+  Debug.Action('LoadServer', fileName);
   
   return (dispatch: Redux.Dispatch<any>) => {
 
@@ -188,7 +188,7 @@ export function LoadServer(fileName: string, successCallback?: (server: Server) 
 }
 
 export function SetBreadcrumbs(breadcrumbs: string | Array<string> | Array<any>) {
-  Debug.Call('SetBreadcrumbs', breadcrumbs);
+  Debug.Action('SetBreadcrumbs', breadcrumbs);
 
   return {
     type: ActionType.SET_BREADCRUMBS,

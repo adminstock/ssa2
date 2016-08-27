@@ -98,6 +98,14 @@ export default class Debug {
     if (DEV_MODE) { Debug.Level('response', message, params); }
   }
 
+  public static Action(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('action', message, params); }
+  }
+
+  public static Reducer(message?: any, ...params: any[]): void {
+    if (DEV_MODE) { Debug.Level('reducer', message, params); }
+  }
+
   public static Error(message?: any, ...params: any[]): void {
     if (DEV_MODE) {
       console.error = Function.bind.call(console.error, console);

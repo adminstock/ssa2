@@ -31,7 +31,10 @@ var logLevels = {
   render3: ['background-color: #d3a8ff; color: white; border-radius: 4px; padding: 1px 4px 1px 4px;', 'color: #400080; font-style: italic;'],
 
   request: ['background-color: #8dd5d8; color: #408080; border-radius: 4px; padding: 1px 4px 1px 4px;', 'color: #408080;'],
-  response: ['background-color: #8dd5d8; color: #408080; border-radius: 4px; padding: 1px 4px 1px 4px;', 'color: #408080;']
+  response: ['background-color: #8dd5d8; color: #408080; border-radius: 4px; padding: 1px 4px 1px 4px;', 'color: #408080;'],
+
+  action: ['background-color: #800000; color: #ffb9b9; border-radius: 4px; padding: 1px 4px 1px 4px;', 'color: #800000; font-style: italic;'],
+  reducer: ['background-color: #800000; color: white; border-radius: 4px; padding: 1px 4px 1px 4px;', 'color: #800000;font-weight:bold;']
 };
 
 var languages = {
@@ -138,8 +141,7 @@ module.exports = Object.keys(languages).map(function(language) {
         'React': 'react',
         'ReactDOM': 'react-dom',
         'ReactUpdate': 'react-addons-update',
-        'Debug': 'Helpers/Debug',
-        'IMainContext': 'Layouts/IMainContext'
+        'Debug': 'Helpers/Debug'
       }),
 
       // https://github.com/ampedandwired/html-webpack-plugin
