@@ -142,12 +142,6 @@ export function LoadApiServers() {
         Debug.Response('LoadApiServers.Success', result);
 
         dispatch(SetApiServers(result));
-
-        /*if (result != null && result.length > 0) {
-          App.Redirect(returnUrl);
-        } else {
-          App.Redirect('/error', { msg: 'List of servers is empty...' });
-        }*/
       },
 
       // server returned error
@@ -169,7 +163,7 @@ export function LoadServer(fileName: string, successCallback?: (server: Server) 
 
     dispatch(ShowOverlay(OverlayType.Loader | OverlayType.White, __('Loading server info...')));
 
-    let api = new ApiRequest<any, Server>('Control.GetServer', { FileName: fileName }, App.Context.ActiveApiServer.Url, App.Context.CurrentUser.AccessToken, null);
+    let api = new ApiRequest<any, Server>('Control.GetServer', { FileName: fileName }, App.ActiveApiServer.Url, App.CurrentUser.AccessToken, null);
 
     api.SuccessCallback = (result) => {
       if (typeof successCallback === 'function') {

@@ -20,7 +20,7 @@ import { createDevTools } from 'redux-devtools';
 import LogMonitor from 'redux-devtools-log-monitor';
 import DockMonitor from 'redux-devtools-dock-monitor';
 
-import { createStore, applyMiddleware, compose } from 'redux';
+import { applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 
 export const ReduxDevTools = createDevTools(

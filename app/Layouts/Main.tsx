@@ -29,7 +29,6 @@ import Header from 'Layouts/Components/Header';
 import Menu from 'Layouts/Components/Menu';
 
 import App from 'Core/App';
-import CurrentUser from 'Core/CurrentUser';
 
 import { SetBreadcrumbs } from 'Actions/Global';
 

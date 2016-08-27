@@ -126,7 +126,6 @@
     <TypeScriptCompile Include="Pages\Error.tsx" />
     <TypeScriptCompile Include="Core\App.tsx" />
     <TypeScriptCompile Include="Core\Config.ts" />
-    <TypeScriptCompile Include="Core\CurrentUser.ts" />
     <TypeScriptCompile Include="API\Enums.ts" />
     <TypeScriptCompile Include="Core\EventArgs.ts" />
     <TypeScriptCompile Include="Core\Page.tsx" />

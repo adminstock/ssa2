@@ -267,7 +267,7 @@ export default class ServerRow extends Component<IServerItemProps, any> {
           btnConnectTitle = __('Try again');
           btnConnectClassName += ' btn-danger';
         }
-        else if (server.Status & ServerStatus.Connecting || server.Status & ServerStatus.Testing || server.FileName == App.CurrentUser.ManagedServerName) {
+        else if (server.Status & ServerStatus.Connecting || server.Status & ServerStatus.Testing || (App.CurrentServer != null && server.FileName == App.CurrentServer.FileName)) {
           btnConnectClassName += ' hidden';
         } else {
           btnConnectTitle = __('Connect');

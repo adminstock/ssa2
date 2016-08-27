@@ -20,14 +20,14 @@ import { createStore } from 'redux';
 import { browserHistory } from 'react-router';
 import { Modal, Button } from 'react-bootstrap';
 
-import Server from 'Models/Server';
+import { Server } from 'Models/Server';
 
 import ApiServer from 'Models/ApiServer';
 import ApiRequest from 'API/ApiRequest';
 import ApiError from 'API/ApiError';
 
-import IMainContext from 'IMainContext';
 import IAppContext from 'IAppContext';
+import ICurrentUser from 'ICurrentUser';
 
 import IMakeRequestProps from 'IMakeRequestProps';
 
@@ -35,9 +35,6 @@ import Dialog from 'UI/Dialog/Dialog';
 import DialogManager from 'UI/Dialog/DialogManager';
 import DialogSettings from 'UI/Dialog/DialogSettings';
 
-import CurrentUser from 'CurrentUser';
-
-import Config from 'Config';
 import CookiesHelper from 'Helpers/CookiesHelper';
 
 import MainReducer from 'Core/MainReducer';
@@ -62,25 +59,33 @@ export default class App {
     return App.Store.getState();
   }
 
-  /** Provides current user. */
-  public static CurrentUser = CurrentUser;
+  /** Gets current user. */
+  public static get CurrentUser(): ICurrentUser {
+    return App.Store.getState().CurrentUser;
+  }
 
-  /** Provides access to config. */
-  public static Config = Config;
+  /** Gets current server. */
+  public static get CurrentServer(): Server  {
+    return App.Store.getState().CurrentServer;
+  }
+
+  /** Gets current page. */
+  public static get CurrentPage(): any {
+    return App.Store.getState().CurrentPage;
+  }
+
+  /** Gets active API server. */
+  public static get ActiveApiServer(): ApiServer {
+    return App.Store.getState().ActiveApiServer;
+  }
 
   constructor() {
     Debug.Warn('"App" is static class. No need to create an instance of this class.');
   }
 
   /**
-   * Sets context. It is used only once in the main application component.
-   *
-   * @param context
-   
-  public static SetContext(context: IMainContext): void {
-    App._Context = context;
-  }*/
-
+   * Initializes the application.
+   */
   public static Init(enhancer?: any): void {
     const initState: IAppContext = {
       CurrentUser: {
@@ -104,38 +109,6 @@ export default class App {
   public static Dispatch<A extends Redux.Action>(action: A): A {
     return App.Store.dispatch(action);
   }
-
-  /*public static LoadApiServers(returnUrl: string): void {
-    //Overlay.Show(OverlayType.Loader | OverlayType.White, __('Initialization...'));
-
-    $.ajax({
-      cache: false,
-      crossDomain: true,
-      type: 'GET',
-      dataType: 'json',
-      url: '/servers.json',
-
-      // handler of request succeeds
-      success: (result: Array<ApiServer>) => {
-        Debug.Response('LoadServers.Success', result);
-
-        App.Store.dispatch(SetApiServers(result));
-
-        if (result != null && result.length > 0) {
-          App.Redirect(returnUrl);
-        } else {
-          App.Redirect('/error', { msg: 'List of servers is empty...' });
-        }
-      },
-
-      // server returned error
-      error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
-        Debug.Response('LoadServers.Error', x, textStatus, errorThrown);
-        App.Redirect('/error', { msg: (textStatus || errorThrown) });
-      }
-    });
-  }
-  */
 
   /**
    * Redirect to a specified URL or to route.
@@ -390,10 +363,11 @@ export default class App {
 
       if (error.Code == 'ACCESS_DENIED') {
         // reset token
-        CurrentUser.AccessToken = null;
+        //TODO
+        //App.Store.dispatch(SetAccessToken(null));
 
         // redirect to login
-        App.Redirect('/login', { query: window.location.href });
+        //App.Redirect('/login', { query: window.location.href });
         return;
       }
 

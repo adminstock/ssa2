@@ -27,7 +27,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 // redux
+import { applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 
 // redux-dev-tools
 import { ReduxDevTools, ReduxEnhancer } from 'ReduxDevTools';
@@ -38,6 +40,11 @@ import SmallServerAdmin from 'SmallServerAdmin';
 import RouteConfig from 'RouteConfig';
 
 // init redux
+/*export const ReduxEnhancer = compose<any>(
+  // Middleware you want to use in development:
+  applyMiddleware(thunk)
+);*/
+
 App.Init(ReduxEnhancer);
 
 // render

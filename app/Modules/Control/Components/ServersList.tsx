@@ -148,11 +148,11 @@ export default class ServersList extends Component<IServersListProps, IServersLi
   }
 
   private TestCurrentServerConnection(): void {
-    if (App.CurrentUser.ManagedServer == null) {
+    if (App.CurrentServer == null) {
       return;
     }
 
-    let currentServerName = App.CurrentUser.ManagedServerName;
+    let currentServerName = App.CurrentServer.FileName;
 
     for (let i = 0; i < this.state.Servers.length; i++) {
       if (this.state.Servers[i].FileName == currentServerName) {
@@ -168,11 +168,11 @@ export default class ServersList extends Component<IServersListProps, IServersLi
   }
 
   private SetStatusToCurrentServer(newStatus: ServerStatus): void {
-    if (App.CurrentUser.ManagedServer == null) {
+    if (App.CurrentServer == null) {
       return;
     }
 
-    let currentServerName = App.CurrentUser.ManagedServerName;
+    let currentServerName = App.CurrentServer.FileName;
 
     for (let i = 0; i < this.state.Servers.length; i++) {
       if (this.state.Servers[i].FileName == currentServerName) {
@@ -228,8 +228,6 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     }
 
     let list = [];
-
-    let currentServer = App.CurrentUser.ManagedServerName;
 
     if (this.state.Servers != null) {
       this.state.Servers.forEach((server, index) => {

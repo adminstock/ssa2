@@ -50,7 +50,7 @@ export class Servers extends Page<any, any> {
   constructor(props, context) {
     super(props, context);
 
-    let outputMode = App.CurrentUser.GetValue<OutputMode>('Control.Servers.OutputMode');
+    let outputMode = App.GetValue<OutputMode>('Control.Servers.OutputMode');
 
     this.state = {
       OutputMode: outputMode || OutputMode.List
@@ -65,7 +65,7 @@ export class Servers extends Page<any, any> {
 
   private OutputMode_Click(newMode: OutputMode): void {
     this.setState({ OutputMode: newMode }, () => {
-      App.CurrentUser.SetValue('Control.Servers.OutputMode', newMode);
+      App.SetValue('Control.Servers.OutputMode', newMode);
     });
   }
 
