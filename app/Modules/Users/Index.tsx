@@ -31,9 +31,9 @@ export default class Index extends Page<any, any> {
     super(props, context);
   }
 
-  componentWillMount() {
+  /*componentWillMount() {
     App.MakeRequest({ Method: 'Users.GetUsers', Data: { page: 1 } });
-  }
+  }*/
 
   render() {
     return (

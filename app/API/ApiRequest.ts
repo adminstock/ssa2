@@ -18,7 +18,6 @@
 import ApiResponse from 'API/ApiResponse';
 import ApiError from 'API/ApiError';
 import { ApiMessageType } from 'API/Enums';
-import CurrentUser from 'Core/CurrentUser';
 
 /**
  * Represents a request to the WebAPI of SmallServerAdmin.
@@ -74,16 +73,16 @@ export default class ApiRequest<TRequest, TResponse> {
   /** Access token of the current user. */
   private Token: string;
   
-  constructor(method: string, data?: TRequest, url?: string, server?: string) {
+  constructor(method: string, data: TRequest, url: string, accessToken: string, server?: string) {
     if (method === null || method == '') {
       throw new Error('Method is required. Value cannot be empty.');
     }
 
     if (url === undefined || url == null || url == '') {
-      url = CurrentUser.ApiServer.Url;
+      throw new Error('Requires API server address. Value cannot be empty.');
     }
 
-    // xdebug
+    // xdebug for WebAPI.PHP
     if (process.env.NODE_ENV !== 'production') {
       if (url.indexOf('?') == -1) {
         url += '?';
@@ -94,16 +93,12 @@ export default class ApiRequest<TRequest, TResponse> {
       url += 'XDEBUG_SESSION_START=1';
     }
 
-    if (server == undefined || server == null || server == '') {
-      server = CurrentUser.ManagedServerName;
-    }
-
     this._Url = url;
     this._Method = method;
     this._Data = data || null;
     this._Key = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
     this._Server = server;
-    this.Token = CurrentUser.AccessToken;
+    this.Token = accessToken;
   }
 
   /**

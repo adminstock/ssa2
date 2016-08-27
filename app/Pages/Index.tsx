@@ -27,9 +27,6 @@ export default class Index extends Page<any, any> {
     super(props, context);
   }
 
-  componentWillMount() {
-  }
-
   render() {
     return (<div>
       <h1>{__("Hello world!")}</h1>

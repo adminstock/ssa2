@@ -16,14 +16,16 @@
  */
 
 /**
- * Implements the main application context.
+ * Context of current user.
  */
-export interface IMainContext {
+export interface ICurrentUser {
 
-  router?: ReactRouter.RouterOnContext;
+  /** Language code. For example: ru, en, de. */
+  Language?: string;
 
-  Title?: string;
+  /** Access token. */
+  AccessToken?: string;
 
 }
 
-export default IMainContext;
+export default ICurrentUser;

@@ -15,15 +15,27 @@
  * limitations under the License.
  */
 
-/**
- * Implements the main application context.
- */
-export interface IMainContext {
+import * as React from 'react';
+import { createDevTools } from 'redux-devtools';
+import LogMonitor from 'redux-devtools-log-monitor';
+import DockMonitor from 'redux-devtools-dock-monitor';
 
-  router?: ReactRouter.RouterOnContext;
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
 
-  Title?: string;
+export const ReduxDevTools = createDevTools(
+  <DockMonitor
+    toggleVisibilityKey='ctrl-h'
+    changePositionKey='ctrl-q'
+    defaultIsVisible={true}
+    defaultSize={0.175}>
+    <LogMonitor />
+  </DockMonitor>
+);
 
-}
-
-export default IMainContext;
+export const ReduxEnhancer = compose<any>(
+  // Middleware you want to use in development:
+  applyMiddleware(thunk),
+  // Required! Enable Redux DevTools with the monitors you chose
+  ReduxDevTools.instrument()
+);

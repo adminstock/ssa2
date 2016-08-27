@@ -20,6 +20,7 @@ import DocumentTitle from 'react-document-title';
 import App from 'Core/App';
 import Page from 'Core/Page';
 import { Overlay, OverlayType } from 'UI/Overlay';
+import { Grid, PageHeader, Alert, Button } from 'react-bootstrap';
 
 /**
  * Error page.
@@ -42,7 +43,13 @@ export default class Error extends Page<any, any> {
   render() {
     return (
       <DocumentTitle title={this.props.Title}>
-        <div><h1>TODO: Error page</h1>{this.props.msg}</div>
+        <Grid>
+          <PageHeader>Application Error</PageHeader>
+          <Alert bsStyle="danger">
+            <h4>{this.props.Title}</h4>
+            {this.props.Text}
+          </Alert>
+        </Grid>
       </DocumentTitle>
     );
   }

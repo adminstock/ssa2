@@ -20,13 +20,13 @@ import DocumentTitle from 'react-document-title';
 import { Modal, Button, Row, Col, Form, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import IMainContext from 'Core/IMainContext';
 import ILoginState from 'ILoginState';
-import CurrentUser from 'Core/CurrentUser';
 import App from 'Core/App';
 import Page from 'Core/Page';
 import ApiRequest from 'API/ApiRequest';
 import AuthResult from 'API/AuthResult';
 import Success from 'API/Success';
 import { Overlay, OverlayType } from 'UI/Overlay';
+import { SetAccessToken } from 'Actions/Global';
 
 /**
  * Login page.
@@ -47,14 +47,14 @@ export default class Index extends Page<any, ILoginState> {
     let loginProcessing = false;
 
     // get token
-    let token = CurrentUser.AccessToken;
+    let token = App.Context.CurrentUser.AccessToken;
 
     if (token == null || token == '') {
       // show form
       showDialog = showForm = true;
     } else {
       // check token valid
-      showDialog = checking = !CurrentUser.IsValid;
+      showDialog = checking = true;
     }
 
     // state
@@ -92,13 +92,20 @@ export default class Index extends Page<any, ILoginState> {
 
     let redirecToHome = false;
 
-    let api = new ApiRequest<any, AuthResult>('Auth.GetToken', { Username: $this.state.Username, Password: $this.state.Password }, CurrentUser.ApiServer.AuthUrl);
+    let api = new ApiRequest<any, AuthResult>(
+      'Auth.GetToken',
+      {
+        Username: $this.state.Username,
+        Password: $this.state.Password
+      },
+      App.Context.ActiveApiServer.AuthUrl,
+      null, null
+    );
 
     api.SuccessCallback = (result) => {
       // set token
-      CurrentUser.AccessToken = result.TokenValue;
-      CurrentUser.IsValid = true;
-
+      App.Store.dispatch(SetAccessToken(result.TokenValue));
+      
       // hide login form and redirect to home
       redirecToHome = true;
     }
@@ -131,18 +138,21 @@ export default class Index extends Page<any, ILoginState> {
 
     let redirecToHome = false;
 
-    let api = new ApiRequest<any, Success>('Auth.TokenIsValid', { Token: CurrentUser.AccessToken }, CurrentUser.ApiServer.AuthUrl);
+    let api = new ApiRequest<any, Success>(
+      'Auth.TokenIsValid',
+      { Token: App.Context.CurrentUser.AccessToken },
+      App.Context.ActiveApiServer.AuthUrl,
+      null, null
+    );
 
     api.SuccessCallback = (result) => {
-      CurrentUser.IsValid = true;
-
       // hide login form and redirect to home
       redirecToHome = true;
     }
 
     api.ErrorCallback = (error) => {
       // remove token
-      CurrentUser.AccessToken = null;
+      App.Store.dispatch(SetAccessToken(null));
 
       // show error
       App.Alert({

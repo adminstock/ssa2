@@ -18,7 +18,6 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import DocumentTitle from 'react-document-title';
-import DialogManager from 'UI/Dialog/DialogManager';
 import IMainContext from 'Core/IMainContext';
 
 /**
@@ -59,8 +58,6 @@ export default class Blank extends React.Component<any, any> implements IMainCon
       <DocumentTitle title={this.props.Title}>
         <div>
           {this.props.children}
-
-          <DialogManager />
         </div>
       </DocumentTitle>
     )

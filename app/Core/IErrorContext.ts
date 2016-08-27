@@ -16,14 +16,16 @@
  */
 
 /**
- * Implements the main application context.
+ * Error context.
  */
-export interface IMainContext {
+export interface IErrorContext {
 
-  router?: ReactRouter.RouterOnContext;
+  /** Error title. */
+  Title: string;
 
-  Title?: string;
-
+  /** Error text. */
+  Text: string | JSX.Element;
+  
 }
 
-export default IMainContext;
+export default IErrorContext;

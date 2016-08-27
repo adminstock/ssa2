@@ -16,14 +16,26 @@
  */
 
 /**
- * Implements the main application context.
+ * The list of actions.
  */
-export interface IMainContext {
+export default class ActionType {
 
-  router?: ReactRouter.RouterOnContext;
+  public static get SET_ACCESS_TOKEN(): string { return 'SET_ACCESS_TOKEN'; }
 
-  Title?: string;
+  public static get SET_LANGUAGE(): string { return 'SET_LANGUAGE'; }
+
+  public static get SET_SERVER(): string { return 'SET_SERVER'; }
+
+  public static get SET_API_SERVERS(): string { return 'SET_API_SERVERS'; }
+
+  public static get SET_ACTIVE_API_SERVER(): string { return 'SET_ACTIVE_API_SERVER'; }
+
+  public static get SET_VISIBLE(): string { return 'SET_VISIBLE'; }
+  
+  public static get SET_ERROR(): string { return 'SET_ERROR'; }
+
+  public static get CLEAR_ERROR(): string { return 'CLEAR_ERROR'; }
+
+  public static get SET_BREADCRUMBS(): string { return 'SET_BREADCRUMBS'; }
 
 }
-
-export default IMainContext;

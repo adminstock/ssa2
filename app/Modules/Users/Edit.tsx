@@ -31,6 +31,8 @@ export default class Edit extends Page<any, any> {
   }
 
   componentWillMount() {
+    this.SetBreadcrumbs(__('Users Editor'));
+
     // test
     //App.Alert('test1');
     //App.Alert(<div>hello world</div>);

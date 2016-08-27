@@ -21,7 +21,7 @@ import DocumentTitle from 'react-document-title';
 import { Router, Route, Link } from 'react-router';
 import { Modal, Button } from 'react-bootstrap';
 
-import DialogManager from 'UI/Dialog/DialogManager';
+import { connect } from 'react-redux';
 
 import IMainContext from 'Core/IMainContext';
 
@@ -31,10 +31,12 @@ import Menu from 'Layouts/Components/Menu';
 import App from 'Core/App';
 import CurrentUser from 'Core/CurrentUser';
 
+import { SetBreadcrumbs } from 'Actions/Global';
+
 /**
  * The main layout.
  */
-export default class Main extends React.Component<any, any> implements IMainContext {
+export class Main extends React.Component<any, any> implements IMainContext {
 
   public router: ReactRouter.RouterOnContext;
 
@@ -87,11 +89,13 @@ export default class Main extends React.Component<any, any> implements IMainCont
             <br />
             Debian GNU/Linux 8.4 (jessie) &middot; PHP v5.4.0
           </footer>
-
-          <DialogManager />
         </div>
       </DocumentTitle>
     )
   }
 
 }
+
+export default connect(
+  //state => ({ Title: state.Title })
+)(Main);

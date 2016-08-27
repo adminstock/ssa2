@@ -17,24 +17,26 @@
 
 import * as React from 'react';
 import { Link } from 'react-router';
-import CurrentUser from 'Core/CurrentUser';
-import Component from 'Core/Component';
+import { LinkContainer } from 'react-router-bootstrap';
 
-export default class Header extends Component<any, any> {
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Button } from 'react-bootstrap';
+
+//import CurrentUser from 'Core/CurrentUser';
+import Component from 'Core/Component';
+import App from 'Core/App';
+import IMainContext from 'Core/IMainContext';
+
+import { SetLanguage } from 'Actions/Global';
+
+import { connect } from 'react-redux';
+
+export class Header extends Component<any, any> {
   
   constructor(props, context) {
     super(props, context);
-
-    // Debug.Init3('Header', props, context);
-
-    this.state = {
-      CurrentPageTitle: document.title
-    };
-
   }
 
   componentWillMount() {
-    window.setTimeout(() => { this.CheckPageTitle(); }, 100);
   }
 
   private CheckPageTitle(): void {
@@ -55,17 +57,17 @@ export default class Header extends Component<any, any> {
    * @param newLanguage New language: en, ru, de etc.
    */
   private SetLanguage(newLanguage: string): void {
-    CurrentUser.Language = newLanguage;
+    App.Store.dispatch(SetLanguage(newLanguage));
   }
 
   private GetServerIcon(): string {
-    if (CurrentUser.ManagedServer == null) {
+    if (true == true) { // CurrentUser.ManagedServer == null
       return null;
     }
 
     let result = '';
     
-    let server = CurrentUser.ManagedServer;
+    let server = null; //CurrentUser.ManagedServer;
 
     if (server.OS) {
       let name = '';
@@ -114,57 +116,100 @@ export default class Header extends Component<any, any> {
 
     return 'os-icon24 ' + result;
   }
-
-
+  
   render() {
     Debug.Render3('Header');
 
-    let serverName = '';
+    let { CurrentPage, CurrentUser, CurrentServer } = App.Context;
 
-    if (CurrentUser.ManagedServer != null) {
-      serverName = CurrentUser.ManagedServer.FileName;
+    let serverName = null;
 
-      if (CurrentUser.ManagedServer.Name != null && CurrentUser.ManagedServer.Name != '') {
-        serverName = CurrentUser.ManagedServer.Name;
+    if (CurrentServer != null) {
+      serverName = CurrentServer.FileName;
+
+      if (CurrentServer.Name != null && CurrentServer.Name != '') {
+        serverName = CurrentServer.Name;
+      }
+
+      serverName = (
+        <span>
+          <i className={ this.GetServerIcon() }></i>
+          <span>{ serverName }</span>
+        </span>
+      )
+    }
+    else {
+      // fa-home
+      serverName = (<i className="fa fa-hashtag" aria-hidden="true" style={ { float: 'none' } }></i>);
+    }
+
+    let breadcrumbs = [
+      (<span key="breadcrumbs-0" className="navbar-brand hidden-xs">/</span>),
+      (<span key="breadcrumbs-1" className="navbar-brand hidden-xs">{ __('Dashboard') }</span>)
+    ];
+
+    if (CurrentPage.Breadcrumbs != null) {
+      if (typeof CurrentPage.Breadcrumbs == 'string') {
+        breadcrumbs = [
+          (<span key="breadcrumbs-0" className="navbar-brand hidden-xs">/</span>),
+          (<span key="breadcrumbs-1" className="navbar-brand hidden-xs">{ CurrentPage.Breadcrumbs }</span>)
+        ];
+      }
+      else if (Array.isArray(CurrentPage.Breadcrumbs)) {
+        breadcrumbs = [<span key="breadcrumbs-100" className="navbar-brand hidden-xs">/</span>];
+
+        (CurrentPage.Breadcrumbs as Array<any>).forEach((item, index) => {
+          if (breadcrumbs.length > 1) {
+            breadcrumbs.push(<span key={ 'breadcrumbs-' + (100 + index) } className="navbar-brand hidden-xs">/</span>);
+          }
+
+          if (typeof item !== 'string') {
+            Debug.Error('Header.render: unsupported type of breadcrumbs');
+          }
+
+          breadcrumbs.push(<span key={ 'breadcrumbs-' + index } className="navbar-brand hidden-xs">{ item }</span>);
+        });
+      }
+      else {
+        Debug.Error('Header.render: unsupported type of breadcrumbs');
       }
     }
 
+    let currentLang = 'lang lang-noselect';
+
+    if (CurrentUser.Language != null && CurrentUser.Language != '') {
+      currentLang = 'lang lang-' + CurrentUser.Language;
+    }
+
     return (
-      <nav className="navbar navbar-default">
-        <div className="container">
-          <div className="navbar-header">
-            <button type="button" className="navbar-toggle" data-toggle="collapse" data-target=".panel-nav">
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-            </button>
-            <a className="navbar-brand" title="All servers"><i className="fa fa-server" style={ { float: 'none' } }></i></a>
-            <Link to="/" className="navbar-brand" title="Dashboard">
-              <i className={this.GetServerIcon()}></i>
-              <span>{serverName}</span>
-            </Link>
-            <span className="navbar-brand hidden-xs">/</span>
-            <span className="navbar-brand hidden-xs">
-              {this.state.CurrentPageTitle}
-            </span>
-          </div>
-          <ul className="nav navbar-nav navbar-right collapse navbar-collapse panel-nav lang">
-            <li className="dropdown">
-              <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                <i className="lang lang-noselect"></i>
-                <span className="caret"></span>
-              </a>
-              <ul className="dropdown-menu">
-                <li><a onClick={this.SetLanguage.bind(this, ['en'])}><i className="lang lang-en"></i></a></li>
-                <li><a onClick={this.SetLanguage.bind(this, ['ru'])}><i className="lang lang-ru"></i></a></li>
-                <li><a onClick={this.SetLanguage.bind(this, ['de'])}><i className="lang lang-de"></i></a></li>
-              </ul>
-            </li>
-            <li><a href="/logout.php"><span className="glyphicon glyphicon-log-out"></span> Logout</a></li>
-          </ul>
-        </div>
-      </nav>
+      <Navbar>
+        <Navbar.Header>
+          <a className="navbar-brand" title="All servers"><i className="fa fa-server" style={ { float: 'none' } }></i></a>
+          <Link to="/" className="navbar-brand" title="Dashboard">
+            { serverName }
+          </Link>
+          { breadcrumbs }
+        </Navbar.Header>
+        <Nav pullRight className="lang">
+          <NavDropdown id="lang" title={<i className={currentLang}></i>}>
+            <MenuItem onClick={ this.SetLanguage.bind(this, 'en') }><i className="lang lang-en"></i></MenuItem>
+            <MenuItem onClick={ this.SetLanguage.bind(this, 'ru') }><i className="lang lang-ru"></i></MenuItem>
+            <MenuItem onClick={ this.SetLanguage.bind(this, 'de') }><i className="lang lang-de"></i></MenuItem>
+          </NavDropdown>
+          <LinkContainer to="/logout">
+            <NavItem>
+              <i className="glyphicon glyphicon-log-out"></i> Logout
+            </NavItem>
+          </LinkContainer>
+        </Nav>
+      </Navbar>
     )
   }
 
 }
+
+export default connect(state => ({
+  CurrentPage: state.CurrentPage,
+  CurrentUser: state.CurrentUser,
+  CurrentServer: state.CurrentServer
+}))(Header);

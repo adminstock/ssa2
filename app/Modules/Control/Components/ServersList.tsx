@@ -26,6 +26,7 @@ import IServersListProps from 'IServersListProps';
 import ServerItem from 'ServerItem';
 import ServerEditor from 'ServerEditor';
 import { OutputMode } from 'OutputMode';
+import { SetServer } from 'Actions/Global';
 
 import {
   Table,
@@ -88,6 +89,8 @@ export default class ServersList extends Component<IServersListProps, IServersLi
    * Loads list of servers.
    */
   private LoadServers(): void {
+    Debug.Call3('LoadServers');
+
     App.MakeRequest<any, Array<Server>>({
       Method: 'Control.GetServers',
       SuccessCallback: (result) => {
@@ -130,7 +133,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
           });
 
           // set tested server as current server
-          App.CurrentUser.SetManagedServer(server);
+          App.Store.dispatch(SetServer(server));
         }
       },
       ErrorCallback: (error) => {
@@ -228,20 +231,22 @@ export default class ServersList extends Component<IServersListProps, IServersLi
 
     let currentServer = App.CurrentUser.ManagedServerName;
 
-    this.state.Servers.forEach((server, index) => {
-      list.push(
-        <ServerItem
-          Server={server}
-          OutputMode={ this.state.OutputMode }
-          key={'server-' + index}
-          OnConnect={ this.ConnectToServer.bind(this) }
-          OnEdit={ this.EditServer.bind(this) }
-          OnDelete={ this.DeleteServer.bind(this) }
-          Disabled={ this.state.Testing }
-          ShowControl={ this.props.ShowControl }
-        />
-      );
-    });
+    if (this.state.Servers != null) {
+      this.state.Servers.forEach((server, index) => {
+        list.push(
+          <ServerItem
+            Server={server}
+            OutputMode={ this.state.OutputMode }
+            key={'server-' + index}
+            OnConnect={ this.ConnectToServer.bind(this) }
+            OnEdit={ this.EditServer.bind(this) }
+            OnDelete={ this.DeleteServer.bind(this) }
+            Disabled={ this.state.Testing }
+            ShowControl={ this.props.ShowControl }
+            />
+        );
+      });
+    }
 
     let servers = null;
 

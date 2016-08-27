@@ -1,0 +1,58 @@
+﻿/*
+ * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Provides access to sessionStorage.
+ */
+export default class Session {
+
+  constructor() {
+    Debug.Warn('"Session" is static class. No need to create an instance of this class.');
+  }
+
+  /**
+   * Gets data from sessionStorage.
+   *
+   * @param key
+   */
+  public static Get<T>(key: string, defaultValue?: any): T {
+    if (window.sessionStorage.getItem(key) == null || window.sessionStorage.getItem(key) == '') {
+      if (defaultValue !== undefined) {
+        return defaultValue;
+      } else {
+        return null;
+      }
+    } else {
+      return JSON.parse(window.sessionStorage.getItem(key));
+    }
+  }
+
+  /**
+   * Sets data to sessionStorage.
+   *
+   * @param key
+   * @param value
+   */
+  public static Set(key: string, value: any): void {
+    if (value == null) {
+      window.sessionStorage.removeItem(key);
+    } else {
+      window.sessionStorage.setItem(key, JSON.stringify(value));
+    }
+  }
+
+}

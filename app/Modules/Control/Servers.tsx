@@ -24,19 +24,25 @@ import ServersList from 'Modules/Control/Components/ServersList';
 //import ServerEditor from 'Modules/Control/Components/ServerEditor';
 import { OutputMode } from 'Modules/Control/Components/OutputMode';
 
+import { connect } from 'react-redux';
+
 import {
   Table,
   ButtonToolbar,
   ButtonGroup,
   Button,
   Glyphicon,
-  Image
+  Image,
+  Alert
 } from 'react-bootstrap';
 
-export default class Servers extends Page<any, any> {
+import { SetBreadcrumbs } from 'Actions/Global';
+
+export class Servers extends Page<any, any> {
 
   static defaultProps = {
-    Title: __('Servers')
+    Title: __('Servers'),
+    CurrentServer: null
   }
 
   private List: ServersList;
@@ -49,10 +55,12 @@ export default class Servers extends Page<any, any> {
     this.state = {
       OutputMode: outputMode || OutputMode.List
     };
+
   }
 
   componentWillMount() {
     //App.MakeRequest('Users.GetUsers', {page: 1 });
+    App.Store.dispatch(SetBreadcrumbs('Servers123'));
   }
 
   private OutputMode_Click(newMode: OutputMode): void {
@@ -70,9 +78,22 @@ export default class Servers extends Page<any, any> {
   render() {
     Debug.Render2('Servers');
 
+    let alertMessage = null;
+
+    if (App.Context.CurrentServer == null) {
+      alertMessage = (
+        <Alert bsStyle="danger">
+          <p>{ __('To continue, you need to select the server.') }</p>
+          <p>{ __('If not in the list of available servers, create a new server.') }</p>
+        </Alert>
+      );
+    }
+
     return (
       <DocumentTitle title={this.props.Title}>
         <div>
+          {alertMessage}
+
           <h2 className="pull-left">
             <ButtonToolbar>
               <ButtonGroup>
@@ -104,3 +125,7 @@ export default class Servers extends Page<any, any> {
   }
 
 }
+
+export default connect(
+  state => ({ CurrentServer: state.CurrentServer })
+)(Servers);

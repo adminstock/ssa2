@@ -16,14 +16,19 @@
  */
 
 import * as React from 'react';
+import { createStore } from 'redux';
 import { browserHistory } from 'react-router';
 import { Modal, Button } from 'react-bootstrap';
+
+import Server from 'Models/Server';
 
 import ApiServer from 'Models/ApiServer';
 import ApiRequest from 'API/ApiRequest';
 import ApiError from 'API/ApiError';
 
 import IMainContext from 'IMainContext';
+import IAppContext from 'IAppContext';
+
 import IMakeRequestProps from 'IMakeRequestProps';
 
 import Dialog from 'UI/Dialog/Dialog';
@@ -33,18 +38,29 @@ import DialogSettings from 'UI/Dialog/DialogSettings';
 import CurrentUser from 'CurrentUser';
 
 import Config from 'Config';
+import CookiesHelper from 'Helpers/CookiesHelper';
+
+import MainReducer from 'Core/MainReducer';
+
+import Session from 'Core/Session';
 
 /**
  * The main class of the application.
  */
 export default class App {
 
+  private static _Store: Redux.Store<IAppContext>;
+
+  public static get Store(): Redux.Store<IAppContext> {
+    return App._Store;
+  }
+
   /* private static _Context: IMainContext = null;
 
-  /** Gets current context. * /
-  public static get Context(): IMainContext {
-    return App._Context;
-  }*/
+  /** Gets current context. */
+  public static get Context(): IAppContext {
+    return App.Store.getState();
+  }
 
   /** Provides current user. */
   public static CurrentUser = CurrentUser;
@@ -64,7 +80,63 @@ export default class App {
   public static SetContext(context: IMainContext): void {
     App._Context = context;
   }*/
-  
+
+  public static Init(enhancer?: any): void {
+    const initState: IAppContext = {
+      CurrentUser: {
+        AccessToken: App.GetSession<string>('AccessToken'),
+        Language: CookiesHelper.Get('lang')
+      },
+      CurrentPage: {
+        Breadcrumbs: null,
+        State: null
+      },
+      CurrentServer: null,
+      ActiveApiServer: null,
+      AvailableApiServers: null,
+      AppError: null,
+      Visible: true
+    };
+
+    App._Store = createStore<IAppContext>(MainReducer, initState, enhancer);
+  }
+
+  public static Dispatch<A extends Redux.Action>(action: A): A {
+    return App.Store.dispatch(action);
+  }
+
+  /*public static LoadApiServers(returnUrl: string): void {
+    //Overlay.Show(OverlayType.Loader | OverlayType.White, __('Initialization...'));
+
+    $.ajax({
+      cache: false,
+      crossDomain: true,
+      type: 'GET',
+      dataType: 'json',
+      url: '/servers.json',
+
+      // handler of request succeeds
+      success: (result: Array<ApiServer>) => {
+        Debug.Response('LoadServers.Success', result);
+
+        App.Store.dispatch(SetApiServers(result));
+
+        if (result != null && result.length > 0) {
+          App.Redirect(returnUrl);
+        } else {
+          App.Redirect('/error', { msg: 'List of servers is empty...' });
+        }
+      },
+
+      // server returned error
+      error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
+        Debug.Response('LoadServers.Error', x, textStatus, errorThrown);
+        App.Redirect('/error', { msg: (textStatus || errorThrown) });
+      }
+    });
+  }
+  */
+
   /**
    * Redirect to a specified URL or to route.
    *
@@ -86,6 +158,56 @@ export default class App {
       } else {
         browserHistory.push(url);
       }
+    }
+  }
+
+  /**
+   * Gets data from sessionStorage.
+   *
+   * @param key
+   */
+  public static GetSession<T>(key: string, defaultValue?: any): T {
+    return Session.Get<T>(key, defaultValue);
+  }
+
+  /**
+   * Sets data to sessionStorage.
+   *
+   * @param key
+   * @param value
+   */
+  public static SetSession(key: string, value: any): void {
+    Session.Set(key, value);
+  }
+
+  /**
+   * Gets data from localStorage.
+   *
+   * @param key
+   */
+  public static GetValue<T>(key: string, defaultValue?: any): T {
+    if (window.localStorage.getItem(key) == null || window.localStorage.getItem(key) == '') {
+      if (defaultValue !== undefined) {
+        return defaultValue;
+      } else {
+        return null;
+      }
+    } else {
+      return JSON.parse(window.localStorage.getItem(key));
+    }
+  }
+
+  /**
+   * Sets data to localStorage.
+   *
+   * @param key
+   * @param value
+   */
+  public static SetValue(key: string, value: any): void {
+    if (value == null) {
+      window.localStorage.removeItem(key);
+    } else {
+      window.localStorage.setItem(key, JSON.stringify(value));
     }
   }
 
@@ -248,7 +370,13 @@ export default class App {
   // #region ..API Requests..
 
   public static MakeRequest<TRequest, TResponse>(settings: IMakeRequestProps<TRequest, TResponse>): void {
-    let api = new ApiRequest<any, TResponse>(settings.Method, settings.Data, settings.Url, settings.Server);
+    let api = new ApiRequest<any, TResponse>(
+      settings.Method,
+      settings.Data,
+      settings.Url || App.Context.ActiveApiServer.Url,
+      (App.Context.CurrentUser ? App.Context.CurrentUser.AccessToken : null),
+      settings.Server || (App.Context.CurrentServer ? App.Context.CurrentServer.FileName : null)
+    );
 
     api.SuccessCallback = (result) => {
 

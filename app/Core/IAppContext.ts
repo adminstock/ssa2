@@ -15,15 +15,35 @@
  * limitations under the License.
  */
 
+import { Server } from 'Models/Server';
+import ApiServer from 'Models/ApiServer';
+import ICurrentUser from 'ICurrentUser';
+import IErrorContext from 'IErrorContext';
+
 /**
- * Implements the main application context.
+ * Application context.
  */
-export interface IMainContext {
+export interface IAppContext {
 
-  router?: ReactRouter.RouterOnContext;
+  /** Current user. */
+  CurrentUser: ICurrentUser;
 
-  Title?: string;
+  /** Current server to manage. */
+  CurrentServer: Server;
+
+  /** Current server of API. */
+  ActiveApiServer: ApiServer;
+
+  /** List of available API servers. */
+  AvailableApiServers: Array<ApiServer>;
+
+  /** Context of the current page. */
+  CurrentPage: { Breadcrumbs?: any, State?: any };
+
+  Visible: boolean;
+
+  AppError: IErrorContext;
 
 }
 
-export default IMainContext;
+export default IAppContext;

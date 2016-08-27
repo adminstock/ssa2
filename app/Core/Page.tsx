@@ -17,6 +17,8 @@
 
 import * as React from 'react';
 import IMainContext from 'IMainContext';
+import App from 'App';
+import { SetBreadcrumbs } from 'Actions/Global';
 
 /**
  * The base class for pages.
@@ -38,6 +40,14 @@ export default class Page<P, S> extends React.Component<P, S> {
     super(props, context);
     
     Debug.Init2('Page', (this.props as any).Title, this);
+  }
+
+  componentWillMount() {
+    this.SetBreadcrumbs(__('Dashboard'));
+  }
+
+  public SetBreadcrumbs(breadcrumbs: string): void {
+    App.Store.dispatch(SetBreadcrumbs(breadcrumbs));
   }
 
 }
