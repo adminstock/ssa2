@@ -19,7 +19,7 @@ import * as React from 'react';
 import { Router, Route, Link, IndexRoute, IndexRedirect, browserHistory } from 'react-router';
 import { LoadServer, SetServer } from 'Actions/Global';
 import { Overlay, OverlayType } from 'UI/Overlay';
-import CookiesHelper from 'Helpers/CookiesHelper';
+import { Cookies } from 'Helpers/Storage';
 import App from 'Core/App';
 import LayoutMain from 'Layouts/Main';
 import LayoutBlank from 'Layouts/Blank';
@@ -48,7 +48,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 
     // check managed server
     if (App.Context.CurrentServer == null) {
-      let serverName = CookiesHelper.Get('managed-server');
+      let serverName = Cookies.Get('managed-server');
 
       if (serverName != null && serverName != '') {
         // load server data
@@ -59,7 +59,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
           LoadComponent(location, callback);
         }, (error) => {
           // remove server from cookies
-          CookiesHelper.Delete('managed-server');
+          Cookies.Delete('managed-server');
           // redirect to error page
           App.Redirect('/error', {msg: error.Text});
         }));

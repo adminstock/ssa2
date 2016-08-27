@@ -18,7 +18,7 @@
 /**
  * Helper class for working with cookies.
  */
-export default class CookiesHelper {
+export default class Cookies {
 
   /** 
    * Adds the specified cookie to the cookie collection.
@@ -69,7 +69,7 @@ export default class CookiesHelper {
    * @param name The name of the cookie.
    */
   public static Delete(name: string) {
-    CookiesHelper.Add(name, '', -1);
+    Cookies.Add(name, '', -1);
   }
 
 }

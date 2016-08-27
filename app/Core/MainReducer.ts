@@ -17,8 +17,7 @@
 
 // import { combineReducers } from 'redux';
 import ActionType from 'Actions/ActionType';
-import CookiesHelper from 'Helpers/CookiesHelper';
-import Session from 'Core/Session';
+import { Session, Cookies } from 'Helpers/Storage';
 
 export default function MainReducer(state, action) {
   Debug.Log('MainReducer', action.type);
@@ -41,10 +40,10 @@ export default function MainReducer(state, action) {
 
     case ActionType.SET_SERVER:
       if (action.CurrentServer == null || action.CurrentServer.FileName == null || action.CurrentServer.FileName == '') {
-        CookiesHelper.Delete('managed-server');
+        Cookies.Delete('managed-server');
         Session.Set('ManagedServer', null);
       } else {
-        CookiesHelper.Add('managed-server', action.CurrentServer.FileName, 365);
+        Cookies.Add('managed-server', action.CurrentServer.FileName, 365);
         Session.Set('ManagedServer', action.CurrentServer);
       }
       
@@ -57,7 +56,7 @@ export default function MainReducer(state, action) {
 
     case ActionType.SET_LANGUAGE:
       // set to cookies
-      CookiesHelper.Add('lang', action.Language, 365);
+      Cookies.Add('lang', action.Language, 365);
 
       // set to state
       let cu2 = Object.assign({}, state.CurrentUser, { Language: action.Language });

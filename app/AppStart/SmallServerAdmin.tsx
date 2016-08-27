@@ -18,7 +18,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import App from 'Core/App';
-import CookiesHelper from 'Helpers/CookiesHelper';
 import { SetVisible, SetActiveApiServer, LoadApiServers, SetError } from 'Actions/Global';
 import Error from 'Pages/Error';
 

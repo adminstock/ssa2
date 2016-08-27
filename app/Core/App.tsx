@@ -35,11 +35,9 @@ import Dialog from 'UI/Dialog/Dialog';
 import DialogManager from 'UI/Dialog/DialogManager';
 import DialogSettings from 'UI/Dialog/DialogSettings';
 
-import CookiesHelper from 'Helpers/CookiesHelper';
-
 import MainReducer from 'Core/MainReducer';
 
-import Session from 'Core/Session';
+import { Session, Cookies } from 'Helpers/Storage';
 
 /**
  * The main class of the application.
@@ -48,13 +46,12 @@ export default class App {
 
   private static _Store: Redux.Store<IAppContext>;
 
+  /** Gets instance of the application store. */
   public static get Store(): Redux.Store<IAppContext> {
     return App._Store;
   }
 
-  /* private static _Context: IMainContext = null;
-
-  /** Gets current context. */
+  /** Gets global application state. */
   public static get Context(): IAppContext {
     return App.Store.getState();
   }
@@ -90,7 +87,7 @@ export default class App {
     const initState: IAppContext = {
       CurrentUser: {
         AccessToken: App.GetSession<string>('AccessToken'),
-        Language: CookiesHelper.Get('lang')
+        Language: Cookies.Get('lang')
       },
       CurrentPage: {
         Breadcrumbs: null,

@@ -109,7 +109,8 @@
     <TypeScriptCompile Include="Core\ICurrentUser.ts" />
     <TypeScriptCompile Include="Core\IErrorContext.ts" />
     <TypeScriptCompile Include="Core\IMakeRequestProps.ts" />
-    <TypeScriptCompile Include="Core\Session.ts" />
+    <TypeScriptCompile Include="Helpers\Session.ts" />
+    <TypeScriptCompile Include="Helpers\Storage.ts" />
     <TypeScriptCompile Include="Layouts\Blank.tsx" />
     <TypeScriptCompile Include="Actions\Global.ts" />
     <TypeScriptCompile Include="Models\ConnectionSettings.ts" />
@@ -165,7 +166,7 @@
     <TypeScriptCompile Include="UI\Dialog\DialogSettings.ts" />
     <TypeScriptCompile Include="API\ApiRequest.ts" />
     <TypeScriptCompile Include="Helpers\TextHelper.ts" />
-    <TypeScriptCompile Include="Helpers\CookiesHelper.ts" />
+    <TypeScriptCompile Include="Helpers\Cookies.ts" />
     <TypeScriptCompile Include="Helpers\Debug.ts" />
     <TypeScriptCompile Include="Pages\Index.tsx" />
     <TypeScriptCompile Include="Layouts\Main.tsx" />
