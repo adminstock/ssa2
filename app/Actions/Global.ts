@@ -89,11 +89,13 @@ export function LoadLanguage(newLanguage: string) {
         break;
 
       default:
-        dispatch(updateIntl({
-          defaultLocale: 'en',
-          locale: 'en',
-          messages: {}
-        }));
+        LanguageLoaded.apply(dispatch, [{
+          intl: {
+            defaultLocale: 'en',
+            locale: 'en',
+            messages: {}
+          }
+        }]);
         break;
     }
   }

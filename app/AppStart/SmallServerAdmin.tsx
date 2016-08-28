@@ -20,7 +20,7 @@ import { IntlProvider, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 
 import App from 'Core/App';
-import { SetVisible, SetActiveApiServer, LoadApiServers, SetError } from 'Actions/Global';
+import { SetVisible, SetActiveApiServer, LoadApiServers, SetError, LoadLanguage } from 'Actions/Global';
 import Error from 'Pages/Error';
 import DialogManager from 'UI/Dialog/DialogManager';
 import { Overlay } from 'UI/Overlay/index';
@@ -46,18 +46,18 @@ export class SmallServerAdmin extends React.Component<any, any> {
     this.InitApp();
   }
 
-  private HasLoadApiServers: boolean;
-
   private InitApp(): void {
     if (App.Context.AppError != null) {
       return;
     }
 
+    if (App.CurrentUser.Language != App.Store.getState().intl.locale) {
+      App.Store.dispatch(LoadLanguage(App.CurrentUser.Language));
+      return;
+    }
+
     if (App.Context.ApiServers == null) {
-      //if (!this.HasLoadApiServers) {
-        App.Store.dispatch(LoadApiServers());
-      //}
-      //this.HasLoadApiServers = true;
+      App.Store.dispatch(LoadApiServers());
       return;
     }
 

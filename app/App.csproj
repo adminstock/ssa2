@@ -193,8 +193,6 @@
     <Content Include="Content\Styles\v1\_lang.scss" />
     <Content Include="Content\Styles\v1\_web-servers.scss" />
     <Content Include="Content\Styles\v1\bundle.scss" />
-    <Content Include="Localization\ru.json" />
-    <Content Include="Localization\de.json" />
     <Content Include="Content\Styles\v1\_overlay.scss" />
     <None Include="typings.json" />
     <TypeScriptCompile Include="typings.local\Debug.d.ts" />
