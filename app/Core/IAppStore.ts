@@ -15,21 +15,31 @@
  * limitations under the License.
  */
 
-import ApiServer from 'Models/ApiServer';
-import IErrorContext from 'IErrorContext';
+import IAppContext from 'IAppContext';
+import ICurrentUser from 'ICurrentUser';
+import IPageContext from 'IPageContext';
+import IOverlay from 'UI/Overlay/IOverlay';
 
 /**
- * Application context.
+ * Application store.
  */
-export interface IAppContext {
-  
-  /** List of available API servers. */
-  AvailableApiServers: Array<ApiServer>;
+export interface IAppStore {
 
-  Visible: boolean;
+  /** Current user. */
+  CurrentUser?: ICurrentUser;
 
-  AppError: IErrorContext;
+  /** Application context. */
+  AppContext?: IAppContext;
+
+  /** Overlay. */
+  Overlay?: IOverlay;
+
+  /** Context of the current page. */
+  CurrentPage?: IPageContext;
+
+  /** Context of react-intl (internationalization). */
+  intl?: any;
 
 }
 
-export default IAppContext;
+export default IAppStore;

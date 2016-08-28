@@ -28,11 +28,13 @@ export default class Blank extends React.Component<any, any> implements IMainCon
   public router: ReactRouter.RouterOnContext;
 
   static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired
+    router: React.PropTypes.object.isRequired,
+    intl: React.PropTypes.object.isRequired
   }
 
   static childContextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired
+    router: React.PropTypes.object.isRequired,
+    intl: React.PropTypes.object.isRequired
   }
 
   static defaultProps = {
@@ -47,7 +49,8 @@ export default class Blank extends React.Component<any, any> implements IMainCon
 
   public getChildContext(): any {
     return {
-      router: (this.context as any).router
+      router: (this.context as any).router,
+      intl: (this.context as any).intl
     };
   }
   

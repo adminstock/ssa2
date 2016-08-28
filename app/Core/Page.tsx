@@ -33,7 +33,8 @@ export default class Page<P, S> extends React.Component<P, S> {
 
   // registration of the context type, already defined into the containing component
   static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired
+    router: React.PropTypes.object.isRequired,
+    intl: React.PropTypes.object.isRequired
   }
 
   constructor(props?, context?) {

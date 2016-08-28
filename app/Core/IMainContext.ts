@@ -22,6 +22,8 @@ export interface IMainContext {
 
   router?: ReactRouter.RouterOnContext;
 
+  intl?: any;
+
 }
 
 export default IMainContext;

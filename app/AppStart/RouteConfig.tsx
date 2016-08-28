@@ -40,14 +40,14 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 
   if (location.pathname != '/login' && location.pathname != '/error') {
     // check access
-    if (App.Context.CurrentUser.AccessToken == null || App.Context.CurrentUser.AccessToken == '') {
+    if (App.CurrentUser.AccessToken == null || App.CurrentUser.AccessToken == '') {
       // redirect to login page
       App.Redirect('/login', { returnUrl: location.pathname + (location.search ? location.search : '') });
       return;
     }
 
     // check managed server
-    if (App.Context.CurrentServer == null) {
+    if (App.CurrentServer == null) {
       let serverName = Cookies.Get('managed-server');
 
       if (serverName != null && serverName != '') {
@@ -132,6 +132,10 @@ export function LoadedComponent(component: any): void {
  * Routes.
  */
 export default class RouteConfig extends React.Component<any, any> {
+
+  static contextTypes: React.ValidationMap<any> = {
+    intl: React.PropTypes.object.isRequired
+  }
 
   constructor(props, context) {
     super(props, context);

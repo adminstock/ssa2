@@ -26,8 +26,10 @@ import ApiServer from 'Models/ApiServer';
 import ApiRequest from 'API/ApiRequest';
 import ApiError from 'API/ApiError';
 
+import IAppStore from 'IAppStore';
 import IAppContext from 'IAppContext';
 import ICurrentUser from 'ICurrentUser';
+import IOverlay from 'UI/Overlay/IOverlay';
 
 import IMakeRequestProps from 'IMakeRequestProps';
 
@@ -35,7 +37,7 @@ import Dialog from 'UI/Dialog/Dialog';
 import DialogManager from 'UI/Dialog/DialogManager';
 import DialogSettings from 'UI/Dialog/DialogSettings';
 
-import MainReducer from 'Core/MainReducer';
+import { AppReducer } from 'Reducers/Combination';
 
 import { Session, Cookies } from 'Helpers/Storage';
 
@@ -44,16 +46,16 @@ import { Session, Cookies } from 'Helpers/Storage';
  */
 export default class App {
 
-  private static _Store: Redux.Store<IAppContext>;
+  private static _Store: Redux.Store<IAppStore>;
 
   /** Gets instance of the application store. */
-  public static get Store(): Redux.Store<IAppContext> {
+  public static get Store(): Redux.Store<IAppStore> {
     return App._Store;
   }
 
   /** Gets global application state. */
   public static get Context(): IAppContext {
-    return App.Store.getState();
+    return App.Store.getState().AppContext;
   }
 
   /** Gets current user. */
@@ -63,7 +65,7 @@ export default class App {
 
   /** Gets current server. */
   public static get CurrentServer(): Server  {
-    return App.Store.getState().CurrentServer;
+    return App.Store.getState().CurrentUser.Server;
   }
 
   /** Gets current page. */
@@ -71,9 +73,8 @@ export default class App {
     return App.Store.getState().CurrentPage;
   }
 
-  /** Gets active API server. */
-  public static get ActiveApiServer(): ApiServer {
-    return App.Store.getState().ActiveApiServer;
+  public static get Overlay(): IOverlay {
+    return App.Store.getState().Overlay;
   }
 
   constructor() {
@@ -84,27 +85,8 @@ export default class App {
    * Initializes the application.
    */
   public static Init(enhancer?: any): void {
-    const initState: IAppContext = {
-      CurrentUser: {
-        AccessToken: App.GetSession<string>('AccessToken'),
-        Language: Cookies.Get('lang')
-      },
-      CurrentPage: {
-        Breadcrumbs: null,
-        State: null
-      },
-      CurrentServer: null,
-      ActiveApiServer: null,
-      AvailableApiServers: null,
-      AppError: null,
-      Overlay: {
-        OverlayType: 0,
-        Text: null
-      },
-      Visible: true
-    };
-
-    App._Store = createStore<IAppContext>(MainReducer, initState, enhancer);
+    App._Store = createStore<IAppStore>(AppReducer, {}, enhancer);
+    Debug.Init('App.Store', App._Store.getState());
   }
 
   public static Dispatch<A extends Redux.Action>(action: A): A {
@@ -347,9 +329,9 @@ export default class App {
     let api = new ApiRequest<any, TResponse>(
       settings.Method,
       settings.Data,
-      settings.Url || App.Context.ActiveApiServer.Url,
-      (App.Context.CurrentUser ? App.Context.CurrentUser.AccessToken : null),
-      settings.Server || (App.Context.CurrentServer ? App.Context.CurrentServer.FileName : null)
+      settings.Url || App.CurrentUser.ApiServer.Url,
+      (App.CurrentUser ? App.CurrentUser.AccessToken : null),
+      settings.Server || (App.CurrentServer ? App.CurrentServer.FileName : null)
     );
 
     api.SuccessCallback = (result) => {

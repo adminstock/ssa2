@@ -28,8 +28,16 @@ export default class Index extends Page<any, any> {
   }
 
   render() {
+    const {formatMessage} = this.context.intl;
+
+    let hello = '';
+
+    if (this.context.intl) {
+      hello = formatMessage(this.context.intl.messages.hello);
+    }
+
     return (<div>
-      <h1>{__("Hello world!")}</h1>
+      <h1>{hello}</h1>
       <span className="glyphicon glyphicon-music"></span>
       <Link to="/Users">Users</Link>
     </div>);

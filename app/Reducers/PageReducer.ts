@@ -15,21 +15,18 @@
  * limitations under the License.
  */
 
-import ApiServer from 'Models/ApiServer';
-import IErrorContext from 'IErrorContext';
+import ActionType from 'Actions/ActionType';
+import { Session, Cookies } from 'Helpers/Storage';
+import IPageContext from 'Core/IPageContext';
 
-/**
- * Application context.
- */
-export interface IAppContext {
-  
-  /** List of available API servers. */
-  AvailableApiServers: Array<ApiServer>;
+const initState = { Breadcrumbs: null, State: null };
 
-  Visible: boolean;
+export default function PageReducer(state: IPageContext = initState, action) {
+  switch (action.type) {
+    case ActionType.SET_BREADCRUMBS:
+      return Object.assign({}, state, { Breadcrumbs: action.Breadcrumbs });
 
-  AppError: IErrorContext;
-
+    default:
+      return state;
+  }
 }
-
-export default IAppContext;

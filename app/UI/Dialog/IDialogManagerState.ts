@@ -16,12 +16,11 @@
  */
 
 import Dialog from 'Dialog';
-import DialogSettings from 'DialogSettings';
 
-export interface IDialogManagerState {
+export interface IDialogProviderState {
 
   Items: Array<Dialog>;
 
 }
 
-export default IDialogManagerState;
+export default IDialogProviderState;

@@ -15,21 +15,18 @@
  * limitations under the License.
  */
 
-import ApiServer from 'Models/ApiServer';
-import IErrorContext from 'IErrorContext';
+import { combineReducers } from 'redux';
+import { intlReducer } from 'react-intl-redux';
 
-/**
- * Application context.
- */
-export interface IAppContext {
-  
-  /** List of available API servers. */
-  AvailableApiServers: Array<ApiServer>;
+import MainReducer from 'MainReducer';
+import UserReducer from 'UserReducer';
+import OverlayReducer from 'OverlayReducer';
+import PageReducer from 'PageReducer';
 
-  Visible: boolean;
-
-  AppError: IErrorContext;
-
-}
-
-export default IAppContext;
+export const AppReducer = combineReducers<any>({
+  AppContext: MainReducer,
+  CurrentUser: UserReducer,
+  CurrentPage: PageReducer,
+  Overlay: OverlayReducer,
+  intl: intlReducer
+});

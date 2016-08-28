@@ -120,15 +120,16 @@ export class Header extends Component<any, any> {
   render() {
     Debug.Render3('Header');
 
-    let { CurrentPage, CurrentUser, CurrentServer } = App.Context;
+    let currentPage = App.CurrentPage;
+    let currentUser = App.CurrentUser;
 
     let serverName = null;
 
-    if (CurrentServer != null) {
-      serverName = CurrentServer.FileName;
+    if (currentUser.Server != null) {
+      serverName = currentUser.Server.FileName;
 
-      if (CurrentServer.Name != null && CurrentServer.Name != '') {
-        serverName = CurrentServer.Name;
+      if (currentUser.Server.Name != null && currentUser.Server.Name != '') {
+        serverName = currentUser.Server.Name;
       }
 
       serverName = (
@@ -148,17 +149,17 @@ export class Header extends Component<any, any> {
       (<span key="breadcrumbs-1" className="navbar-brand hidden-xs">{ __('Dashboard') }</span>)
     ];
 
-    if (CurrentPage.Breadcrumbs != null) {
-      if (typeof CurrentPage.Breadcrumbs == 'string') {
+    if (currentPage.Breadcrumbs != null) {
+      if (typeof currentPage.Breadcrumbs == 'string') {
         breadcrumbs = [
           (<span key="breadcrumbs-0" className="navbar-brand hidden-xs">/</span>),
-          (<span key="breadcrumbs-1" className="navbar-brand hidden-xs">{ CurrentPage.Breadcrumbs }</span>)
+          (<span key="breadcrumbs-1" className="navbar-brand hidden-xs">{ currentPage.Breadcrumbs }</span>)
         ];
       }
-      else if (Array.isArray(CurrentPage.Breadcrumbs)) {
+      else if (Array.isArray(currentPage.Breadcrumbs)) {
         breadcrumbs = [<span key="breadcrumbs-100" className="navbar-brand hidden-xs">/</span>];
 
-        (CurrentPage.Breadcrumbs as Array<any>).forEach((item, index) => {
+        (currentPage.Breadcrumbs as Array<any>).forEach((item, index) => {
           if (breadcrumbs.length > 1) {
             breadcrumbs.push(<span key={ 'breadcrumbs-' + (100 + index) } className="navbar-brand hidden-xs">/</span>);
           }
@@ -177,8 +178,8 @@ export class Header extends Component<any, any> {
 
     let currentLang = 'lang lang-noselect';
 
-    if (CurrentUser.Language != null && CurrentUser.Language != '') {
-      currentLang = 'lang lang-' + CurrentUser.Language;
+    if (currentUser.Language != null && currentUser.Language != '') {
+      currentLang = 'lang lang-' + currentUser.Language;
     }
 
     return (

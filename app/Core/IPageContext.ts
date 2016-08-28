@@ -15,21 +15,17 @@
  * limitations under the License.
  */
 
-import ApiServer from 'Models/ApiServer';
-import IErrorContext from 'IErrorContext';
-
 /**
- * Application context.
+ * Page context.
  */
-export interface IAppContext {
-  
-  /** List of available API servers. */
-  AvailableApiServers: Array<ApiServer>;
+export interface IPageContext {
 
-  Visible: boolean;
+  /** Breadcrumbs. */
+  Breadcrumbs?: string | Array<any>;
 
-  AppError: IErrorContext;
+  /** Page state. */
+  State?: any;
 
 }
 
-export default IAppContext;
+export default IPageContext;

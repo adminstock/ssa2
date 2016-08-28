@@ -43,5 +43,5 @@ export default class ActionType {
   public static get SET_OVERLAY_TEXT(): string { return 'SET_OVERLAY_TEXT'; }
 
   public static get HIDE_OVERLAY(): string { return 'HIDE_OVERLAY'; }
-    
+
 }

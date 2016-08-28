@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 
+import { Server } from 'Models/Server';
+import ApiServer from 'Models/ApiServer';
+
 /**
  * Context of current user.
  */
@@ -25,6 +28,12 @@ export interface ICurrentUser {
 
   /** Access token. */
   AccessToken?: string;
+
+  /** Current server to manage. */
+  Server?: Server;
+
+  /** Current server of API. */
+  ApiServer?: ApiServer;
 
 }
 

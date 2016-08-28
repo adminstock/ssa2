@@ -42,7 +42,7 @@ export class Servers extends Page<any, any> {
 
   static defaultProps = {
     Title: __('Servers'),
-    CurrentServer: null
+    CurrentUser: null
   }
 
   private List: ServersList;
@@ -80,7 +80,7 @@ export class Servers extends Page<any, any> {
 
     let alertMessage = null;
 
-    if (App.Context.CurrentServer == null) {
+    if (App.CurrentUser.Server == null) {
       alertMessage = (
         <Alert bsStyle="danger">
           <p>{ __('To continue, you need to select the server.') }</p>
@@ -127,5 +127,5 @@ export class Servers extends Page<any, any> {
 }
 
 export default connect(
-  state => ({ CurrentServer: state.CurrentServer })
+  state => ({ CurrentUser: state.CurrentUser })
 )(Servers);

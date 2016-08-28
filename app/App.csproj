@@ -98,11 +98,17 @@
     <Content Include="typings\globals\redux-devtools-log-monitor\typings.json" />
     <Content Include="typings\globals\redux-thunk\typings.json" />
     <Content Include="typings\globals\react-router-bootstrap\typings.json" />
+    <Content Include="typings\globals\react-intl\typings.json" />
     <TypeScriptCompile Include="Actions\ActionType.ts" />
     <TypeScriptCompile Include="AppStart\RouteConfig.tsx" />
     <TypeScriptCompile Include="AppStart\SmallServerAdmin.tsx" />
     <TypeScriptCompile Include="AppStart\Init.tsx" />
-    <TypeScriptCompile Include="Core\MainReducer.ts" />
+    <TypeScriptCompile Include="Core\IAppStore.ts" />
+    <TypeScriptCompile Include="Core\IPageContext.ts" />
+    <TypeScriptCompile Include="Reducers\Combination.ts" />
+    <TypeScriptCompile Include="Reducers\PageReducer.ts" />
+    <TypeScriptCompile Include="Reducers\UserReducer.ts" />
+    <TypeScriptCompile Include="Reducers\MainReducer.ts" />
     <TypeScriptCompile Include="AppStart\ReduxDevTools.tsx" />
     <TypeScriptCompile Include="Core\Component.tsx" />
     <TypeScriptCompile Include="Core\IAppContext.ts" />
@@ -141,6 +147,7 @@
     <Content Include=".bootstraprc" />
     <Content Include="Content\Styles\v1\_os-icons.scss" />
     <None Include="servers.json" />
+    <TypeScriptCompile Include="Reducers\OverlayReducer.ts" />
     <TypeScriptCompile Include="typings\globals\history\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\jquery\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
@@ -148,6 +155,7 @@
     <TypeScriptCompile Include="typings\globals\react-bootstrap\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-document-title\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-dom\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\react-intl\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-redux\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-router-bootstrap\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-router\index.d.ts" />

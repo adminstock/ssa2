@@ -34,7 +34,7 @@ export class Overlay extends React.Component<any, any> {
   private GetClassName(): string {
     let result = 'overlay-wrapper';
 
-    let overlayType = App.Context.Overlay.OverlayType;
+    let overlayType = App.Overlay.OverlayType;
 
     if (overlayType & OverlayType.Opacity15) {
       result += ' overlay-opacity15';
@@ -56,7 +56,7 @@ export class Overlay extends React.Component<any, any> {
   }
 
   private GetLoadingIndicator(): JSX.Element {
-    let overlayType = App.Context.Overlay.OverlayType;
+    let overlayType = App.Overlay.OverlayType;
 
     if ((overlayType & OverlayType.Loader) != OverlayType.Loader) {
       return null;
@@ -81,8 +81,8 @@ export class Overlay extends React.Component<any, any> {
     // text
     let text = null;
 
-    if (App.Context.Overlay.Text != null && App.Context.Overlay.Text != '') {
-      text = (<div className="loader-text">{ App.Context.Overlay.Text }</div>);
+    if (App.Overlay.Text != null && App.Overlay.Text != '') {
+      text = (<div className="loader-text">{ App.Overlay.Text }</div>);
     }
 
     return (
@@ -94,9 +94,9 @@ export class Overlay extends React.Component<any, any> {
   }
 
   render() {
-    Debug.Render('Overlay', App.Context.Overlay.OverlayType, App.Context.Overlay.Text);
+    Debug.Render('Overlay', App.Overlay.OverlayType, App.Overlay.Text);
 
-    if (App.Context.Overlay.OverlayType == OverlayType.Invisible) {
+    if (App.Overlay.OverlayType == OverlayType.Invisible) {
       return null;
     } else {
       return (

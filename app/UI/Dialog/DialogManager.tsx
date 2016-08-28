@@ -97,12 +97,12 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
 
   private UpdateState(): void {
     let $this = this;
-    
+
     if (!DialogManager.UpdateStateNeed) {
       window.setTimeout($this.UpdateState.bind($this), 100);
       return;
     }
-    
+
     Debug.Call3('DialogManager.UpdateState', 'processing');
 
     this.setState({ Items: DialogManager.Items }, () => {
@@ -180,14 +180,14 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
           if (!added) {
             if (current == 'Header') {
               modal.push
-              (
-                <Modal.Header key={TextHelper.RandomKey('modal_header_')} closeButton={settings.ShowCloseButton}>
-                    <Modal.Title key={TextHelper.RandomKey('modal_title_') }>{settings[current]}</Modal.Title>
+                (
+                <Modal.Header key={TextHelper.RandomKey('modal_header_') } closeButton={settings.ShowCloseButton}>
+                  <Modal.Title key={TextHelper.RandomKey('modal_title_') }>{settings[current]}</Modal.Title>
                 </Modal.Header>
-              );
+                );
             }
             else if (current == 'Body') {
-              modal.push(<Modal.Body key={TextHelper.RandomKey('modal_body_')}>{settings[current]}</Modal.Body>);
+              modal.push(<Modal.Body key={TextHelper.RandomKey('modal_body_') }>{settings[current]}</Modal.Body>);
             }
             else if (current == 'Footer') {
               modal.push(<Modal.Footer key={TextHelper.RandomKey('modal_footer_') }>{settings[current]}</Modal.Footer>);
@@ -198,13 +198,13 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
     }
 
     dialog.Element =
-    (
-      <Modal key={'modal_' + dialog.Key} show={dialog.Visible} onHide={() => {
-        if (dialog.Closed) {
-          $this.CloseDialog(dialog.Key);
-        }
-      }}>{modal}</Modal>
-    );
+      (
+        <Modal key={'modal_' + dialog.Key} show={dialog.Visible} onHide={() => {
+          if (dialog.Closed) {
+            $this.CloseDialog(dialog.Key);
+          }
+        } }>{modal}</Modal>
+      );
 
     // hide all
     DialogManager.HideAll(true);
@@ -311,7 +311,7 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
    */
   public static ShowDialog(key: string, state?: any): boolean {
     Debug.Call('DialogManager.ShowDialog', key);
-        
+
     return DialogManager.SetDialogVisibleStatus(key, true, state);
   }
 

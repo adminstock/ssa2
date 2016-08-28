@@ -16,7 +16,9 @@
  */
 
 import * as React from 'react';
+import { IntlProvider, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
+
 import App from 'Core/App';
 import { SetVisible, SetActiveApiServer, LoadApiServers, SetError } from 'Actions/Global';
 import Error from 'Pages/Error';
@@ -51,13 +53,18 @@ export class SmallServerAdmin extends React.Component<any, any> {
     this.InitApp();
   }
 
+  private HasLoadApiServers: boolean;
+
   private InitApp(): void {
     if (App.Context.AppError != null) {
       return;
     }
 
     if (App.Context.AvailableApiServers == null) {
-      App.Store.dispatch(LoadApiServers());
+      //if (!this.HasLoadApiServers) {
+        App.Store.dispatch(LoadApiServers());
+      //}
+      //this.HasLoadApiServers = true;
       return;
     }
 
@@ -83,7 +90,7 @@ export class SmallServerAdmin extends React.Component<any, any> {
       return;
     }
 
-    if (App.Context.ActiveApiServer == null) {
+    if (App.CurrentUser.ApiServer == null) {
       App.Store.dispatch(SetActiveApiServer(App.Context.AvailableApiServers[0]));
       return;
     }
@@ -97,9 +104,9 @@ export class SmallServerAdmin extends React.Component<any, any> {
     let children = null;
     let allowRender = true;
 
-    let { Visible, AppError, AvailableApiServers, ActiveApiServer } = App.Context;
+    let { Visible, AppError, AvailableApiServers } = App.Context;
 
-    Debug.Render('SmallServerAdmin', Visible); // , AvailableApiServers, ActiveApiServer, CurrentServer
+    Debug.Render('SmallServerAdmin', Visible, AvailableApiServers);
 
     if (AppError != null) {
       children = this.Error(AppError.Title, AppError.Text);
@@ -110,7 +117,7 @@ export class SmallServerAdmin extends React.Component<any, any> {
       allowRender = false;
     }
 
-    if (ActiveApiServer == null) {
+    if (App.CurrentUser.ApiServer == null) {
       allowRender = false
     }
 
@@ -122,21 +129,29 @@ export class SmallServerAdmin extends React.Component<any, any> {
       children = this.props.children;
     }
 
-    return (
-      <div>
-        {children}
+    // this.props.dispatch
+    const messages = defineMessages({
+      hello: {
+        id: 'hello',
+        defaultMessage: 'Hello world!!!',
+      }
+    });
 
-        <Overlay />
-        <DialogManager />
-      </div>
+    return (
+      <IntlProvider defaultLocale="en" locale={ App.CurrentUser.Language } messages={messages}>
+        <div>
+          {children}
+
+          <Overlay />
+          <DialogManager/>
+        </div>
+      </IntlProvider>
     );
   }
 
 }
 
 export default connect(state => ({
-  Visible: state.Visible,
-  AvailableApiServers: state.AvailableApiServers,
-  ActiveApiServer: state.ActiveApiServer,
-  AppError: state.AppError
+  CurrentUser: state.CurrentUser,
+  AppContext: state.AppContext
 }))(SmallServerAdmin);

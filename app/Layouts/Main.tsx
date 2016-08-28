@@ -40,11 +40,13 @@ export class Main extends React.Component<any, any> implements IMainContext {
   public router: ReactRouter.RouterOnContext;
 
   static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired
+    router: React.PropTypes.object.isRequired,
+    intl: React.PropTypes.object.isRequired
   }
 
   static childContextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired
+    router: React.PropTypes.object.isRequired,
+    intl: React.PropTypes.object.isRequired
   }
 
   static defaultProps = {
@@ -54,12 +56,13 @@ export class Main extends React.Component<any, any> implements IMainContext {
   constructor(props, context) {
     super(props, context);
 
-    Debug.Init(this);
+    Debug.Init(this, props, context);
   }
 
   public getChildContext(): any {
     return {
-      router: (this.context as any).router
+      router: (this.context as any).router,
+      intl: (this.context as any).intl
     };
   }
   

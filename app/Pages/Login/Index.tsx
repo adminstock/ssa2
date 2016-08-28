@@ -45,7 +45,7 @@ export default class Index extends Page<any, ILoginState> {
     let loginProcessing = false;
 
     // get token
-    let token = App.Context.CurrentUser.AccessToken;
+    let token = App.CurrentUser.AccessToken;
 
     if (token == null || token == '') {
       // show form
@@ -96,7 +96,7 @@ export default class Index extends Page<any, ILoginState> {
         Username: $this.state.Username,
         Password: $this.state.Password
       },
-      App.Context.ActiveApiServer.AuthUrl,
+      App.CurrentUser.ApiServer.AuthUrl,
       null, null
     );
 
@@ -138,8 +138,8 @@ export default class Index extends Page<any, ILoginState> {
 
     let api = new ApiRequest<any, Success>(
       'Auth.TokenIsValid',
-      { Token: App.Context.CurrentUser.AccessToken },
-      App.Context.ActiveApiServer.AuthUrl,
+      { Token: App.CurrentUser.AccessToken },
+      App.CurrentUser.ApiServer.AuthUrl,
       null, null
     );
 

@@ -34,11 +34,11 @@ export default class Edit extends Page<any, any> {
     this.SetBreadcrumbs(__('Users Editor'));
 
     // test
-    //App.Alert('test1');
-    //App.Alert(<div>hello world</div>);
-    //App.Confirm(<div>hello world11111</div>);
-    //App.Confirm(<div>This is test<br />test<br />tessst</div>, (s, confirmed) => { Debug.Log('Confirmed', confirmed); });
-    //App.Confirm({ message: '123', title: 'Are you want?', callback: (s, confirmed) => { Debug.Log('Confirmed', confirmed); } });
+    App.Alert('test1');
+    App.Alert(<div>hello world</div>);
+    App.Confirm(<div>hello world11111</div>);
+    App.Confirm(<div>This is test<br />test<br />tessst</div>, (s, confirmed) => { Debug.Log('Confirmed', confirmed); });
+    App.Confirm({ message: '123', title: 'Are you want?', callback: (s, confirmed) => { Debug.Log('Confirmed', confirmed); } });
   }
 
   render() {

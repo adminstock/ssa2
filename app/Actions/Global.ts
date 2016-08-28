@@ -76,7 +76,7 @@ export function SetServer(newServer: Server) {
 
   return {
     type: ActionType.SET_SERVER,
-    CurrentServer: newServer
+    Server: newServer
   };
 }
 
@@ -166,7 +166,7 @@ export function LoadServer(fileName: string, successCallback?: (server: Server) 
 
     dispatch(ShowOverlay(OverlayType.Loader | OverlayType.White, __('Loading server info...')));
 
-    let api = new ApiRequest<any, Server>('Control.GetServer', { FileName: fileName }, App.ActiveApiServer.Url, App.CurrentUser.AccessToken, null);
+    let api = new ApiRequest<any, Server>('Control.GetServer', { FileName: fileName }, App.CurrentUser.ApiServer.Url, App.CurrentUser.AccessToken, null);
 
     api.SuccessCallback = (result) => {
       if (typeof successCallback === 'function') {
