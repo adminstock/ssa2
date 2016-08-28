@@ -37,7 +37,7 @@ import Dialog from 'UI/Dialog/Dialog';
 import DialogManager from 'UI/Dialog/DialogManager';
 import DialogSettings from 'UI/Dialog/DialogSettings';
 
-import { AppReducer } from 'Reducers/Combination';
+import { RootReducer } from 'Reducers/Combination';
 
 import { Session, Cookies } from 'Helpers/Storage';
 
@@ -73,6 +73,7 @@ export default class App {
     return App.Store.getState().CurrentPage;
   }
 
+  /** Gets overlay info. */
   public static get Overlay(): IOverlay {
     return App.Store.getState().Overlay;
   }
@@ -85,7 +86,7 @@ export default class App {
    * Initializes the application.
    */
   public static Init(enhancer?: any): void {
-    App._Store = createStore<IAppStore>(AppReducer, {}, enhancer);
+    App._Store = createStore<IAppStore>(RootReducer, {}, enhancer);
     Debug.Init('App.Store', App._Store.getState());
   }
 

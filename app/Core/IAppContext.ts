@@ -24,10 +24,12 @@ import IErrorContext from 'IErrorContext';
 export interface IAppContext {
   
   /** List of available API servers. */
-  AvailableApiServers: Array<ApiServer>;
+  ApiServers: Array<ApiServer>;
 
+  /** Visible status. */
   Visible: boolean;
 
+  /** Global error. */
   AppError: IErrorContext;
 
 }

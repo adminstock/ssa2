@@ -20,12 +20,12 @@ import { Session, Cookies } from 'Helpers/Storage';
 import IAppContext from 'Core/IAppContext';
 
 const initState: IAppContext = {
-  AvailableApiServers: null,
+  ApiServers: null,
   AppError: null,
   Visible: true
 };
 
-export default function MainReducer(state: IAppContext = initState, action) {
+export default function AppReducer(state: IAppContext = initState, action) {
   switch (action.type) {
     case ActionType.SET_VISIBLE:
       return Object.assign({}, state, { Visible: action.Visible });
@@ -37,7 +37,7 @@ export default function MainReducer(state: IAppContext = initState, action) {
       return Object.assign({}, state, { AppError: null });
 
     case ActionType.SET_API_SERVERS:
-      return Object.assign({}, state, { AvailableApiServers: action.Servers });
+      return Object.assign({}, state, { ApiServers: action.Servers });
 
     default:
       return state;

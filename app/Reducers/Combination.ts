@@ -18,13 +18,13 @@
 import { combineReducers } from 'redux';
 import { intlReducer } from 'react-intl-redux';
 
-import MainReducer from 'MainReducer';
+import AppReducer from 'AppReducer';
 import UserReducer from 'UserReducer';
 import OverlayReducer from 'OverlayReducer';
 import PageReducer from 'PageReducer';
 
-export const AppReducer = combineReducers<any>({
-  AppContext: MainReducer,
+export const RootReducer = combineReducers<any>({
+  AppContext: AppReducer,
   CurrentUser: UserReducer,
   CurrentPage: PageReducer,
   Overlay: OverlayReducer,

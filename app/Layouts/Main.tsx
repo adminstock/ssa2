@@ -35,7 +35,7 @@ import { SetBreadcrumbs } from 'Actions/Global';
 /**
  * The main layout.
  */
-export class Main extends React.Component<any, any> implements IMainContext {
+export default class Main extends React.Component<any, any> implements IMainContext {
 
   public router: ReactRouter.RouterOnContext;
 
@@ -56,7 +56,7 @@ export class Main extends React.Component<any, any> implements IMainContext {
   constructor(props, context) {
     super(props, context);
 
-    Debug.Init(this, props, context);
+    Debug.Init(this);
   }
 
   public getChildContext(): any {
@@ -97,7 +97,3 @@ export class Main extends React.Component<any, any> implements IMainContext {
   }
 
 }
-
-export default connect(
-  //state => ({ Title: state.Title })
-)(Main);

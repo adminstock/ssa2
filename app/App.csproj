@@ -108,7 +108,7 @@
     <TypeScriptCompile Include="Reducers\Combination.ts" />
     <TypeScriptCompile Include="Reducers\PageReducer.ts" />
     <TypeScriptCompile Include="Reducers\UserReducer.ts" />
-    <TypeScriptCompile Include="Reducers\MainReducer.ts" />
+    <TypeScriptCompile Include="Reducers\AppReducer.ts" />
     <TypeScriptCompile Include="AppStart\ReduxDevTools.tsx" />
     <TypeScriptCompile Include="Core\Component.tsx" />
     <TypeScriptCompile Include="Core\IAppContext.ts" />

@@ -60,7 +60,7 @@ export class SmallServerAdmin extends React.Component<any, any> {
       return;
     }
 
-    if (App.Context.AvailableApiServers == null) {
+    if (App.Context.ApiServers == null) {
       //if (!this.HasLoadApiServers) {
         App.Store.dispatch(LoadApiServers());
       //}
@@ -68,7 +68,7 @@ export class SmallServerAdmin extends React.Component<any, any> {
       return;
     }
 
-    if (App.Context.AvailableApiServers.length <= 0 && App.Context.AppError == null) {
+    if (App.Context.ApiServers.length <= 0 && App.Context.AppError == null) {
       App.Store.dispatch(SetError(
         'List of servers is empty', (
           <div>
@@ -91,7 +91,7 @@ export class SmallServerAdmin extends React.Component<any, any> {
     }
 
     if (App.CurrentUser.ApiServer == null) {
-      App.Store.dispatch(SetActiveApiServer(App.Context.AvailableApiServers[0]));
+      App.Store.dispatch(SetActiveApiServer(App.Context.ApiServers[0]));
       return;
     }
   }
@@ -104,16 +104,16 @@ export class SmallServerAdmin extends React.Component<any, any> {
     let children = null;
     let allowRender = true;
 
-    let { Visible, AppError, AvailableApiServers } = App.Context;
+    let { Visible, AppError, ApiServers } = App.Context;
 
-    Debug.Render('SmallServerAdmin', Visible, AvailableApiServers);
+    Debug.Render('SmallServerAdmin', Visible, ApiServers);
 
     if (AppError != null) {
       children = this.Error(AppError.Title, AppError.Text);
       allowRender = false;
     }
 
-    if (AvailableApiServers == null) {
+    if (ApiServers == null) {
       allowRender = false;
     }
 
