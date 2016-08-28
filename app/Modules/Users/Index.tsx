@@ -24,7 +24,7 @@ import App from 'Core/App';
 export default class Index extends Page<any, any> {
 
   static defaultProps = {
-    Title: __('Users')
+    Title: 'Users'
   }
 
   constructor(props, context) {

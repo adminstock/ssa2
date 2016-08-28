@@ -33,13 +33,6 @@ export class SmallServerAdmin extends React.Component<any, any> {
   constructor(props, context) {
     super(props, context);
 
-    if (DEV_MODE) {
-      console.log('%cSmallServerAdmin v' + SSA_VERSION + ' (development)', 'font-weight:bold;color:white;background-color:black;font-size:150%;padding:4px 12px 4px 12px;border-radius:24px 6px;');
-      console.warn('The application assembled in debug mode, with the conclusion of detailed reports and with uncompressed files.');
-    } else {
-      console.log('%cSmallServerAdmin v' + SSA_VERSION + ' (production)', 'font-weight:bold;');
-    }
-
     Debug.Init(this);
   }
 
@@ -106,7 +99,7 @@ export class SmallServerAdmin extends React.Component<any, any> {
 
     let { Visible, AppError, ApiServers } = App.Context;
 
-    Debug.Render('SmallServerAdmin', Visible, ApiServers);
+    Debug.Render('SmallServerAdmin');
 
     if (AppError != null) {
       children = this.Error(AppError.Title, AppError.Text);
@@ -138,14 +131,12 @@ export class SmallServerAdmin extends React.Component<any, any> {
     });
 
     return (
-      <IntlProvider defaultLocale="en" locale={ App.CurrentUser.Language } messages={messages}>
-        <div>
-          {children}
+      <div>
+        {children}
 
-          <Overlay />
-          <DialogManager/>
-        </div>
-      </IntlProvider>
+        <Overlay />
+        <DialogManager/>
+      </div>
     );
   }
 

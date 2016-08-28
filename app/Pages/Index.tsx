@@ -17,6 +17,7 @@
 import * as React from 'react';
 import { Link } from 'react-router';
 import Page from 'Core/Page';
+import { FormattedMessage } from 'react-intl';
 
 /**
  * The main page.
@@ -28,16 +29,8 @@ export default class Index extends Page<any, any> {
   }
 
   render() {
-    const {formatMessage} = this.context.intl;
-
-    let hello = '';
-
-    if (this.context.intl) {
-      hello = formatMessage(this.context.intl.messages.hello);
-    }
-
     return (<div>
-      <h1>{hello}</h1>
+      <h1><FormattedMessage id="hello" defaultMessage="Hello world!" /></h1>
       <span className="glyphicon glyphicon-music"></span>
       <Link to="/Users">Users</Link>
     </div>);

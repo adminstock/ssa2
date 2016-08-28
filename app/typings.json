@@ -8,7 +8,7 @@
     "history": "github:DefinitelyTyped/DefinitelyTyped/react-router/history.d.ts#f20a05ba43e7c51c0b2c131b561cff65d7a384a0",
     "react-document-title": "github:alekseynemiro/TypeScriptTypeDefinitions/react-document-title/react-document-title.d.ts#5f21fcad50046592191631a6ea3fd83d4c12c962",
     "react-intl": "github:DefinitelyTyped/DefinitelyTyped/react-intl/react-intl.d.ts#7e656a65e70709d8d8068b6dff1875155e44166e",
-    "react-intl-redux": "github:alekseynemiro/TypeScriptTypeDefinitions/react-intl-redux/react-intl-redux.d.ts#3ee1fbba660d9550678f58591e13a88d71ad1485",
+    "react-intl-redux": "github:alekseynemiro/TypeScriptTypeDefinitions/react-intl-redux/react-intl-redux.d.ts#fc6b231ca8721ca9c32a0ae2e0137c52ce467eea",
     "redux": "github:DefinitelyTyped/DefinitelyTyped/redux/redux.d.ts#15ddcf312782faf9e7fdfe724a3a29382a5825d7",
     "react-redux": "github:DefinitelyTyped/DefinitelyTyped/react-redux/react-redux.d.ts#94d4f0e96e5b11f49708fb3fbce6b5c91e33d52d",
     "redux-thunk": "github:DefinitelyTyped/DefinitelyTyped/redux-thunk/redux-thunk.d.ts#d417f687ab0c81ed72bffbc5dace5f643369bb70",

@@ -212,8 +212,8 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     }
 
     App.Confirm({
-      message: <div>{ __('Are you sure you want to delete the') } <strong>{ serverName }</strong>?</div>,
-      buttonOkTitle: __('Yes, delete the server'),
+      message: <div>{ 'Are you sure you want to delete the' } <strong>{ serverName }</strong>?</div>,
+      buttonOkTitle: 'Yes, delete the server',
       callback: (d, confirmed) => {
 
       }
@@ -224,7 +224,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     Debug.Render2('ServersList', this.state.Loading);
 
     if (this.state.Loading) {
-      return (<ProcessingIndicator Text={ __('Loading. Please wait...') } />);
+      return (<ProcessingIndicator Text={ 'Loading. Please wait...' } />);
     }
 
     let list = [];

@@ -27,7 +27,7 @@ import { Grid, PageHeader, Alert, Button } from 'react-bootstrap';
 export default class Error extends Page<any, any> {
 
   static defaultProps = {
-    Title: __('Error'),
+    Title: 'Error',
     returnUrl: '/'
   }
 

@@ -48,12 +48,12 @@ export default class ServerEditor extends Component<any, any> {
   render() {
     Debug.Render3('ServerEditor');
 
-    let title = __('New server');
-    let submitTitle = __('Create');
+    let title = 'New server';
+    let submitTitle = 'Create';
 
     if (this.props.Company != null) {
-      title = __('Server');
-      submitTitle = __('Save');
+      title = 'Server';
+      submitTitle = 'Save';
     }
 
     return (
@@ -63,13 +63,13 @@ export default class ServerEditor extends Component<any, any> {
         </Modal.Header>
         <Modal.Body>
           <Accordion>
-            <Panel header={ __('Connection') } eventKey="1">
+            <Panel header={ 'Connection' } eventKey="1">
               1
             </Panel>
-            <Panel header={ __('Info') } eventKey="2">
+            <Panel header={ 'Info' } eventKey="2">
               2
             </Panel>
-            <Panel header={ __('Modules') } eventKey="3">
+            <Panel header={ 'Modules' } eventKey="3">
               3
             </Panel>
           </Accordion>
@@ -80,7 +80,7 @@ export default class ServerEditor extends Component<any, any> {
             {submitTitle}
           </Button>
           <Button bsStyle="default" disabled={ this.state.Processing }>
-            { __('Cancel') }
+            { 'Cancel' }
           </Button>
         </Modal.Footer>
       </Modal>

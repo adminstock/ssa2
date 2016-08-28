@@ -22,7 +22,7 @@ import IProcessingIndicatorProps from 'IProcessingIndicatorProps';
 export default class ProcessingIndicator extends Component<IProcessingIndicatorProps, any> {
 
   static defaultProps = {
-    Text: __('Please wait...')
+    Text: 'Please wait...'
   }
 
   constructor(props, context) {

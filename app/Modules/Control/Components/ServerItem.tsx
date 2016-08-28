@@ -133,12 +133,12 @@ export default class ServerRow extends Component<IServerItemProps, any> {
 
       // connection button
       if (server.Disabled) {
-        btnConnectTitle = __('Disabled');
+        btnConnectTitle = 'Disabled';
         btnConnectClassName += ' btn-default';
         serverNameIcon = (<i className="glyphicon glyphicon-ban-circle"></i>);
       } else {
         if (server.Status & ServerStatus.ConnectionError) {
-          btnConnectTitle = __('Connect'); // __('Try again');
+          btnConnectTitle = 'Connect'; // __('Try again');
           btnConnectClassName += ' btn-default';
           serverNameIcon = (<i className="glyphicon glyphicon-exclamation-sign"></i>);
           serverNameClass += ' red';
@@ -147,23 +147,23 @@ export default class ServerRow extends Component<IServerItemProps, any> {
             errorMessage = (<Alert bsStyle="danger">{ server.StatusMessage }</Alert>);
           }
           else {
-            errorMessage = (<Alert bsStyle="danger">{ __('Unable to connect to the server.') }</Alert>);
+            errorMessage = (<Alert bsStyle="danger">{ 'Unable to connect to the server.' }</Alert>);
           }
         }
         else if (server.Status & ServerStatus.Connecting || server.Status & ServerStatus.Testing) {
           btnConnectClassName += ' btn-warning';
-          btnConnectTitle = (server.Status & ServerStatus.Connecting ? __('Connecting...') : __('Testing...'));
+          btnConnectTitle = (server.Status & ServerStatus.Connecting ? 'Connecting...' : 'Testing...');
           serverNameIcon = (<i className="fa fa-spinner fa-pulse fa-fw"></i>);
           serverNameClass += ' brown';
         }
         else if (server.Status & ServerStatus.Connected) {
           btnConnectClassName += ' btn-success';
-          btnConnectTitle = __('Connected');
+          btnConnectTitle = 'Connected';
           serverNameIcon = (<i className="glyphicon glyphicon-ok-sign"></i>);
           serverNameClass += ' green';
         }
         else {
-          btnConnectTitle = __('Connect');
+          btnConnectTitle = 'Connect';
           btnConnectClassName += ' btn-default';
         }
       }
@@ -191,8 +191,8 @@ export default class ServerRow extends Component<IServerItemProps, any> {
           controlTitleHidden = 'hidden';
         }
 
-        editControl = (<Button bsSize="small" bsStyle="primary" disabled={ this.props.Disabled } onClick={ this.props.OnEdit.bind(this, server) }><i className="glyphicon glyphicon-edit"></i><span className={controlTitleHidden}> { __('Edit') }</span></Button>);
-        deleteControl = (<Button bsSize="small" bsStyle="danger" disabled={ this.props.Disabled } onClick={ this.props.OnDelete.bind(this, server) }><i className="glyphicon glyphicon-trash"></i><span className={controlTitleHidden}> { __('Delete') }</span></Button>);
+        editControl = (<Button bsSize="small" bsStyle="primary" disabled={ this.props.Disabled } onClick={ this.props.OnEdit.bind(this, server) }><i className="glyphicon glyphicon-edit"></i><span className={controlTitleHidden}> { 'Edit' }</span></Button>);
+        deleteControl = (<Button bsSize="small" bsStyle="danger" disabled={ this.props.Disabled } onClick={ this.props.OnDelete.bind(this, server) }><i className="glyphicon glyphicon-trash"></i><span className={controlTitleHidden}> { 'Delete' }</span></Button>);
       }
 
       return (
@@ -260,17 +260,17 @@ export default class ServerRow extends Component<IServerItemProps, any> {
       let btnConnectTitle = '';
 
       if (server.Disabled) {
-        btnConnectTitle = __('Disabled');
+        btnConnectTitle = 'Disabled';
         btnConnectClassName += ' btn-gray';
       } else {
         if (server.Status & ServerStatus.ConnectionError) {
-          btnConnectTitle = __('Try again');
+          btnConnectTitle = 'Try again';
           btnConnectClassName += ' btn-danger';
         }
         else if (server.Status & ServerStatus.Connecting || server.Status & ServerStatus.Testing || (App.CurrentServer != null && server.FileName == App.CurrentServer.FileName)) {
           btnConnectClassName += ' hidden';
         } else {
-          btnConnectTitle = __('Connect');
+          btnConnectTitle = 'Connect';
           btnConnectClassName += ' btn-silver';
         }
       }
@@ -286,7 +286,7 @@ export default class ServerRow extends Component<IServerItemProps, any> {
                 return (<span>{server.StatusMessage}</span>);
               }
               else {
-                return (<span>__('Unable to connect to the server.')</span>);
+                return (<span>Unable to connect to the server.</span>);
               }
             })()}
           </small>
@@ -301,13 +301,13 @@ export default class ServerRow extends Component<IServerItemProps, any> {
 
         editControl = (
           <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-            <Button bsSize="small" bsStyle="primary" disabled={ this.props.Disabled } onClick={ this.props.OnEdit.bind(this, server) }><i className="glyphicon glyphicon-edit"></i><span className="hidden-xs hidden-sm hidden-md"> { __('Edit') }</span></Button>
+            <Button bsSize="small" bsStyle="primary" disabled={ this.props.Disabled } onClick={ this.props.OnEdit.bind(this, server) }><i className="glyphicon glyphicon-edit"></i><span className="hidden-xs hidden-sm hidden-md"> { 'Edit' }</span></Button>
           </td>
         );
 
         deleteControl = (
           <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-            <Button bsSize="small" bsStyle="danger" disabled={ this.props.Disabled } onClick={ this.props.OnDelete.bind(this, server) }><i className="glyphicon glyphicon-trash"></i><span className="hidden-xs hidden-sm hidden-md"> { __('Delete') }</span></Button>
+            <Button bsSize="small" bsStyle="danger" disabled={ this.props.Disabled } onClick={ this.props.OnDelete.bind(this, server) }><i className="glyphicon glyphicon-trash"></i><span className="hidden-xs hidden-sm hidden-md"> { 'Delete' }</span></Button>
           </td>
         );
       }
@@ -324,14 +324,14 @@ export default class ServerRow extends Component<IServerItemProps, any> {
               {btnConnectTitle}
             </Button>
             
-            <div className={ (server.Status & ServerStatus.Connected ? 'green' : 'hidden') }>{ __('Connected') }</div>
+            <div className={ (server.Status & ServerStatus.Connected ? 'green' : 'hidden') }>{ 'Connected' }</div>
             <div className={ (server.Status & ServerStatus.Testing ? 'brown' : 'hidden') }>
               <span className="fa fa-spinner fa-pulse fa-fw"></span> { ' ' }
-              { __('Testing...') }
+              { 'Testing...' }
             </div>
             <div className={ (server.Status & ServerStatus.Connecting ? 'brown' : 'hidden') }>
               <span className="fa fa-spinner fa-pulse fa-fw"></span> { ' ' }
-              { __('Connecting...') }
+              { 'Connecting...' }
             </div>
           </td>
           {editControl}

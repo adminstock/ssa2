@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import { updateIntl } from 'react-intl-redux'
+
 import ActionType from 'ActionType';
 import { Server } from 'Models/Server';
 
@@ -69,6 +71,42 @@ export function SetLanguage(newLanguage: string) {
     type: ActionType.SET_LANGUAGE,
     Language: newLanguage
   };
+}
+
+export function LoadLanguage(newLanguage: string) {
+  Debug.Action('LoadLanguage', newLanguage);
+
+  return (dispatch: Redux.Dispatch<any>) => {
+    dispatch(ShowOverlay(OverlayType.Loader | OverlayType.White, 'Loading resources of localization...'));
+
+    switch (newLanguage) {
+      case 'ru':
+        require(['Localization/ru'], LanguageLoaded.bind(dispatch));
+        break;
+
+      case 'de':
+        require(['Localization/de'], LanguageLoaded.bind(dispatch));
+        break;
+
+      default:
+        dispatch(updateIntl({
+          defaultLocale: 'en',
+          locale: 'en',
+          messages: {}
+        }));
+        break;
+    }
+  }
+}
+
+function LanguageLoaded(data: any) {
+  Debug.Call('LanguageLoaded', data.intl);
+
+  this(updateIntl(data.intl));
+
+  this(SetLanguage(data.intl.locale));
+  
+  this(HideOverlay());
 }
 
 export function SetServer(newServer: Server) {
@@ -131,7 +169,7 @@ export function LoadApiServers() {
   return (dispatch: Redux.Dispatch<any>) => {
     Debug.Request('LoadApiServers');
 
-    dispatch(ShowOverlay(OverlayType.Loader | OverlayType.White, __('Loading list of API servers...')));
+    dispatch(ShowOverlay(OverlayType.Loader | OverlayType.White, 'Loading list of API servers...'));
 
     $.ajax({
       cache: false,
@@ -164,7 +202,7 @@ export function LoadServer(fileName: string, successCallback?: (server: Server) 
   
   return (dispatch: Redux.Dispatch<any>) => {
 
-    dispatch(ShowOverlay(OverlayType.Loader | OverlayType.White, __('Loading server info...')));
+    dispatch(ShowOverlay(OverlayType.Loader | OverlayType.White, 'Loading server info...'));
 
     let api = new ApiRequest<any, Server>('Control.GetServer', { FileName: fileName }, App.CurrentUser.ApiServer.Url, App.CurrentUser.AccessToken, null);
 

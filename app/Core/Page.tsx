@@ -44,7 +44,7 @@ export default class Page<P, S> extends React.Component<P, S> {
   }
 
   componentWillMount() {
-    this.SetBreadcrumbs(__('Dashboard'));
+    this.SetBreadcrumbs('Dashboard');
   }
 
   public SetBreadcrumbs(breadcrumbs: string): void {

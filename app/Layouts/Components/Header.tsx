@@ -26,7 +26,7 @@ import Component from 'Core/Component';
 import App from 'Core/App';
 import IMainContext from 'Core/IMainContext';
 
-import { SetLanguage } from 'Actions/Global';
+import { LoadLanguage } from 'Actions/Global';
 
 import { connect } from 'react-redux';
 
@@ -57,7 +57,7 @@ export class Header extends Component<any, any> {
    * @param newLanguage New language: en, ru, de etc.
    */
   private SetLanguage(newLanguage: string): void {
-    App.Store.dispatch(SetLanguage(newLanguage));
+    App.Store.dispatch(LoadLanguage(newLanguage));
   }
 
   private GetServerIcon(): string {
@@ -146,7 +146,7 @@ export class Header extends Component<any, any> {
 
     let breadcrumbs = [
       (<span key="breadcrumbs-0" className="navbar-brand hidden-xs">/</span>),
-      (<span key="breadcrumbs-1" className="navbar-brand hidden-xs">{ __('Dashboard') }</span>)
+      (<span key="breadcrumbs-1" className="navbar-brand hidden-xs">{ 'Dashboard' }</span>)
     ];
 
     if (currentPage.Breadcrumbs != null) {

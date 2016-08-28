@@ -8,40 +8,5 @@
 </head>
 <body>
 	<div id="app"></div>
-	<script type="text/javascript">
-		// get language
-		function GetLanguage() {
-			var languages = ['en', 'ru', 'de'];
-			var result = null;
-
-			// check cookies
-			var m = document.cookie.match(new RegExp('lang=([^;]+)'));
-			if (m) { result = m[1]; }
-
-			// check user-languages
-			if (result == null || result == '') {
-				result = window.navigator.languages && window.navigator.languages[0] || // Chrome / Firefox
-				window.navigator.language ||   // All browsers
-				window.navigator.userLanguage; // IE <= 10
-
-				if (result.length > 2) {
-					result = result.substr(0, 2);
-				}
-			}
-
-			if (result == null || result == '' || languages.indexOf(result) == -1) {
-				result = 'en';
-			}
-
-			return result;
-		}
-		
-		// include script
-		var ssa_app = document.createElement('script');
-		ssa_app.type = 'text/javascript';
-		ssa_app.src = '/dist/scripts/' + GetLanguage() + '/app.js';
-
-		document.body.appendChild(ssa_app);
-	</script>
 </body>
 </html>

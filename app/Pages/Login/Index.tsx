@@ -32,7 +32,7 @@ import { SetAccessToken } from 'Actions/Global';
 export default class Index extends Page<any, ILoginState> {
 
   static defaultProps = {
-    Title: __('Login'),
+    Title: 'Login',
     returnUrl: '/'
   }
 
@@ -112,7 +112,7 @@ export default class Index extends Page<any, ILoginState> {
       // show error
       App.Alert({
         message: 'Server error: ' + error.Text,
-        title: __('Error')
+        title: 'Error'
       });
     }
 
@@ -155,7 +155,7 @@ export default class Index extends Page<any, ILoginState> {
       // show error
       App.Alert({
         message: 'Server error: ' + error.Text,
-        title: __('Error')
+        title: 'Error'
       });
     }
 
@@ -216,14 +216,14 @@ export default class Index extends Page<any, ILoginState> {
     let title = '', footer = null, body = null;
 
     if (this.state.ShowForm) {
-      title = __('Authentication');
+      title = 'Authentication';
 
       body = (
         <Form horizontal>
           <FormGroup controlId="loginFormUsername" validationState={this.state.ValidationStateUsername}>
             <Col xs={12} sm={12} md={12} lg={12}>
               <ControlLabel>
-                { __('Username') }:
+                { 'Username' }:
               </ControlLabel>
             </Col>
             <Col xs={12} sm={12} md={12} lg={12}>
@@ -234,7 +234,7 @@ export default class Index extends Page<any, ILoginState> {
           <FormGroup controlId="loginFormPassword" validationState={this.state.ValidationStatePassword}>
             <Col xs={12} sm={12} md={12} lg={12}>
               <ControlLabel>
-                { __('Password') }:
+                { 'Password' }:
               </ControlLabel>
             </Col>
             <Col xs={12} sm={12} md={12} lg={12}>
@@ -250,22 +250,22 @@ export default class Index extends Page<any, ILoginState> {
         <div>
           <Button bsStyle="primary" onClick={this.Login.bind(this) } disabled={disabledForm}>
             {disabledForm ? <i className="fa fa-refresh fa-spin fa-fw"></i> : null}
-            {__('Login') }
+            { 'Login' }
           </Button>
           <Button bsStyle="default" onClick={this.Leave.bind(this) } disabled={disabledForm}>
-            {__('Leave') }
+            { 'Leave' }
           </Button>
         </div>
       );
     }
     else {
       if (this.state.Checking) {
-        title = __('Checking...');
+        title = 'Checking...';
 
         body = (
           <div className="text-center">
             <p><i className="fa fa-spinner fa-pulse fa-5x fa-fw"></i></p>
-            <p>{__('Checking the access...') }</p>
+            <p>{ 'Checking the access...' }</p>
           </div>
         );
 

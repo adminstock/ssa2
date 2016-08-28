@@ -20,19 +20,16 @@ import IOverlay from 'UI/Overlay/IOverlay';
 
 const initState: IOverlay = { OverlayType: 0, Text: null };
 
-export default function OverlayReducer(state = initState, action) {
+export default function OverlayReducer(state: IOverlay = initState, action) {
   switch (action.type) {
     case ActionType.SHOW_OVERLAY:
-      let overlay = Object.assign({}, state, { OverlayType: action.OverlayType, Text: action.Text });
-      return Object.assign({}, state, { Overlay: overlay });
+      return Object.assign({}, state, { OverlayType: action.OverlayType, Text: action.Text });
 
     case ActionType.SET_OVERLAY_TEXT:
-      let overlay2 = Object.assign({}, state, { Text: action.Text });
-      return Object.assign({}, state, { Overlay: overlay2 });
+      return Object.assign({}, state, { Text: action.Text });
 
     case ActionType.HIDE_OVERLAY:
-      let overlay3 = Object.assign({}, state, { OverlayType: 0 });
-      return Object.assign({}, state, { Overlay: overlay3 });
+      return Object.assign({}, state, { OverlayType: 0 });
 
     default:
       return state;

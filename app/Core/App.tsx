@@ -86,7 +86,15 @@ export default class App {
    * Initializes the application.
    */
   public static Init(enhancer?: any): void {
-    App._Store = createStore<IAppStore>(RootReducer, {}, enhancer);
+    const initialState = {
+      intl: {
+        defaultLocale: 'en',
+        locale: 'en',
+        messages: {}
+      }
+    };
+
+    App._Store = createStore<IAppStore>(RootReducer, initialState, enhancer);
     Debug.Init('App.Store', App._Store.getState());
   }
 
@@ -220,10 +228,10 @@ export default class App {
     }
 
     if (buttonTitle === undefined || buttonTitle == null || buttonTitle == '') {
-      buttonTitle = __('Ok');
+      buttonTitle = 'Ok';
     }
 
-    s.Header = title || __('Message');
+    s.Header = title || 'Message';
     s.Body = text;
     s.Footer = (<Button bsStyle="default" onClick={s.OnCloseDialog.bind(s) }>{buttonTitle}</Button>);
 
@@ -292,14 +300,14 @@ export default class App {
     }
 
     if (buttonOkTitle === undefined || buttonOkTitle == null || buttonOkTitle == '') {
-      buttonOkTitle = __('Ok');
+      buttonOkTitle = 'Ok';
     }
 
     if (buttonCancelTitle === undefined || buttonCancelTitle == null || buttonCancelTitle == '') {
-      buttonCancelTitle = __('Cancel');
+      buttonCancelTitle = 'Cancel';
     }
 
-    s.Header = title || __('Confirm');
+    s.Header = title || 'Confirm';
     s.Body = text;
     s.Footer = (
       <div>
@@ -382,7 +390,7 @@ export default class App {
    */
   public static DefaultApiErrorHandler(error: ApiError): void {
     App.Alert({
-      title: __('Error'),
+      title: 'Error',
       message: <div>{error.Text} {error.Trace != null ? (<div><hr /><pre>{error.Trace}</pre></div>) : ''}</div>
     });
   }

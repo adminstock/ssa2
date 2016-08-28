@@ -22,6 +22,8 @@ export default class ActionType {
 
   public static get SET_ACCESS_TOKEN(): string { return 'SET_ACCESS_TOKEN'; }
 
+  public static get LOAD_LANGUAGE(): string { return 'LOAD_LANGUAGE'; }
+
   public static get SET_LANGUAGE(): string { return 'SET_LANGUAGE'; }
 
   public static get SET_SERVER(): string { return 'SET_SERVER'; }

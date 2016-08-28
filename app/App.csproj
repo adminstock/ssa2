@@ -99,12 +99,15 @@
     <Content Include="typings\globals\redux-thunk\typings.json" />
     <Content Include="typings\globals\react-router-bootstrap\typings.json" />
     <Content Include="typings\globals\react-intl\typings.json" />
+    <Content Include="typings\globals\react-intl-redux\typings.json" />
     <TypeScriptCompile Include="Actions\ActionType.ts" />
     <TypeScriptCompile Include="AppStart\RouteConfig.tsx" />
     <TypeScriptCompile Include="AppStart\SmallServerAdmin.tsx" />
     <TypeScriptCompile Include="AppStart\Init.tsx" />
     <TypeScriptCompile Include="Core\IAppStore.ts" />
     <TypeScriptCompile Include="Core\IPageContext.ts" />
+    <TypeScriptCompile Include="Localization\de.ts" />
+    <TypeScriptCompile Include="Localization\ru.ts" />
     <TypeScriptCompile Include="Reducers\Combination.ts" />
     <TypeScriptCompile Include="Reducers\PageReducer.ts" />
     <TypeScriptCompile Include="Reducers\UserReducer.ts" />
@@ -155,6 +158,7 @@
     <TypeScriptCompile Include="typings\globals\react-bootstrap\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-document-title\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-dom\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\react-intl-redux\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-intl\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-redux\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-router-bootstrap\index.d.ts" />

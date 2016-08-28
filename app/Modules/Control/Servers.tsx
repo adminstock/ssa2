@@ -41,7 +41,7 @@ import { SetBreadcrumbs } from 'Actions/Global';
 export class Servers extends Page<any, any> {
 
   static defaultProps = {
-    Title: __('Servers'),
+    Title: 'Servers',
     CurrentUser: null
   }
 
@@ -83,8 +83,8 @@ export class Servers extends Page<any, any> {
     if (App.CurrentUser.Server == null) {
       alertMessage = (
         <Alert bsStyle="danger">
-          <p>{ __('To continue, you need to select the server.') }</p>
-          <p>{ __('If not in the list of available servers, create a new server.') }</p>
+          <p>{ 'To continue, you need to select the server.' }</p>
+          <p>{ 'If not in the list of available servers, create a new server.' }</p>
         </Alert>
       );
     }
@@ -97,7 +97,7 @@ export class Servers extends Page<any, any> {
           <h2 className="pull-left">
             <ButtonToolbar>
               <ButtonGroup>
-                <Button bsStyle="primary" onClick={ this.NewServer.bind(this) }><Glyphicon glyph="plus" /> { __('Add server') }</Button>
+                <Button bsStyle="primary" onClick={ this.NewServer.bind(this) }><Glyphicon glyph="plus" /> { 'Add server' }</Button>
               </ButtonGroup>
             </ButtonToolbar>
           </h2>

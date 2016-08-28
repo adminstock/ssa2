@@ -23,7 +23,7 @@ import App from 'Core/App';
 export default class Edit extends Page<any, any> {
 
   static defaultProps = {
-    Title: __('Users Editor')
+    Title: 'Users Editor'
   }
 
   constructor(props, context) {
@@ -31,7 +31,7 @@ export default class Edit extends Page<any, any> {
   }
 
   componentWillMount() {
-    this.SetBreadcrumbs(__('Users Editor'));
+    this.SetBreadcrumbs('Users Editor');
 
     // test
     App.Alert('test1');
