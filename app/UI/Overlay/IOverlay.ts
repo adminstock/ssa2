@@ -21,7 +21,9 @@ export interface IOverlay {
 
   OverlayType: OverlayType;
 
-  Text?: string
+  Text?: string;
+
+  Counter?: number;
 
 }
 

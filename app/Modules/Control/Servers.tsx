@@ -18,6 +18,8 @@
 import * as React from 'react';
 import { Link } from 'react-router';
 import DocumentTitle from 'react-document-title';
+import { FormattedMessage } from 'react-intl';
+
 import Page from 'Core/Page';
 import App from 'Core/App';
 import ServersList from 'Modules/Control/Components/ServersList';
@@ -83,8 +85,8 @@ export class Servers extends Page<any, any> {
     if (App.CurrentUser.Server == null) {
       alertMessage = (
         <Alert bsStyle="danger">
-          <p>{ 'To continue, you need to select the server.' }</p>
-          <p>{ 'If not in the list of available servers, create a new server.' }</p>
+          <p><FormattedMessage id="module.control.servers.selectServer" defaultMessage="To continue, you need to select the server." /></p>
+          <p><FormattedMessage id="module.control.servers.orCreateServer" defaultMessage="If not in the list of available servers, create a new server." /></p>
         </Alert>
       );
     }
@@ -97,7 +99,7 @@ export class Servers extends Page<any, any> {
           <h2 className="pull-left">
             <ButtonToolbar>
               <ButtonGroup>
-                <Button bsStyle="primary" onClick={ this.NewServer.bind(this) }><Glyphicon glyph="plus" /> { 'Add server' }</Button>
+                <Button bsStyle="primary" onClick={ this.NewServer.bind(this) }><Glyphicon glyph="plus" /> <FormattedMessage id="module.control.servers.addServer" defaultMessage="Add server" /></Button>
               </ButtonGroup>
             </ButtonToolbar>
           </h2>

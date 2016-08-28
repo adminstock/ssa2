@@ -28,7 +28,7 @@ import * as ReactDOM from 'react-dom';
 
 // react-intl
 import { addLocaleData } from 'react-intl';
-//const ssa_langs = ['en', 'ru', 'de'];
+//const ssa_langs = ['en', 'ru', 'de']; TODO: to dynamic
 const reactIntlEn = require('react-intl/locale-data/en') as ReactIntl.Locale[];
 const reactIntlRu = require('react-intl/locale-data/ru') as ReactIntl.Locale[];
 const reactIntlDe = require('react-intl/locale-data/de') as ReactIntl.Locale[];
@@ -37,8 +37,9 @@ addLocaleData([...reactIntlEn, ...reactIntlRu, ...reactIntlDe]);
 
 // redux
 import { applyMiddleware, compose } from 'redux';
-// import { Provider } from 'react-redux';
-import { Provider } from 'react-intl-redux';
+import { Provider } from 'react-redux';
+// import { Provider } from 'react-intl-redux';
+import { IntlProvider } from 'react-intl-redux'
 import thunk from 'redux-thunk';
 
 // redux-dev-tools
@@ -48,6 +49,8 @@ import { ReduxDevTools, ReduxEnhancer } from 'ReduxDevTools';
 import App from 'Core/App';
 import SmallServerAdmin from 'SmallServerAdmin';
 import RouteConfig from 'RouteConfig';
+import { Overlay } from 'UI/Overlay/index';
+import { LoadLanguage } from 'Actions/Global';
 
 // init redux
 /*export const ReduxEnhancer = compose<any>(
@@ -62,17 +65,26 @@ if (DEV_MODE) {
   console.log('%cSmallServerAdmin v' + SSA_VERSION + ' (production)', 'font-weight:bold;');
 }
 
+// init application
 App.Init(ReduxEnhancer);
+
+// init locale
+if (App.CurrentUser != null && App.CurrentUser.Language != App.Store.getState().intl.locale) {
+  App.Store.dispatch(LoadLanguage(App.CurrentUser.Language));
+}
 
 // render
 ReactDOM.render((
   <Provider store={App.Store}>
     <div>
-      <SmallServerAdmin>
-        <RouteConfig />
-      </SmallServerAdmin>
-
       <ReduxDevTools />
+      <Overlay />
+
+      <IntlProvider>
+        <SmallServerAdmin>
+          <RouteConfig />
+        </SmallServerAdmin>
+      </IntlProvider>
     </div>
   </Provider>
 ), document.getElementById('app'));

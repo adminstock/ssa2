@@ -19,6 +19,7 @@ import * as React from 'react';
 import { createStore } from 'redux';
 import { browserHistory } from 'react-router';
 import { Modal, Button } from 'react-bootstrap';
+import { FormattedMessage } from 'react-intl';
 
 import { Server } from 'Models/Server';
 
@@ -101,6 +102,10 @@ export default class App {
   public static Dispatch<A extends Redux.Action>(action: A): A {
     return App.Store.dispatch(action);
   }
+
+  //public static FormatMessage(id: string, defailtValue: string): string {
+    //return App.Store.getState().intl.formatMessage();
+  //}
 
   /**
    * Redirect to a specified URL or to route.
@@ -228,10 +233,10 @@ export default class App {
     }
 
     if (buttonTitle === undefined || buttonTitle == null || buttonTitle == '') {
-      buttonTitle = 'Ok';
+      buttonTitle = (<FormattedMessage id="btnOk" defaultMessage="Ok" />);
     }
 
-    s.Header = title || 'Message';
+    s.Header = title || (<FormattedMessage id="dlgTitleMessage" defaultMessage="Message" />);
     s.Body = text;
     s.Footer = (<Button bsStyle="default" onClick={s.OnCloseDialog.bind(s) }>{buttonTitle}</Button>);
 
@@ -300,14 +305,14 @@ export default class App {
     }
 
     if (buttonOkTitle === undefined || buttonOkTitle == null || buttonOkTitle == '') {
-      buttonOkTitle = 'Ok';
+      buttonOkTitle = (<FormattedMessage id="btnOk" defaultMessage="Ok" />);
     }
 
     if (buttonCancelTitle === undefined || buttonCancelTitle == null || buttonCancelTitle == '') {
-      buttonCancelTitle = 'Cancel';
+      buttonCancelTitle = (<FormattedMessage id="btnCancel" defaultMessage="Cancel" />);
     }
 
-    s.Header = title || 'Confirm';
+    s.Header = title || <FormattedMessage id="dlgTitleConfirm" defaultMessage="Confirm" />;
     s.Body = text;
     s.Footer = (
       <div>
@@ -390,7 +395,7 @@ export default class App {
    */
   public static DefaultApiErrorHandler(error: ApiError): void {
     App.Alert({
-      title: 'Error',
+      title: (<FormattedMessage id="dlgTitleError" defaultMessage="Error" />),
       message: <div>{error.Text} {error.Trace != null ? (<div><hr /><pre>{error.Trace}</pre></div>) : ''}</div>
     });
   }

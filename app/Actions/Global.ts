@@ -107,8 +107,8 @@ function LanguageLoaded(data: any) {
   this(updateIntl(data.intl));
 
   this(SetLanguage(data.intl.locale));
-  
-  this(HideOverlay());
+
+  this(HideOverlay('LanguageLoaded'));
 }
 
 export function SetServer(newServer: Server) {
@@ -139,8 +139,8 @@ export function SetOverlayText(text?: string) {
   };
 }
 
-export function HideOverlay() {
-  Debug.Action('HideOverlay');
+export function HideOverlay(debugMessage?: string) {
+  Debug.Action('HideOverlay', debugMessage);
 
   return {
     type: ActionType.HIDE_OVERLAY
@@ -183,8 +183,10 @@ export function LoadApiServers() {
       // handler of request succeeds
       success: (result: Array<ApiServer>) => {
         Debug.Response('LoadApiServers.Success', result);
-
+        
         dispatch(SetApiServers(result));
+        
+        dispatch(HideOverlay('LoadApiServers'));
       },
 
       // server returned error
@@ -192,6 +194,8 @@ export function LoadApiServers() {
         Debug.Response('LoadApiServers.Error', x, textStatus, errorThrown);
 
         dispatch(SetError('Request error', textStatus || errorThrown));
+
+        dispatch(HideOverlay('LoadApiServers'));
       }
     });
 
@@ -222,6 +226,10 @@ export function LoadServer(fileName: string, successCallback?: (server: Server) 
       } else {
         dispatch(SetError('Server error', error.Text));
       }
+    }
+
+    api.CompleteCallback = () => {
+      dispatch(HideOverlay('LoadServer'));
     }
 
     api.Execute();

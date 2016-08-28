@@ -20,10 +20,10 @@ import { IntlProvider, defineMessages } from 'react-intl';
 import { connect } from 'react-redux';
 
 import App from 'Core/App';
-import { SetVisible, SetActiveApiServer, LoadApiServers, SetError, LoadLanguage } from 'Actions/Global';
+import { SetVisible, SetActiveApiServer, LoadApiServers, SetError, ShowOverlay, HideOverlay } from 'Actions/Global';
 import Error from 'Pages/Error';
 import DialogManager from 'UI/Dialog/DialogManager';
-import { Overlay } from 'UI/Overlay/index';
+import { OverlayType } from 'UI/Overlay/OverlayType';
 
 /**
  * SmallServerAdmin.
@@ -37,25 +37,32 @@ export class SmallServerAdmin extends React.Component<any, any> {
   }
 
   componentWillMount() {
-    // Debug.Log('componentWillMount');
+    Debug.Call1('SmallServerAdmin.componentWillMount');
+
+    App.Store.dispatch(ShowOverlay(OverlayType.White | OverlayType.Loader | OverlayType.Opacity90, 'Initialization...'));
+
     this.InitApp();
   }
 
   componentWillUpdate() {
-    // Debug.Log('componentWillUpdate');
+    Debug.Call1('SmallServerAdmin.componentWillUpdate');
+
     this.InitApp();
   }
 
+  componentDidMount() {
+    Debug.Call1('SmallServerAdmin.componentDidMount');
+
+    App.Store.dispatch(HideOverlay('Init'));
+  }
+
   private InitApp(): void {
+    Debug.Call1('SmallServerAdmin.InitApp');
+
     if (App.Context.AppError != null) {
       return;
     }
-
-    if (App.CurrentUser.Language != App.Store.getState().intl.locale) {
-      App.Store.dispatch(LoadLanguage(App.CurrentUser.Language));
-      return;
-    }
-
+    
     if (App.Context.ApiServers == null) {
       App.Store.dispatch(LoadApiServers());
       return;
@@ -123,18 +130,11 @@ export class SmallServerAdmin extends React.Component<any, any> {
     }
 
     // this.props.dispatch
-    const messages = defineMessages({
-      hello: {
-        id: 'hello',
-        defaultMessage: 'Hello world!!!',
-      }
-    });
 
     return (
       <div>
         {children}
 
-        <Overlay />
         <DialogManager/>
       </div>
     );

@@ -34,13 +34,15 @@ import LayoutBlank from 'Layouts/Blank';
 export function LoadComponent(location: any, callback: (error: any, component?: string | React.ComponentClass<any> | React.StatelessComponent<any>) => void): void {
   Debug.Call('Loading', location.pathname, location);
 
-  App.Store.dispatch(ShowOverlay(OverlayType.White | OverlayType.Loader | OverlayType.Opacity90));
+  App.Store.dispatch(ShowOverlay(OverlayType.White | OverlayType.Loader | OverlayType.Opacity90, 'Page loading...'));
 
   App.AbortAllRequests();
 
   if (location.pathname != '/login' && location.pathname != '/error') {
     // check access
     if (App.CurrentUser.AccessToken == null || App.CurrentUser.AccessToken == '') {
+      App.Store.dispatch(HideOverlay('Loaded'));
+
       // redirect to login page
       App.Redirect('/login', { returnUrl: location.pathname + (location.search ? location.search : '') });
       return;
@@ -49,6 +51,8 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
     // check managed server
     if (App.CurrentServer == null) {
       let serverName = Cookies.Get('managed-server');
+
+      App.Store.dispatch(HideOverlay('Loaded'));
 
       if (serverName != null && serverName != '') {
         // load server data
@@ -69,6 +73,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
       else {
         // redirect to list of servers
         if (location.pathname != '/control/servers') {
+          App.Store.dispatch(HideOverlay('Loaded'));
           App.Redirect('/control/servers', { returnUrl: location.pathname });
           return;
         }
@@ -110,6 +115,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 
     default:
       //console.error('Cannot find path "' + location.pathname + '"');
+      App.Store.dispatch(HideOverlay('Loaded'));
       App.Redirect('/error', { msg: 'Cannot find path "' + location.pathname + '"', code: 'HTTP404' });
   }
 
@@ -123,7 +129,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
 export function LoadedComponent(component: any): void {
   Debug.Call('Loaded', this.location.pathname);
 
-  App.Store.dispatch(HideOverlay());
+  App.Store.dispatch(HideOverlay('Loaded'));
 
   this.callback(null, props => React.createElement(component.default, this.location.query || this.location.params));
 }
