@@ -1,6 +1,6 @@
-﻿/*
+﻿/* 
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,21 @@
  * limitations under the License.
  */
 
-import { Server } from 'Models/Server';
-import Module from 'Models/Module';
+/**
+ * Represents author of ssa module.
+ */
+export default class Author {
 
-export interface IServerEditorState {
+  /** Author name. */
+  public Name: string;
 
-  Server?: Server;
+  /** Author email. For example: example@example.org */
+  public Email: string | Array<string>;
 
-  AllModules?: Array<Module>;
+  /** Author homepage. For example: http://example.org */
+  public Homepage: string | Array<string>;
 
-  Processing?: boolean;
-
-  LoadingModules?: boolean;
-
-  ShowModuleInfo?: boolean;
-
-  SelectedModule?: Module;
-
+  /** Role of the author in the module. */
+  public Role: string;
+  
 }
-
-export default IServerEditorState;

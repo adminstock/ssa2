@@ -53,6 +53,13 @@ class Module implements \WebAPI\Core\IObjectProperties
   public $DateRelease;
 
   /**
+   * License name or URL.
+   * 
+   * @var string
+   */
+  public $License;
+
+  /**
    * Homepage URL.
    * 
    * @var string

@@ -15,23 +15,16 @@
  * limitations under the License.
  */
 
-import { Server } from 'Models/Server';
 import Module from 'Models/Module';
 
-export interface IServerEditorState {
+export interface IModuleInfoProps {
 
-  Server?: Server;
+  Module: Module;
 
-  AllModules?: Array<Module>;
+  Visible: boolean;
 
-  Processing?: boolean;
-
-  LoadingModules?: boolean;
-
-  ShowModuleInfo?: boolean;
-
-  SelectedModule?: Module;
+  OnHide: { (): void; };
 
 }
 
-export default IServerEditorState;
+export default IModuleInfoProps;

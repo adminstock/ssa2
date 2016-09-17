@@ -109,9 +109,27 @@
     <TypeScriptCompile Include="Core\IPageContext.ts" />
     <TypeScriptCompile Include="Localization\de.ts" />
     <TypeScriptCompile Include="Localization\ru.ts" />
+    <TypeScriptCompile Include="Models\Author.ts" />
+    <TypeScriptCompile Include="Models\Icon.ts" />
     <TypeScriptCompile Include="Models\Module.ts" />
     <TypeScriptCompile Include="Modules\Control\Components\ConnectionSettings.tsx" />
-    <TypeScriptCompile Include="Modules\Control\Components\IServerEditorState.ts" />
+    <TypeScriptCompile Include="Modules\Control\Components\IModuleInfoProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>ModuleInfo.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IServerEditorState.ts">
+      <DependentUpon>ServerEditor.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IServerItemProps.ts">
+      <DependentUpon>ServerItem.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IServersListProps.ts">
+      <DependentUpon>ServersList.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IServersListState.ts">
+      <DependentUpon>ServersList.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\ModuleInfo.tsx" />
     <TypeScriptCompile Include="Reducers\Combination.ts" />
     <TypeScriptCompile Include="Reducers\PageReducer.ts" />
     <TypeScriptCompile Include="Reducers\UserReducer.ts" />
@@ -129,9 +147,6 @@
     <TypeScriptCompile Include="Models\ConnectionSettings.ts" />
     <TypeScriptCompile Include="Modules\Control\Components\ServerEditor.tsx" />
     <TypeScriptCompile Include="Modules\Control\Servers.tsx" />
-    <TypeScriptCompile Include="Modules\Control\Components\IServerItemProps.ts" />
-    <TypeScriptCompile Include="Modules\Control\Components\IServersListProps.ts" />
-    <TypeScriptCompile Include="Modules\Control\Components\IServersListState.ts" />
     <TypeScriptCompile Include="Modules\Control\Components\ServerItem.tsx" />
     <TypeScriptCompile Include="Modules\Control\Components\ServersList.tsx" />
     <TypeScriptCompile Include="Modules\Control\Components\OutputMode.ts" />

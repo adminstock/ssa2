@@ -1,6 +1,6 @@
-﻿/*
+﻿/* 
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,19 @@
  * limitations under the License.
  */
 
-import { Server } from 'Models/Server';
-import Module from 'Models/Module';
+/**
+ * Represents icon.
+ */
+export default class Icon {
 
-export interface IServerEditorState {
+  /**
+   * Icon size. For example: 16, 24, 32, 48.
+   */
+  public Size: number;
 
-  Server?: Server;
-
-  AllModules?: Array<Module>;
-
-  Processing?: boolean;
-
-  LoadingModules?: boolean;
-
-  ShowModuleInfo?: boolean;
-
-  SelectedModule?: Module;
+  /**
+   * Icon data (base64).
+   */
+  public Data: string;
 
 }
-
-export default IServerEditorState;

@@ -180,11 +180,11 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
           if (!added) {
             if (current == 'Header') {
               modal.push
-                (
+              (
                 <Modal.Header key={TextHelper.RandomKey('modal_header_') } closeButton={settings.ShowCloseButton}>
                   <Modal.Title key={TextHelper.RandomKey('modal_title_') }>{settings[current]}</Modal.Title>
                 </Modal.Header>
-                );
+              );
             }
             else if (current == 'Body') {
               modal.push(<Modal.Body key={TextHelper.RandomKey('modal_body_') }>{settings[current]}</Modal.Body>);

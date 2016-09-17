@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 
+import Author from 'Author';
+import Icon from 'Icon';
+
 /**
  * Represents ssa module.
  */
@@ -58,15 +61,18 @@ export default class Module {
    */
   public ChangeLog: string;
 
+  /** License name or URL. */
+  public License: string;
+
   /**
    * Module authors.
    */
-  public Authors: Array<any>;
+  public Authors: Array<Author>;
 
   /**
    * Module icon.
    */
-  public Icons: Array<any>;
+  public Icons: Array<Icon>;
 
   constructor(name?: string, enabled?: boolean) {
     this.Name = name;

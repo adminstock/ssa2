@@ -39,6 +39,8 @@ import Module from 'Models/Module';
 import IServerEditorState from 'IServerEditorState';
 import ConnectionSettings from 'ConnectionSettings';
 
+import ModuleInfo from 'ModuleInfo';
+
 export default class ServerEditor extends Component<any, IServerEditorState> {
 
   constructor(props?, context?) {
@@ -48,7 +50,9 @@ export default class ServerEditor extends Component<any, IServerEditorState> {
       Server: this.props.Server,
       AllModules: null,
       Processing: false,
-      LoadingModules: false
+      LoadingModules: false,
+      ShowModuleInfo: false,
+      SelectedModule: null
     };
   }
 
@@ -78,6 +82,19 @@ export default class ServerEditor extends Component<any, IServerEditorState> {
     });
   }
 
+  private ModuleInfoShow(module: Module): void {
+    this.setState({
+      ShowModuleInfo: true,
+      SelectedModule: module
+    });
+  }
+
+  private ModuleInfoHide(): void {
+    this.setState({
+      ShowModuleInfo: false
+    });
+  }
+
   render() {
     Debug.Render3('ServerEditor');
 
@@ -94,12 +111,12 @@ export default class ServerEditor extends Component<any, IServerEditorState> {
     if (this.state.AllModules != null) {
       this.state.AllModules.forEach((m, i) => {
         allModules.push(
-          <tr>
+          <tr key={ 'module-' + i }>
             <td>
               <Checkbox checked={ m.Enabled }>{ m.Name }</Checkbox>
             </td>
             <td>
-              <Button bsSize="small">
+              <Button bsSize="small" onClick={ this.ModuleInfoShow.bind(this, m) }>
                 <i className="glyphicon glyphicon-info-sign"></i>
               </Button>
             </td>
@@ -114,54 +131,58 @@ export default class ServerEditor extends Component<any, IServerEditorState> {
     }
 
     return (
-      <Modal show={this.props.Visible} backdrop="static" onHide={ () => { } }>
-        <Modal.Header closeButton>
-          <Modal.Title>{title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Accordion>
-            <Panel header={ App.FormatMessage('MDL_CONTROL_CONNECTION', 'Connection') } eventKey="1">
-              <ConnectionSettings />
-            </Panel>
-            <Panel header={ App.FormatMessage('MDL_CONTROL_INFO', 'Info') } eventKey="2">
-              <Form horizontal>
-                <FormGroup controlId="loginFormPassword" validationState={ null }>
-                  <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
-                    <FormattedMessage id="LBL_NAME" defaultMessage="Name" />:
-                  </Col>
-                  <Col xs={12} sm={8} md={9} lg={9}>
-                    <FormControl type="text" maxLength={50} disabled={disabled} />
-                  </Col>
-                </FormGroup>
-                <FormGroup controlId="loginFormPassword" validationState={ null }>
-                  <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
-                    <FormattedMessage id="LBL_DESCRIPTION" defaultMessage="Description" />:
-                  </Col>
-                  <Col xs={12} sm={8} md={9} lg={9}>
-                    <FormControl componentClass="textarea" rows={5} disabled={disabled} />
-                  </Col>
-                </FormGroup>
-              </Form>
-            </Panel>
-            <Panel header={ App.FormatMessage('MDL_CONTROL_MODULES', 'Modules') } eventKey="3">
-              <Table>
-                <tbody>
-                  { allModules }
-                </tbody>
-              </Table>
-            </Panel>
-          </Accordion>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button bsStyle="primary" disabled={ this.state.Processing }>
-            { this.state.Processing ? <i className="fa fa-refresh fa-spin fa-fw"></i> : null }
-            <FormattedMessage id="BTN_SAVE" defaultMessage="Save" />
-          </Button>
-          <Button bsStyle="default" disabled={ this.state.Processing }>
-            <FormattedMessage id="BTN_CANCEL" defaultMessage="Cancel" />
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <div>
+        <Modal show={ this.props.Visible } backdrop="static" onHide={ () => { } }>
+          <Modal.Header closeButton>
+            <Modal.Title>{title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Accordion>
+              <Panel header={ App.FormatMessage('MDL_CONTROL_CONNECTION', 'Connection') } eventKey="1">
+                <ConnectionSettings />
+              </Panel>
+              <Panel header={ App.FormatMessage('MDL_CONTROL_INFO', 'Info') } eventKey="2">
+                <Form horizontal>
+                  <FormGroup controlId="loginFormPassword" validationState={ null }>
+                    <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
+                      <FormattedMessage id="LBL_NAME" defaultMessage="Name" />:
+                    </Col>
+                    <Col xs={12} sm={8} md={9} lg={9}>
+                      <FormControl type="text" maxLength={50} disabled={disabled} />
+                    </Col>
+                  </FormGroup>
+                  <FormGroup controlId="loginFormPassword" validationState={ null }>
+                    <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
+                      <FormattedMessage id="LBL_DESCRIPTION" defaultMessage="Description" />:
+                    </Col>
+                    <Col xs={12} sm={8} md={9} lg={9}>
+                      <FormControl componentClass="textarea" rows={5} disabled={disabled} />
+                    </Col>
+                  </FormGroup>
+                </Form>
+              </Panel>
+              <Panel header={ App.FormatMessage('MDL_CONTROL_MODULES', 'Modules') } eventKey="3">
+                <Table>
+                  <tbody>
+                    { allModules }
+                  </tbody>
+                </Table>
+              </Panel>
+            </Accordion>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button bsStyle="primary" disabled={ this.state.Processing }>
+              { this.state.Processing ? <i className="fa fa-refresh fa-spin fa-fw"></i> : null }
+              <FormattedMessage id="BTN_SAVE" defaultMessage="Save" />
+            </Button>
+            <Button bsStyle="default" disabled={ this.state.Processing }>
+              <FormattedMessage id="BTN_CANCEL" defaultMessage="Cancel" />
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <ModuleInfo Visible={ this.state.ShowModuleInfo } Module={ this.state.SelectedModule } OnHide={ this.ModuleInfoHide.bind(this) } />
+      </div>
     );
   }
 

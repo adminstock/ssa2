@@ -67,7 +67,14 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
       if (is_file(implode(DIRECTORY_SEPARATOR, [$path, 'module.json'])) !== FALSE)
       {
         $jsonDecode = new \WebAPI\Core\JsonDecode('\WebAPI\Control\Models\Module', implode(DIRECTORY_SEPARATOR, [$path, 'module.json']));
-        $result[] = $jsonDecode->GetInstance();
+        $m = $jsonDecode->GetInstance();
+
+        if (!isset($m->Name) || $m->Name == '')
+        {
+          $m->Name = $item;
+        }
+
+        $result[] = $m;
       }
       else
       {

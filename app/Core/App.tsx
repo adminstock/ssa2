@@ -41,6 +41,7 @@ import DialogSettings from 'UI/Dialog/DialogSettings';
 import { RootReducer } from 'Reducers/Combination';
 
 import { Session, Cookies } from 'Helpers/Storage';
+import TextHelper from 'Helpers/TextHelper';
 
 /**
  * The main class of the application.
@@ -191,6 +192,10 @@ export default class App {
     } else {
       window.localStorage.setItem(key, JSON.stringify(value));
     }
+  }
+
+  public static RandomKey(prefix?: string, size?: number): string {
+    return TextHelper.RandomKey(prefix, size);
   }
 
   // #region ..Alert..
