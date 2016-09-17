@@ -70,14 +70,10 @@ export default class ServerEditor extends Component<any, IServerEditorState> {
     this.setState({
       LoadingModules: true
     }, () => {
-      App.MakeRequest<any, Array<Module>>({
-        Method: 'Control.GetModules',
-        SuccessCallback: (result) => {
-          this.setState({ AllModules: result, LoadingModules: false });
-        },
-        ErrorCallback: (error) => {
-          App.DefaultApiErrorHandler(error);
-        }
+      App.MakeRequest<any, Array<Module>>('Control.GetModules').then((result) => {
+        this.setState({ AllModules: result, LoadingModules: false });
+      }).catch((error) => {
+        App.DefaultApiErrorHandler(error);
       });
     });
   }
@@ -93,6 +89,10 @@ export default class ServerEditor extends Component<any, IServerEditorState> {
     this.setState({
       ShowModuleInfo: false
     });
+  }
+
+  private Module_StatusChanged(): void {
+
   }
 
   render() {
@@ -112,16 +112,16 @@ export default class ServerEditor extends Component<any, IServerEditorState> {
       this.state.AllModules.forEach((m, i) => {
         allModules.push(
           <tr key={ 'module-' + i }>
-            <td>
-              <Checkbox checked={ m.Enabled }>{ m.Name }</Checkbox>
+            <td className="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+              <Checkbox checked={ false } onChange={ this.Module_StatusChanged.bind(this) }>{ m.Title }</Checkbox>
             </td>
-            <td>
+            <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
               <Button bsSize="small" onClick={ this.ModuleInfoShow.bind(this, m) }>
                 <i className="glyphicon glyphicon-info-sign"></i>
               </Button>
             </td>
-            <td>
-              <Button bsSize="small">
+            <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+              <Button bsSize="small" disabled={ !m.Settings }>
                 <i className="glyphicon glyphicon-cog"></i>
               </Button>
             </td>

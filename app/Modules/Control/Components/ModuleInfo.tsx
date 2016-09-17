@@ -123,7 +123,7 @@ export default class ModuleInfo extends Component<IModuleInfoProps, any> {
           <Modal.Title>
             <i className="glyphicon glyphicon-info-sign"></i> { ' ' }
             <FormattedMessage id="LBL_MODULE" defaultMessage="Module" />: { ' ' }
-            { m.Name }
+            { m.Title }
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

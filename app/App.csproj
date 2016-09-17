@@ -114,7 +114,6 @@
     <TypeScriptCompile Include="Models\Module.ts" />
     <TypeScriptCompile Include="Modules\Control\Components\ConnectionSettings.tsx" />
     <TypeScriptCompile Include="Modules\Control\Components\IModuleInfoProps.ts">
-      <SubType>Code</SubType>
       <DependentUpon>ModuleInfo.tsx</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="Modules\Control\Components\IServerEditorState.ts">

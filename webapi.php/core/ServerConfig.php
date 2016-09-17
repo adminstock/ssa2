@@ -74,13 +74,18 @@ class ServerConfig implements IObjectProperties
   /**
    * List of modules.
    * 
-   * @var mixed
+   * @var \WebAPI\Core\Module[]
    */
   public $Modules;
  
   public function GetObjectProperties() 
   {
-    return ['Connection' => '\WebAPI\Core\ConnectionConfig', 'OS' => '\WebAPI\Core\OS'];
+    return 
+    [
+      'Connection' => '\WebAPI\Core\ConnectionConfig', 
+      'OS' => '\WebAPI\Core\OS',
+      'Modules' => '\WebAPI\Core\Module[]' 
+    ];
   }
 
   /**

@@ -19,16 +19,17 @@ import Author from 'Author';
 import Icon from 'Icon';
 
 /**
- * Represents ssa module.
+ * Represents info about SSA Module.
  */
 export default class Module {
 
   /** Module name. */
   public Name: string;
-    
-  /** Status. */
-  public Enabled: boolean;
 
+  /** Human name. */
+  public Title: string;
+
+  /** Settings schema. */
   public Settings: any;
 
   /**
@@ -74,9 +75,8 @@ export default class Module {
    */
   public Icons: Array<Icon>;
 
-  constructor(name?: string, enabled?: boolean) {
+  constructor(name?: string) {
     this.Name = name;
-    this.Enabled = enabled;
   }
 
 }

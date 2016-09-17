@@ -1,5 +1,5 @@
 <?php
-namespace WebAPI\Control\Models;
+namespace WebAPI\Core;
 
 /*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
@@ -19,44 +19,30 @@ namespace WebAPI\Control\Models;
  */
 
 /**
- * Represents server.
+ * Represent module settings for a particular server.
  */
-class Server
+class ModuleSettings
 {
 
-  /** Config file name. */
-  public $FileName;
-
-  /** Server name. */
+  /**
+   * Module name.
+   * 
+   * @var string
+   */
   public $Name;
-
-  /** Server description. */
-  public $Description;
-
-  /** SSH host or IP address. */
-  public $Address;
-
-  /** SSH port. Default: 22. */
-  public $Port;
-
-  /** SSH username. */
-  public $Username;
-
-  /** SSH password. */
-  public $Password;
-
-  /** Use password for all commands. */
-  public $RequiredPassword;
-
-  /** Status. */
-  public $Disabled;
-
-  /** List of modules. */
-  // public Modules: Array<Module>;
-
-  /** Address to which the user will be redirected after logout. */
-  public $LogoutRedirect;
-
-  public $OperatingSystem;
+    
+  /**
+   * Module is enabled or not.
+   * 
+   * @var bool
+   */
+  public $Enabled;
+    
+  /**
+   * Module settings.
+   * 
+   * @var mixed
+   */
+  public $Settings;
 
 }

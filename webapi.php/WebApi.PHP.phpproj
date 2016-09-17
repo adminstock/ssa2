@@ -24,7 +24,7 @@
     <Compile Include="control\models\Author.php" />
     <Compile Include="control\models\Icon.php" />
     <Compile Include="control\models\Module.php" />
-    <Compile Include="control\models\Server.php" />
+    <Compile Include="core\ModuleSettings.php" />
     <Compile Include="control\models\Version.php" />
     <Compile Include="core\ApiErrorCode.php" />
     <Compile Include="core\ApiException.php" />

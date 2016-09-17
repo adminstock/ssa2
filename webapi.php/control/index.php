@@ -69,9 +69,11 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
         $jsonDecode = new \WebAPI\Core\JsonDecode('\WebAPI\Control\Models\Module', implode(DIRECTORY_SEPARATOR, [$path, 'module.json']));
         $m = $jsonDecode->GetInstance();
 
-        if (!isset($m->Name) || $m->Name == '')
+        $m->Name = $item;
+
+        if (!isset($m->Title) || $m->Title == '')
         {
-          $m->Name = $item;
+          $m->Title = $item;
         }
 
         $result[] = $m;
@@ -79,7 +81,7 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
       else
       {
         $m = new \WebAPI\Control\Models\Module();
-        $m->Name = $item;
+        $m->Name = $m->Title = $item;
         $result[] = $m;
       }
     }

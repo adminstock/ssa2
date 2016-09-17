@@ -25,11 +25,18 @@ class Module implements \WebAPI\Core\IObjectProperties
 {
 
   /**
-   * Module name.
+   * Module name (folder name).
    * 
    * @var string
    */
   public $Name;
+  
+  /**
+   * Human name.
+   * 
+   * @var string
+   */
+  public $Title;
 
   /**
    * Short description.
