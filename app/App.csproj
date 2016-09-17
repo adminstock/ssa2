@@ -100,6 +100,7 @@
     <Content Include="typings\globals\react-router-bootstrap\typings.json" />
     <Content Include="typings\globals\react-intl\typings.json" />
     <Content Include="typings\globals\react-intl-redux\typings.json" />
+    <Content Include="typings\globals\isomorphic-fetch\typings.json" />
     <TypeScriptCompile Include="Actions\ActionType.ts" />
     <TypeScriptCompile Include="AppStart\RouteConfig.tsx" />
     <TypeScriptCompile Include="AppStart\SmallServerAdmin.tsx" />
@@ -108,6 +109,9 @@
     <TypeScriptCompile Include="Core\IPageContext.ts" />
     <TypeScriptCompile Include="Localization\de.ts" />
     <TypeScriptCompile Include="Localization\ru.ts" />
+    <TypeScriptCompile Include="Models\Module.ts" />
+    <TypeScriptCompile Include="Modules\Control\Components\ConnectionSettings.tsx" />
+    <TypeScriptCompile Include="Modules\Control\Components\IServerEditorState.ts" />
     <TypeScriptCompile Include="Reducers\Combination.ts" />
     <TypeScriptCompile Include="Reducers\PageReducer.ts" />
     <TypeScriptCompile Include="Reducers\UserReducer.ts" />
@@ -152,6 +156,7 @@
     <None Include="servers.json" />
     <TypeScriptCompile Include="Reducers\OverlayReducer.ts" />
     <TypeScriptCompile Include="typings\globals\history\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\isomorphic-fetch\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\jquery\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-addons-update\index.d.ts" />

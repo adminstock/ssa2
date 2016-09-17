@@ -103,9 +103,21 @@ export default class App {
     return App.Store.dispatch(action);
   }
 
-  //public static FormatMessage(id: string, defailtValue: string): string {
-    //return App.Store.getState().intl.formatMessage();
-  //}
+  public static FormatMessage(id: string, defaultMessage: string, values?: any): string {
+    if (App.Store.getState().intl.messages[id] === undefined) {
+      return defaultMessage;
+    }
+
+    let result: string = App.Store.getState().intl.messages[id];
+
+    if (values === undefined || values == null) {
+      return result;
+    } else {
+      return result.replace(/\{([^\}]+)\}/g, (match, key) => {
+        return values[key] || match;
+      });
+    }
+  }
 
   /**
    * Redirect to a specified URL or to route.
@@ -339,53 +351,97 @@ export default class App {
   // #endregion
   // #region ..API Requests..
 
-  public static MakeRequest<TRequest, TResponse>(settings: IMakeRequestProps<TRequest, TResponse>): void {
-    let api = new ApiRequest<any, TResponse>(
-      settings.Method,
-      settings.Data,
-      settings.Url || App.CurrentUser.ApiServer.Url,
-      (App.CurrentUser ? App.CurrentUser.AccessToken : null),
-      settings.Server || (App.CurrentServer ? App.CurrentServer.FileName : null)
-    );
+  public static MakeRequest<TRequest, TResponse>(method: string, data?: any, settings?: IMakeRequestProps<TRequest, TResponse>): Promise<TResponse>;
 
-    api.SuccessCallback = (result) => {
+  public static MakeRequest<TRequest, TResponse>(settings: IMakeRequestProps<TRequest, TResponse>): Promise<TResponse>;
 
-      if (typeof settings.SuccessCallback === 'function') {
-        settings.SuccessCallback(result);
-      }
+  public static MakeRequest<TRequest, TResponse>(settings: { (): IMakeRequestProps<TRequest, TResponse> }): Promise<TResponse>;
 
+  // string | IMakeRequestProps<TRequest, TResponse> | { (): IMakeRequestProps<TRequest, TResponse> }
+
+  public static MakeRequest<TRequest, TResponse>(methodNameOrSettings: any, data?: any, settings?: IMakeRequestProps<TRequest, TResponse>): Promise<TResponse> {
+    Debug.Call2('App.MakeRequest', methodNameOrSettings, data, settings);
+
+    if (typeof methodNameOrSettings === 'string') {
+      let s: IMakeRequestProps<TRequest, TResponse> = {
+        Method: methodNameOrSettings.toString(),
+        Data: data || (settings ? settings.Data : null),
+        CompleteCallback: (settings ? settings.CompleteCallback : null),
+        SuccessCallback: (settings ? settings.SuccessCallback : null),
+        ErrorCallback: (settings ? settings.ErrorCallback : null),
+        DisableDefaultErrorHandler: (settings ? settings.DisableDefaultErrorHandler : null),
+        Server: (settings ? settings.Server : null),
+        Url: (settings ? settings.Url : null)
+      };
+
+      settings = s;
+    }
+    else if (typeof settings === 'function') {
+      settings = methodNameOrSettings();
+    } else {
+      settings = methodNameOrSettings;
     }
 
-    api.ErrorCallback = (error) => {
+    Debug.Call3('App.MakeRequest', settings);
 
-      if (error.Code == 'ACCESS_DENIED') {
-        // reset token
-        //TODO
-        //App.Store.dispatch(SetAccessToken(null));
+    let result = new Promise<TResponse>((resolve, reject) => {
 
-        // redirect to login
-        //App.Redirect('/login', { query: window.location.href });
-        return;
+      if (settings.DisableDefaultErrorHandler == undefined || settings.DisableDefaultErrorHandler == null) {
+        settings.DisableDefaultErrorHandler = false;
       }
 
-      if (typeof settings.ErrorCallback === 'function') {
-        // custom handler
-        settings.ErrorCallback(error);
-      }
-      else {
-        // show error message
-        App.DefaultApiErrorHandler(error);
+      let api = new ApiRequest<any, TResponse>(
+        settings.Method,
+        settings.Data,
+        settings.Url || App.CurrentUser.ApiServer.Url,
+        (App.CurrentUser ? App.CurrentUser.AccessToken : null),
+        settings.Server || (App.CurrentServer ? App.CurrentServer.FileName : null)
+      );
+
+      api.SuccessCallback = (response) => {
+        resolve(response);
+
+        if (typeof settings.SuccessCallback === 'function') {
+          settings.SuccessCallback(response);
+        }
       }
 
-    }
+      api.ErrorCallback = (error) => {
 
-    api.CompleteCallback = () => {
+        if (error.Code == 'ACCESS_DENIED') {
+          // reset token
+          //TODO
+          //App.Store.dispatch(SetAccessToken(null));
+
+          // redirect to login
+          //App.Redirect('/login', { query: window.location.href });
+          return;
+        }
+
+        reject(error);
+        
+        if (typeof settings.ErrorCallback === 'function') {
+          // custom handler
+          settings.ErrorCallback(error);
+        }
+        else {
+          // show error message
+          if (!settings.DisableDefaultErrorHandler) {
+            App.DefaultApiErrorHandler(error);
+          }
+        }
+      }
+
       if (typeof settings.CompleteCallback === 'function') {
-        settings.CompleteCallback();
+        api.CompleteCallback = () => {
+          settings.CompleteCallback();
+        }
       }
-    }
 
-    api.Execute();
+      api.Execute();
+    });
+
+    return result;
   }
 
   /**

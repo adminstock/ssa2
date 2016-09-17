@@ -12,3 +12,4 @@
 .svn
 .sprites
 *.psd
+/app/npm-debug.log

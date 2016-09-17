@@ -20,6 +20,7 @@ require('font-awesome-loader');
 require('default-theme');
 
 require('es6-shim');
+require('isomorphic-fetch');
 require('jquery');
 
 // react

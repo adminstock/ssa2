@@ -1,6 +1,9 @@
-﻿/*
+<?php
+namespace WebAPI\Control\Models;
+
+/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +19,23 @@
  */
 
 /**
- * Implements the main application context.
+ * Represent module icon.
  */
-export interface IMainContext {
+class Icon
+{
 
-  router?: ReactRouter.RouterOnContext;
+  /**
+   * Icon size. For example: 16, 24, 32, 48.
+   * 
+   * @var integer
+   */
+  public $Size;
 
-  intl?: ReactIntl.InjectedIntlProps;
+  /**
+   * Icon data (base64).
+   * 
+   * @var string
+   */
+  public $Data;
 
 }
-
-export default IMainContext;

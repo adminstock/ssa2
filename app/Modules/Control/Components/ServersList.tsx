@@ -91,13 +91,9 @@ export default class ServersList extends Component<IServersListProps, IServersLi
   private LoadServers(): void {
     Debug.Call3('LoadServers');
 
-    App.MakeRequest<any, Array<Server>>({
-      Method: 'Control.GetServers',
-      SuccessCallback: (result) => {
-        this.setState({ Servers: result, Loading: false });
-
-        this.TestCurrentServerConnection();
-      }
+    App.MakeRequest<any, Array<Server>>('Control.GetServers').then((result) => {
+      this.setState({ Servers: result, Loading: false });
+      this.TestCurrentServerConnection();
     });
   }
 
@@ -113,7 +109,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
 
   private TestConnection(server: Server, setServer: boolean): void {
     Debug.Call3('TestConnection', server);
-
+    
     App.MakeRequest({
       Method: 'Control.ConnectionTest',
       Server: server.FileName,
@@ -192,6 +188,10 @@ export default class ServersList extends Component<IServersListProps, IServersLi
 
   private EditServer(server: Server): void {
     Debug.Call('EditServer', server);
+
+    this.setState({
+      ShowEditor: true
+    });
   }
 
   private DeleteServer(server: Server): void {

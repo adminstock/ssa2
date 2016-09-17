@@ -21,10 +21,8 @@ namespace WebAPI\Core;
 /**
  * Represents server config.
  */
-class ServerConfig
+class ServerConfig implements IObjectProperties
 {
-
-  private $ObjectProperties = ['Connection' => '\WebAPI\Core\ConnectionConfig', 'OS' => '\WebAPI\Core\OS'];
 
   /** 
    * Config file name.
@@ -79,95 +77,41 @@ class ServerConfig
    * @var mixed
    */
   public $Modules;
-
-  function __construct($path, $notHidePassword = FALSE)
+ 
+  public function GetObjectProperties() 
   {
-    if (!isset($path) || $path == '')
-    {
-      throw new \InvalidArgumentException('Config file is required. Value cannot be empty.');
-    }
+    return ['Connection' => '\WebAPI\Core\ConnectionConfig', 'OS' => '\WebAPI\Core\OS'];
+  }
 
-    if (!is_file($path))
+  /**
+   * Returns full path to config.
+   * 
+   * @param string $name File name.
+   * 
+   * @return string
+   */
+  public static function GetConfigPath($name)
+  {
+    if (!is_file($name))
     {
-      if (strtolower(pathinfo($path, PATHINFO_EXTENSION)) != '.json')
+      if (strtolower(pathinfo($name, PATHINFO_EXTENSION)) != '.json')
       {
-        $path .= '.json';
+        $name .= '.json';
       }
 
       if (!defined('SSA_SERVERS_PATH') || SSA_SERVERS_PATH == '' || !is_dir(SSA_SERVERS_PATH))
       {
-        $path = implode(DIRECTORY_SEPARATOR, [ROOT_PATH, 'servers', $path]);
+        return implode(DIRECTORY_SEPARATOR, [ROOT_PATH, 'servers', $name]);
       }
       else
       {
-        $path = implode(DIRECTORY_SEPARATOR, [SSA_SERVERS_PATH, $path]);
+        return implode(DIRECTORY_SEPARATOR, [SSA_SERVERS_PATH, $name]);
       }
     }
-
-    if (!is_file($path))
+    else
     {
-      throw new ApiException('File "'.$path.'" not found.', ApiErrorCode::NOT_FOUND, HttpStatusCode::NOT_FOUND);
-    }
-    
-    if (!is_readable($path))
-    {
-      throw new ApiException('No access to the file "'.$path.'".');
-    }
-
-    // read file
-    $json = file_get_contents($path);
-    $json = str_replace("\xEF\xBB\xBF", '', $json);
-
-    $server = json_decode($json, TRUE);
-
-    if (json_last_error() != JSON_ERROR_NONE)
-    {
-      throw new ApiException('JSON Error: '.json_last_error(), ApiErrorCode::JSON_PARSE_ERROR);
-    }
-
-    // clear username and password
-    if (isset($server['connection']) && $notHidePassword !== TRUE)
-    {
-      //$server['connection']['user'] = NULL;
-      $server['connection']['password'] = NULL;
-    }
-
-    $this->FileName = basename($path, '.json');
-
-    // fill the current instance
-    $this->Fill($this, $server);
-  }
-
-  private function Fill($instance, $config)
-  {
-    $r = new \ReflectionClass($instance);
-    $propeties = $r->getProperties(\ReflectionProperty::IS_PUBLIC);
-
-    foreach($propeties as $property)
-    {
-      $propertyName = $property->getName();
-      $key = str_replace('-', '', strtolower($propertyName));
-
-      if (!isset($config[$key]))
-      {
-        continue;
-      }
-      
-      // TODO: getDocComment() Hmm...
-
-      if (array_key_exists($propertyName, $this->ObjectProperties))
-      {
-        $value = new $this->ObjectProperties[$propertyName]();
-
-        $this->Fill($value, $config[$key]);
-
-        $instance->$propertyName = $value;
-      }
-      else
-      {
-        $instance->$propertyName = $config[$key];
-      }
+      return $name;  
     }
   }
-    
+  
 }

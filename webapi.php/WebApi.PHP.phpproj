@@ -21,13 +21,18 @@
     <Compile Include="auth\index.php" />
     <Compile Include="config.php" />
     <Compile Include="control\index.php" />
+    <Compile Include="control\models\Author.php" />
+    <Compile Include="control\models\Icon.php" />
+    <Compile Include="control\models\Module.php" />
     <Compile Include="control\models\Server.php" />
     <Compile Include="control\models\Version.php" />
     <Compile Include="core\ApiErrorCode.php" />
     <Compile Include="core\ApiException.php" />
     <Compile Include="core\HttpStatusCode.php" />
     <Compile Include="core\IModuleFlags.php" />
+    <Compile Include="core\IObjectProperties.php" />
     <Compile Include="core\IRemoteClient.php" />
+    <Compile Include="core\JsonDecode.php" />
     <Compile Include="core\Module.php" />
     <Compile Include="core\ModuleFlags.php" />
     <Compile Include="core\OS.php" />
@@ -58,6 +63,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".version" />
+    <Content Include="control\module.json" />
+    <Content Include="module.example.json" />
     <Content Include="servers\192.168.56.140.test.json" />
     <Content Include="servers\192.168.56.139.test.json" />
     <Content Include="servers\osx.test.json" />
@@ -66,5 +73,6 @@
     <Content Include="servers\osx-test.test.json" />
     <Content Include="servers\windows2012r2.test.json" />
     <Content Include="servers\example.json" />
+    <Content Include="users\module.json" />
   </ItemGroup>
 </Project>

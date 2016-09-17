@@ -1,6 +1,9 @@
-﻿/*
+<?php
+namespace WebAPI\Core;
+
+/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +18,14 @@
  * limitations under the License.
  */
 
-/**
- * Implements the main application context.
- */
-export interface IMainContext {
-
-  router?: ReactRouter.RouterOnContext;
-
-  intl?: ReactIntl.InjectedIntlProps;
+interface IObjectProperties
+{
+  
+  /**
+   * Returns a list of properties that are objects.
+   * 
+   * @return []
+   */
+  function GetObjectProperties();
 
 }
-
-export default IMainContext;

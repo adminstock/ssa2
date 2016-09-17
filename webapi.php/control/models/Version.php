@@ -1,5 +1,5 @@
 <?php
-namespace WebAPI\Control;
+namespace WebAPI\Control\Models;
 
 /*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.

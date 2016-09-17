@@ -85,8 +85,8 @@ export class Servers extends Page<any, any> {
     if (App.CurrentUser.Server == null) {
       alertMessage = (
         <Alert bsStyle="danger">
-          <p><FormattedMessage id="module.control.servers.selectServer" defaultMessage="To continue, you need to select the server." /></p>
-          <p><FormattedMessage id="module.control.servers.orCreateServer" defaultMessage="If not in the list of available servers, create a new server." /></p>
+          <p><FormattedMessage id="MDL_CONTROL_SELECT_SERVER" defaultMessage="To continue, you need to select the server." /></p>
+          <p><FormattedMessage id="MDL_CONTROL_OR_CREATE_SERVER" defaultMessage="If not in the list of available servers, create a new server." /></p>
         </Alert>
       );
     }

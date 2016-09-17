@@ -1,0 +1,48 @@
+{
+  "name": "Module name",
+  "description": "Short description.",
+  "version": "1.0.0",
+  "dateRelease": "2016-09-17",
+  "license": "Apache License 2.0",
+  "authors": [
+    {
+      "name": "Author Name",
+      "email": "author@example.org",
+      "homepage": "http://example.org",
+      "role": "Role in the project"
+    }
+  ],
+  "changelog": "Path to ChangeLog file or file name.",
+  "readme": "Path to ReadMe file or file name.",
+  "icons": [
+    {
+      "size": 16,
+      "data": "base64"
+    }
+  ],
+  "settings": [
+    {
+      "tab": "Tab title",
+      "sections": [
+        {
+          "section": "Section name",
+          "elements": [
+            {
+              "title": "Source",
+              "type": "dropdownlist",
+              "data": [],
+              "data-ref": "source",
+              "data-display": "title",
+              "data-value": "title"
+            },
+            {
+              "title": "",
+              "type": "text",
+              "attributes": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

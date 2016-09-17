@@ -105,7 +105,7 @@ module.exports = {
         'NODE_ENV': JSON.stringify(process.env.NODE_ENV) // do not change this string
       },
 
-      'DEV_MODE': JSON.stringify(process.env.NODE_ENV == 'development'),
+      'DEV_MODE': JSON.stringify(process.env.NODE_ENV === 'development'),
 
       'LOG_LEVELS': JSON.stringify(logLevels),
 
@@ -240,7 +240,7 @@ module.exports = {
 
       // remove Debug
       // https://github.com/yahoo/strip-loader
-      (process.env.NODE_ENV == 'development' ? { test: /\.abc123$/  } : {
+      (process.env.NODE_ENV === 'development' ? { test: /\.abc123$/  } : {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: webpackStrip.loader(

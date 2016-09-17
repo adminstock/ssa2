@@ -1,5 +1,5 @@
 ﻿{
-  "Name": "WebAPI.PHP",
-  "Version": "2.0.0-alpha",
-  "DateRelease": "unreleased"
+  "name": "WebAPI.PHP",
+  "version": "2.0.0-alpha",
+  "dateRelease": "unreleased"
 }

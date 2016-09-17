@@ -86,7 +86,9 @@ class API
       {
         try
         {
-          $server = new ServerConfig($query['Server'], TRUE);
+          $jsonDecode = new \WebAPI\Core\JsonDecode('\WebAPI\Core\ServerConfig', ServerConfig::GetConfigPath($query['Server']));
+          $server = $jsonDecode->GetInstance();
+          $server->FileName = $query['Server'];
         }
         catch (\Exception $ex)
         {

@@ -173,30 +173,24 @@ export function LoadApiServers() {
 
     dispatch(ShowOverlay(OverlayType.Loader | OverlayType.White, 'Loading list of API servers...'));
 
-    $.ajax({
-      cache: false,
-      crossDomain: true,
-      type: 'GET',
-      dataType: 'json',
-      url: '/servers.json',
-
+    fetch('/servers.json', { cache: 'no-cache', method: 'GET' }).then((result) => {
       // handler of request succeeds
-      success: (result: Array<ApiServer>) => {
-        Debug.Response('LoadApiServers.Success', result);
-        
-        dispatch(SetApiServers(result));
-        
-        dispatch(HideOverlay('LoadApiServers'));
-      },
+      Debug.Response('LoadApiServers.Success');
 
+      result.json<Array<ApiServer>>().then((data) => {
+        dispatch(SetApiServers(data));
+      }).catch((error) => {
+        dispatch(SetError('JSON parse error', error));
+      });
+
+      dispatch(HideOverlay('LoadApiServers'));
+    }).catch((error) => {
       // server returned error
-      error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
-        Debug.Response('LoadApiServers.Error', x, textStatus, errorThrown);
+      Debug.Response('LoadApiServers.Error');
 
-        dispatch(SetError('Request error', textStatus || errorThrown));
+      dispatch(SetError('Request error', error));
 
-        dispatch(HideOverlay('LoadApiServers'));
-      }
+      dispatch(HideOverlay('LoadApiServers'));
     });
 
     return null;

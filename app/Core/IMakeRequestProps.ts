@@ -46,6 +46,8 @@ export interface IMakeRequestProps<TRequest, TResponse> {
   /** Handler for completion of the request. */
   CompleteCallback?: { (): void; };
 
+  DisableDefaultErrorHandler?: boolean;
+
 }
 
 export default IMakeRequestProps;

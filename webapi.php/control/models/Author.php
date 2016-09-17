@@ -1,6 +1,9 @@
-﻿/*
+<?php
+namespace WebAPI\Control\Models;
+
+/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +19,17 @@
  */
 
 /**
- * Implements the main application context.
+ * Represent module author.
  */
-export interface IMainContext {
+class Author
+{
 
-  router?: ReactRouter.RouterOnContext;
+  public $Name;
 
-  intl?: ReactIntl.InjectedIntlProps;
+  public $Email;
+
+  public $Homepage;
+
+  public $Role;
 
 }
-
-export default IMainContext;

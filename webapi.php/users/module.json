@@ -1,0 +1,13 @@
+{
+  "name": "Users",
+  "description": "Module for user management.",
+  "version": "2.0.0",
+  "dateRelease": "unreleased",
+  "license": "Apache License 2.0",
+  "authors": [
+    {
+      "name": "Aleksey Nemiro",
+      "homepage": "http://nemiro.developer.cards"
+    }
+  ]
+}

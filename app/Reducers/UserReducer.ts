@@ -18,12 +18,14 @@
 import ActionType from 'Actions/ActionType';
 import { Session, Cookies } from 'Helpers/Storage';
 import ICurrentUser from 'Core/ICurrentUser';
+import ApiServer from 'Models/ApiServer';
+import { Server } from 'Models/Server';
 
 const initState: ICurrentUser = {
   AccessToken: Session.Get<string>('AccessToken'),
   Language: Cookies.Get('lang') || 'en',
-  ApiServer: null,
-  Server: null
+  ApiServer: Session.Get<ApiServer>('ApiServer'),
+  Server: Session.Get<Server>('ManagedServer')
 };
 
 export default function UserReducer(state: ICurrentUser = initState, action) {
@@ -40,6 +42,14 @@ export default function UserReducer(state: ICurrentUser = initState, action) {
       return Object.assign({}, state, { Language: action.Language });
 
     case ActionType.SET_ACTIVE_API_SERVER:
+      if (action.Server == null) {
+        Cookies.Delete('api-server');
+        Session.Set('ApiServer', null);
+      } else {
+        Cookies.Add('api-server', action.Server.Url, 365);
+        Session.Set('ApiServer', action.Server);
+      }
+
       return Object.assign({}, state, { ApiServer: action.Server });
 
     case ActionType.SET_SERVER:

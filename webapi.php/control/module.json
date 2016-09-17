@@ -1,0 +1,38 @@
+{
+  "name": "Control panel",
+  "description": "Configuration, maintenance, upgrading.",
+  "version": "2.0.0",
+  "dateRelease": "unreleased",
+  "license": "Apache License 2.0",
+  "authors": [
+    {
+      "name": "Aleksey Nemiro",
+      "homepage": "http://nemiro.developer.cards"
+    }
+  ],
+  "settings": [
+    {
+      "tab": "Updations",
+      "sections": [
+        {
+          "section": "Common",
+          "elements": [
+            {
+              "title": "Source",
+              "type": "dropdownlist",
+              "data": [],
+              "data-ref": "source",
+              "data-display": "title",
+              "data-value": "title"
+            },
+            {
+              "title": "",
+              "type": "text",
+              "attributes": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

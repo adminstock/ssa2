@@ -219,8 +219,107 @@ export default class ApiRequest<TRequest, TResponse> {
         }
       }
     });
-    
+
     ApiRequest.ActiveRequests.push(r);
+  }
+
+  /**
+   * Sends a request to the API.
+   */
+  public Fetch(): Promise<TResponse> {
+    let $this = this;
+
+    Debug.Level3('Token', this.Token);
+    Debug.Level3('Server', this.Server);
+
+    let headers = null;
+
+    if ($this.Token != null) {
+      headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'SSA-TOKEN ' + $this.Token
+      };
+    } else {
+      headers = {
+        'Content-Type': 'application/json'
+      };
+    }
+
+    let data = {};
+
+    if ($this.Method != null && $this.Method != '') {
+      data = $.extend(data, { Method: $this.Method });
+    }
+
+    if ($this.Data != null) {
+      data = $.extend(data, { Data: $this.Data });
+    }
+
+    if ($this.Server != null && $this.Server != '') {
+      data = $.extend(data, { Server: $this.Server });
+    }
+
+    Debug.Request('ApiRequest.Fetch', this.Key, this.Url, data);
+
+    return new Promise<TResponse>((resolve, reject) => {
+
+      fetch($this.Url, {
+        cache: 'no-cache',
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(data)
+      }).then((response) => {
+        response.json<ApiResponse<TResponse>>().then((result) => {
+          Debug.Response('ApiRequest.Success', $this.Key, $this.Url, result);
+
+          // debug
+          if (process.env.NODE_ENV !== 'production') {
+            if (result.Messages != undefined && result.Messages != null) {
+              result.Messages.forEach((m) => {
+                if (m.Type == ApiMessageType.MSG_WARNINIG) {
+                  Debug.Warn(m.Text);
+                }
+                else if (m.Type == ApiMessageType.MSG_ERROR || m.Type == ApiMessageType.MSG_CRITICAL) {
+                  Debug.Error(m.Text);
+                } else {
+                  Debug.Log(m.Text);
+                }
+              });
+            }
+          }
+          
+          if ($this.SuccessCallback != null) {
+            $this.SuccessCallback(result.Data);
+          } else {
+            resolve(result.Data);
+          }
+          
+          if ($this.CompleteCallback != null) {
+            $this.CompleteCallback();
+          }
+        }).catch((error) => {
+          Debug.Response('ApiRequest.Error', error);
+          
+          if ($this.ErrorCallback != null) {
+            $this.ErrorCallback(error);
+          }
+          
+          if ($this.CompleteCallback != null) {
+            $this.CompleteCallback();
+          }
+        });
+      }).catch((error) => {
+        Debug.Response('ApiRequest.Error', error);
+
+        if ($this.ErrorCallback != null) {
+          $this.ErrorCallback(error);
+        }
+        
+        if ($this.CompleteCallback != null) {
+          $this.CompleteCallback();
+        }
+      });
+    });
   }
 
   public static AbortAll(): void {

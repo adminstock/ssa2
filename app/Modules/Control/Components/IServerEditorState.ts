@@ -15,15 +15,19 @@
  * limitations under the License.
  */
 
-/**
- * Implements the main application context.
- */
-export interface IMainContext {
+import { Server } from 'Models/Server';
+import Module from 'Models/Module';
 
-  router?: ReactRouter.RouterOnContext;
+export interface IServerEditorState {
 
-  intl?: ReactIntl.InjectedIntlProps;
+  Server?: Server;
+
+  AllModules?: Array<Module>;
+
+  Processing?: boolean;
+
+  LoadingModules?: boolean;
 
 }
 
-export default IMainContext;
+export default IServerEditorState;

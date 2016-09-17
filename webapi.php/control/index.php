@@ -49,6 +49,37 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
     return NULL;
   }
 
+  public function GetModules()
+  {
+    $result = [];
+
+    $exclude = [ '.', '..', 'auth', 'core', 'servers' ];
+
+    foreach(scandir(ROOT_PATH) as $item)
+    {
+      $path = implode(DIRECTORY_SEPARATOR, [ROOT_PATH, $item]);
+
+      if (is_dir($path) === FALSE || array_search($item, $exclude) !== FALSE) 
+      {
+        continue;
+      }
+
+      if (is_file(implode(DIRECTORY_SEPARATOR, [$path, 'module.json'])) !== FALSE)
+      {
+        $jsonDecode = new \WebAPI\Core\JsonDecode('\WebAPI\Control\Models\Module', implode(DIRECTORY_SEPARATOR, [$path, 'module.json']));
+        $result[] = $jsonDecode->GetInstance();
+      }
+      else
+      {
+        $m = new \WebAPI\Control\Models\Module();
+        $m->Name = $item;
+        $result[] = $m;
+      }
+    }
+
+    return $result;
+  }
+
   #endregion
   #region Servers
 
@@ -96,13 +127,24 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
   }
 
   /**
-    * Returns specified server.
-    * 
-    * @return \WebAPI\Core\ServerConfig
-    */
+   * Returns specified server.
+   * 
+   * @return \WebAPI\Core\ServerConfig
+   */
   public function GetServer($fileName)
   {
-    return new \WebAPI\Core\ServerConfig($fileName);
+    $jsonDecode = new \WebAPI\Core\JsonDecode('\WebAPI\Core\ServerConfig', \WebAPI\Core\ServerConfig::GetConfigPath($fileName));
+
+    $result = $jsonDecode->GetInstance();
+    
+    $result->FileName = basename($fileName, '.json');
+
+    if (isset($result->Connection))
+    {
+      $result->Connection->Password = NULL;
+    }
+
+    return $result;
   }
 
   #endregion
