@@ -48,7 +48,8 @@ export default class ServersList extends Component<IServersListProps, IServersLi
       Loading: true,
       Testing: false,
       OutputMode: this.props.OutputMode || OutputMode.List,
-      ShowEditor: false
+      ShowEditor: false,
+      SelectedServer: null
     };
   }
 
@@ -182,7 +183,8 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     Debug.Call2('NewServer');
 
     this.setState({
-      ShowEditor: true
+      ShowEditor: true,
+      SelectedServer: new Server()
     });
   }
 
@@ -190,7 +192,8 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     Debug.Call('EditServer', server);
 
     this.setState({
-      ShowEditor: true
+      ShowEditor: true,
+      SelectedServer: server
     });
   }
 
@@ -264,7 +267,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
       <div>
         {servers}
 
-        <ServerEditor Visible={ this.state.ShowEditor } />
+        <ServerEditor Visible={ this.state.ShowEditor } Server={ this.state.SelectedServer } />
       </div>
     );
   }

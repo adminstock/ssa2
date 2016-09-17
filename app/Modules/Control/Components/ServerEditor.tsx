@@ -35,6 +35,7 @@ import Component from 'Core/Component';
 
 import { Server, ServerStatus } from 'Models/Server';
 import Module from 'Models/Module';
+import ModuleSettings from 'Models/ModuleSettings';
 
 import IServerEditorState from 'IServerEditorState';
 import ConnectionSettings from 'ConnectionSettings';
@@ -64,6 +65,12 @@ export default class ServerEditor extends Component<any, IServerEditorState> {
     }
   }
 
+  componentWillReceiveProps(nextProps: any) {
+    Debug.Call3('ServerEditor.componentWillReceiveProps', nextProps);
+
+    this.setState(nextProps);
+  }
+
   private LoadModules(): void {
     Debug.Call3('LoadModules');
 
@@ -91,12 +98,26 @@ export default class ServerEditor extends Component<any, IServerEditorState> {
     });
   }
 
-  private Module_StatusChanged(): void {
+  private ModuleSettings_StatusChanged(moduleSettings: ModuleSettings): void {
+    Debug.Call3('ServerEditor.ModuleSettings_StatusChanged', moduleSettings);
 
+    let index = this.state.Server.Modules.findIndex((ms) => ms.Name == moduleSettings.Name);
+
+    Debug.Level3('index', index);
+
+    let updatedSettings = ReactUpdate(this.state.Server.Modules[index], { Enabled: { $set: !moduleSettings.Enabled } }); 
+
+    this.setState(ReactUpdate(this.state, { Server: { Modules: { $splice: [[index, 1, updatedSettings]] } } }), () => {
+      Debug.Level3('updatedSettings', updatedSettings, this.state.Server.Modules[index]);
+    });
   }
 
   render() {
     Debug.Render3('ServerEditor');
+
+    if (this.state.Server == null) {
+      return null;
+    }
 
     let title = <FormattedMessage id="MDL_CONTROL_NEW_SERVER" defaultMessage="New server" />;
 
@@ -109,11 +130,27 @@ export default class ServerEditor extends Component<any, IServerEditorState> {
     let allModules = [];
 
     if (this.state.AllModules != null) {
+
+      let serverModules = this.state.Server.Modules;
+
+      if ((serverModules == null || serverModules.length <= 0)) {
+        serverModules = new Array<ModuleSettings>();
+        this.state.Server.Modules = serverModules;
+      }
+
       this.state.AllModules.forEach((m, i) => {
+        let moduleSettings = serverModules.find((ms) => ms.Name == m.Name);
+
+        if (moduleSettings == null) {
+          // add default
+          serverModules.push(new ModuleSettings(m.Name, true));
+          moduleSettings = serverModules[serverModules.length - 1];
+        }
+
         allModules.push(
           <tr key={ 'module-' + i }>
             <td className="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-              <Checkbox checked={ false } onChange={ this.Module_StatusChanged.bind(this) }>{ m.Title }</Checkbox>
+              <Checkbox checked={ moduleSettings.Enabled } onChange={ this.ModuleSettings_StatusChanged.bind(this, moduleSettings) }>{ m.Title }</Checkbox>
             </td>
             <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
               <Button bsSize="small" onClick={ this.ModuleInfoShow.bind(this, m) }>

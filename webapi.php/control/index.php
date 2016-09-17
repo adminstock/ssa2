@@ -68,22 +68,20 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
       {
         $jsonDecode = new \WebAPI\Core\JsonDecode('\WebAPI\Control\Models\Module', implode(DIRECTORY_SEPARATOR, [$path, 'module.json']));
         $m = $jsonDecode->GetInstance();
-
-        $m->Name = $item;
-
-        if (!isset($m->Title) || $m->Title == '')
-        {
-          $m->Title = $item;
-        }
-
-        $result[] = $m;
       }
       else
       {
         $m = new \WebAPI\Control\Models\Module();
-        $m->Name = $m->Title = $item;
-        $result[] = $m;
       }
+
+      $m->Name = $item;
+
+      if (!isset($m->Title) || $m->Title == '')
+      {
+        $m->Title = $item;
+      }
+
+      $result[] = $m;
     }
 
     return $result;
@@ -152,7 +150,7 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
     {
       $result->Connection->Password = NULL;
     }
-
+    
     return $result;
   }
 

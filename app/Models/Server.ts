@@ -17,6 +17,7 @@
 
 import OperatingSystem from 'OperatingSystem';
 import ConnectionSettings from 'ConnectionSettings';
+import ModuleSettings from 'ModuleSettings';
 
 /** Server status. */
 export enum ServerStatus {
@@ -50,8 +51,8 @@ export class Server {
   /** Status. */
   public Disabled: boolean;
 
-  /** List of modules. */
-  // public Modules: Array<Module>;
+  /** List of modules on the server. Empty - all modules by default. */
+  public Modules: Array<ModuleSettings>;
 
   /** Address to which the user will be redirected after logout. */
   public LogoutRedirect: string;
@@ -62,7 +63,10 @@ export class Server {
   /** The operating system under which the server is running. */
   public OS: OperatingSystem;
 
+  /** Connection status. Is not for WebAPI. */
   public Status: ServerStatus;
+
+  /** Connection status message. Is not for WebAPI. */
   public StatusMessage: string;
 
 }

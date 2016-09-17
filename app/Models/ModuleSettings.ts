@@ -1,6 +1,6 @@
-﻿/*
+﻿/* 
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,27 @@
  * limitations under the License.
  */
 
-import { Server } from 'Models/Server';
-import { OutputMode } from 'OutputMode';
+/**
+ * Represent module settings for a particular server.
+ */
+export default class ModuleSettings {
 
-export interface IServersListState {
+  /** Module name. */
+  public Name: string;
 
-  Servers?: Array<Server>;
+  /**
+   * Module is enabled or not.
+   */
+  public Enabled: boolean;
 
-  Loading?: boolean;
+  /**
+   * Module settings.
+   */
+  public Settings: any;
 
-  Testing?: boolean;
-
-  ShowEditor?: boolean;
-
-  SelectedServer?: Server;
-
-  OutputMode?: OutputMode;
+  constructor(name?: string, enabled?: boolean) {
+    this.Name = name;
+    this.Enabled = enabled;
+  }
 
 }
-
-export default IServersListState;
