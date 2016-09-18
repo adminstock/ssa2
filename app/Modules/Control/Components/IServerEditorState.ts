@@ -16,21 +16,14 @@
  */
 
 import { Server } from 'Models/Server';
-import Module from 'Models/Module';
 
 export interface IServerEditorState {
 
   Server?: Server;
 
-  AllModules?: Array<Module>;
-
   Processing?: boolean;
 
   LoadingModules?: boolean;
-
-  ShowModuleInfo?: boolean;
-
-  SelectedModule?: Module;
 
 }
 

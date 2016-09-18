@@ -197,6 +197,14 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     });
   }
 
+  private HideServerEditor(): void {
+    Debug.Call('HideServerEditor');
+
+    this.setState({
+      ShowEditor: false
+    });
+  }
+
   private DeleteServer(server: Server): void {
     Debug.Call('DeleteServer', server);
 
@@ -267,7 +275,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
       <div>
         {servers}
 
-        <ServerEditor Visible={ this.state.ShowEditor } Server={ this.state.SelectedServer } />
+        <ServerEditor Visible={ this.state.ShowEditor } Server={ this.state.SelectedServer } OnHide={ this.HideServerEditor.bind(this) } />
       </div>
     );
   }

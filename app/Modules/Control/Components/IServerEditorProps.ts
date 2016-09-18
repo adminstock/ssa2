@@ -1,6 +1,6 @@
-﻿/* 
+﻿/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro, 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,16 @@
  * limitations under the License.
  */
 
-import IOperatingSystem from 'IOperatingSystem';
+import { Server } from 'Models/Server';
 
-/**
- * Represents information about an operating system.
- */
-export default class OperatingSystem implements IOperatingSystem {
+export interface IServerEditorProps {
 
-  /** Name. For example: Windows 7, Debian, Ubuntu, OS X. */
-  public Name: string;
+  Server: Server;
 
-  /** The family of operating systems. For example: Linux, MacOSX, Win32 */
-  public Family: string;
+  Visible: boolean;
 
-  /** Version number of the operating system. For example: 6.1.7601 */
-  public Version: string;
-
-  constructor() {
-    this.Name = '';
-    this.Family = '';
-    this.Version = '';
-  }
+  OnHide: { (): void; };
 
 }
+
+export default IServerEditorProps;

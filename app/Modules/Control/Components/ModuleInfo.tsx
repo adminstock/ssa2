@@ -20,14 +20,9 @@ import { FormattedMessage } from 'react-intl';
 import
 {
   Modal,
-  Button, ButtonGroup, ButtonToolbar, Checkbox,
+  Button,
   Row, Col,
-  Form, FormGroup, FormControl,
   ControlLabel,
-  Alert,
-  Accordion,
-  Panel,
-  Table
 } from 'react-bootstrap';
 
 import App from 'Core/App';

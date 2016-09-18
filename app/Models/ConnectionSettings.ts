@@ -32,9 +32,12 @@ export default class ConnectionSettings {
   public Port: number;
 
   /** Username. */
-  public Username: string;
+  public User: string;
 
   /** User password. */
   public Password: string;
+
+  /** Use password for all commands. */
+  public RequiredPassword: boolean;
 
 }

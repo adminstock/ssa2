@@ -113,12 +113,49 @@
     <TypeScriptCompile Include="Models\Icon.ts" />
     <TypeScriptCompile Include="Models\Module.ts" />
     <TypeScriptCompile Include="Models\ModuleSettings.ts" />
-    <TypeScriptCompile Include="Modules\Control\Components\ConnectionSettings.tsx" />
+    <TypeScriptCompile Include="Models\IOperatingSystem.ts" />
+    <TypeScriptCompile Include="Modules\Control\Components\ConnectionSettingsForm.tsx" />
+    <TypeScriptCompile Include="Modules\Control\Components\IConnectionSettingsFormProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>ConnectionSettingsForm.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IConnectionSettingsFormState.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>ConnectionSettingsForm.tsx</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="Modules\Control\Components\IModuleInfoProps.ts">
       <DependentUpon>ModuleInfo.tsx</DependentUpon>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IModulesListProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>ModulesList.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IModulesListState.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>ModulesList.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IOperatingSystemFormProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>OperatingSystemForm.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IOperatingSystemFormState.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>OperatingSystemForm.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IServerEditorProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>ServerEditor.tsx</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="Modules\Control\Components\IServerEditorState.ts">
       <DependentUpon>ServerEditor.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IServerInfoFormProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>ServerInfoForm.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IServerInfoFormState.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>ServerInfoForm.tsx</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="Modules\Control\Components\IServerItemProps.ts">
       <DependentUpon>ServerItem.tsx</DependentUpon>
@@ -130,6 +167,9 @@
       <DependentUpon>ServersList.tsx</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="Modules\Control\Components\ModuleInfo.tsx" />
+    <TypeScriptCompile Include="Modules\Control\Components\ModulesList.tsx" />
+    <TypeScriptCompile Include="Modules\Control\Components\OperatingSystemForm.tsx" />
+    <TypeScriptCompile Include="Modules\Control\Components\ServerInfoForm.tsx" />
     <TypeScriptCompile Include="Reducers\Combination.ts" />
     <TypeScriptCompile Include="Reducers\PageReducer.ts" />
     <TypeScriptCompile Include="Reducers\UserReducer.ts" />

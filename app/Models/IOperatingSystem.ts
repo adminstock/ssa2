@@ -15,26 +15,20 @@
  * limitations under the License.
  */
 
-import IOperatingSystem from 'IOperatingSystem';
-
 /**
  * Represents information about an operating system.
  */
-export default class OperatingSystem implements IOperatingSystem {
+export interface IOperatingSystem {
 
   /** Name. For example: Windows 7, Debian, Ubuntu, OS X. */
-  public Name: string;
+  Name?: string;
 
   /** The family of operating systems. For example: Linux, MacOSX, Win32 */
-  public Family: string;
+  Family?: string;
 
   /** Version number of the operating system. For example: 6.1.7601 */
-  public Version: string;
-
-  constructor() {
-    this.Name = '';
-    this.Family = '';
-    this.Version = '';
-  }
+  Version?: string;
 
 }
+
+export default IOperatingSystem;

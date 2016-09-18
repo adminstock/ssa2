@@ -45,9 +45,6 @@ export class Server {
   /** Server description. */
   public Description: string;
 
-  /** Use password for all commands. */
-  public RequiredPassword: boolean;
-
   /** Status. */
   public Disabled: boolean;
 
