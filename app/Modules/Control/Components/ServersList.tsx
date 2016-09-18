@@ -49,7 +49,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
       Testing: false,
       OutputMode: this.props.OutputMode || OutputMode.List,
       ShowEditor: false,
-      SelectedServer: null
+      SelectedServer: ''
     };
   }
 
@@ -184,7 +184,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
 
     this.setState({
       ShowEditor: true,
-      SelectedServer: new Server()
+      SelectedServer: ''
     });
   }
 
@@ -193,7 +193,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
 
     this.setState({
       ShowEditor: true,
-      SelectedServer: server
+      SelectedServer: server.FileName
     });
   }
 
@@ -275,7 +275,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
       <div>
         {servers}
 
-        <ServerEditor Visible={ this.state.ShowEditor } Server={ this.state.SelectedServer } OnHide={ this.HideServerEditor.bind(this) } />
+        <ServerEditor Visible={ this.state.ShowEditor } FileName={ this.state.SelectedServer } OnHide={ this.HideServerEditor.bind(this) } ActiveKey="1" />
       </div>
     );
   }

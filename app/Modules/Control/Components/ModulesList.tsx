@@ -23,11 +23,14 @@ import
   Checkbox,
   Table, Row, Col,
   Form, FormGroup, FormControl,
-  ControlLabel
+  ControlLabel,
+  Alert
 } from 'react-bootstrap';
 
 import App from 'Core/App';
 import Component from 'Core/Component';
+
+import ProcessingIndicator from 'UI/ProcessingIndicator';
 
 import Module from 'Models/Module';
 import ModuleSettings from 'Models/ModuleSettings';
@@ -118,15 +121,21 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
   render() {
     Debug.Render3('ModulesList');
 
-    if (this.state.Modules == null) {
-      return null;
+    if (this.state.LoadingModules) {
+      return (<ProcessingIndicator Text={ App.FormatMessage('LBL_LOADING', 'Loading...') } />);
     }
+
+    if (this.state.AllModules == null) {
+      return <Alert bsStyle="danger">No modules...</Alert>;
+    }
+
+    let disabled = this.props.Disabled;
 
     let allModules = [];
 
     if (this.state.AllModules != null) {
 
-      let serverModules = this.state.Modules;
+      let serverModules = this.state.Modules || new Array<ModuleSettings>();
 
       this.state.AllModules.forEach((m, i) => {
         let moduleSettings = serverModules.find((ms) => ms.Name == m.Name);
@@ -140,7 +149,11 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
         allModules.push(
           <tr key={ 'module-' + i }>
             <td className="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-              <Checkbox checked={ moduleSettings.Enabled } onChange={ this.ModuleSettings_StatusChanged.bind(this, moduleSettings) }>{ m.Title }</Checkbox>
+              <Checkbox
+                disabled={ disabled }
+                checked={ moduleSettings.Enabled }
+                onChange={ this.ModuleSettings_StatusChanged.bind(this, moduleSettings) }
+              >{ m.Title }</Checkbox>
             </td>
             <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
               <Button bsSize="small" onClick={ this.ModuleInfoShow.bind(this, m) }>
@@ -148,7 +161,7 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
               </Button>
             </td>
             <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-              <Button bsSize="small" disabled={ !m.Settings }>
+              <Button bsSize="small" disabled={ disabled || !m.Settings }>
                 <i className="glyphicon glyphicon-cog"></i>
               </Button>
             </td>

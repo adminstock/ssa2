@@ -29,12 +29,27 @@ import App from 'Core/App';
 import Component from 'Core/Component';
 
 import { Server, ServerStatus } from 'Models/Server';
-import OperatingSystem from 'Models/OperatingSystem';
+import { OperatingSystemFamily, OperatingSystem } from 'Models/OperatingSystem';
 
 import IOperatingSystemFormProps from 'IOperatingSystemFormProps';
 import IOperatingSystemFormState from 'IOperatingSystemFormState';
 
 export default class OperatingSystemForm extends Component<IOperatingSystemFormProps, IOperatingSystemFormState> {
+
+  /** Gets OS name. */
+  public get Name(): string {
+    return this.state.Name;
+  }
+
+  /** Gets OS family. */
+  public get Family(): string {
+    return this.state.Family;
+  }
+
+  /** Gets OS version. */
+  public get Version(): string {
+    return this.state.Version;
+  }
 
   constructor(props?, context?) {
     super(props, context);
@@ -56,10 +71,16 @@ export default class OperatingSystemForm extends Component<IOperatingSystemFormP
     this.setState({ [stateKey]: (document.getElementById(elementId) as HTMLInputElement).value });
   }
 
+  private Family_OnClick(e: Event): void {
+    this.setState({
+      Family: $(e.target).data('family') || null
+    });
+  }
+
   render() {
     Debug.Render3('OperatingSystemForm');
 
-    let disabled = false;
+    let disabled = this.props.Disabled;
 
     let family = (this.state.Family || '').toLocaleLowerCase();
     
@@ -85,12 +106,12 @@ export default class OperatingSystemForm extends Component<IOperatingSystemFormP
           </Col>
           <Col xs={12} sm={8} md={9} lg={9}>
             <ButtonToolbar>
-              <ButtonGroup>
-                <Button active={ true }><FormattedMessage id="MDL_CONTROL_UNKNOWN" defaultMessage="Unknown" /></Button>
-                <Button active={ family == 'unix' }>Unix</Button>
-                <Button active={ family == 'linux' }>Linux</Button>
-                <Button active={ family == 'bsd' }>BSD</Button>
-                <Button active={ family == 'windows' }>Windows</Button>
+              <ButtonGroup onClick={ this.Family_OnClick.bind(this) }>
+                <Button disabled={ disabled } active={ !OperatingSystemFamily.IsKnownFamily(family) }><FormattedMessage id="MDL_CONTROL_UNKNOWN" defaultMessage="Unknown" /></Button>
+                <Button disabled={ disabled } active={ family == 'unix' } data-family={ OperatingSystemFamily.FAMILY_UNIX }>Unix</Button>
+                <Button disabled={ disabled } active={ family == 'linux' } data-family={ OperatingSystemFamily.FAMILY_LINUX }>Linux</Button>
+                <Button disabled={ disabled } active={ family == 'bsd' } data-family={ OperatingSystemFamily.FAMILY_BSD }>BSD</Button>
+                <Button disabled={ disabled } active={ family == 'windows' } data-family={ OperatingSystemFamily.FAMILY_WINDOWS }>Windows</Button>
               </ButtonGroup>
             </ButtonToolbar>
           </Col>

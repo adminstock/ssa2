@@ -25,6 +25,8 @@ export interface IServerEditorState {
 
   LoadingModules?: boolean;
 
+  ActiveKey?: string;
+
 }
 
 export default IServerEditorState;

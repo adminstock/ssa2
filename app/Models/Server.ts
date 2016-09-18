@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import OperatingSystem from 'OperatingSystem';
+import { OperatingSystem } from 'OperatingSystem';
 import ConnectionSettings from 'ConnectionSettings';
 import ModuleSettings from 'ModuleSettings';
 

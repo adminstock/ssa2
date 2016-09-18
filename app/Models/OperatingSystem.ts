@@ -17,10 +17,37 @@
 
 import IOperatingSystem from 'IOperatingSystem';
 
+export class OperatingSystemFamily {
+
+  /** GNU/Linux */
+  public static get FAMILY_LINUX(): string { return 'Linux'; }
+
+  /** BSD, OS X */
+  public static get FAMILY_BSD(): string { return 'BSD'; }
+
+  public static get FAMILY_WINDOWS(): string { return 'Windows'; }
+
+  public static get FAMILY_UNIX(): string { return 'Unix'; }
+
+  /**
+   * Gets a value indicating whether specified value is family of OS.
+   *
+   * @param value Family name to check.
+   */
+  public static IsKnownFamily(value: string): boolean {
+    if (value == null || value == '') {
+      return false;
+    }
+
+    return ['unix', 'linux', 'bsd', 'windows'].indexOf(value.toLowerCase()) != -1;
+  }
+
+}
+
 /**
  * Represents information about an operating system.
  */
-export default class OperatingSystem implements IOperatingSystem {
+export class OperatingSystem implements IOperatingSystem {
 
   /** Name. For example: Windows 7, Debian, Ubuntu, OS X. */
   public Name: string;

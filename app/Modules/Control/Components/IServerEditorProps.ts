@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-import { Server } from 'Models/Server';
-
 export interface IServerEditorProps {
 
-  Server: Server;
+  FileName: string;
 
   Visible: boolean;
+
+  ActiveKey: string;
 
   OnHide: { (): void; };
 

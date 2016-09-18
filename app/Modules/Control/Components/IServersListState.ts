@@ -28,7 +28,7 @@ export interface IServersListState {
 
   ShowEditor?: boolean;
 
-  SelectedServer?: Server;
+  SelectedServer?: string;
 
   OutputMode?: OutputMode;
 

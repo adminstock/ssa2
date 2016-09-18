@@ -132,7 +132,8 @@ export default class ApiRequest<TRequest, TResponse> {
       data = $.extend(data, { Server: $this.Server });
     }
 
-    Debug.Request('ApiRequest.Execute', this.Key, this.Url, data);
+    // Debug.Request('ApiRequest.Execute', this.Key, this.Url, data);
+    Debug.Request(this.Method, this.Key, data);
 
     let r = $.ajax({
       cache: false,
@@ -147,7 +148,8 @@ export default class ApiRequest<TRequest, TResponse> {
 
       // handler of request succeeds
       success: (result: ApiResponse<TResponse>) => {
-        Debug.Response('ApiRequest.Success', $this.Key, $this.Url, result);
+        // Debug.Response('ApiRequest.Success', $this.Key, $this.Url, result);
+        Debug.Response(this.Method + ' > Success', this.Key, result);
 
         // debug
         if (process.env.NODE_ENV !== 'production') {
@@ -172,7 +174,8 @@ export default class ApiRequest<TRequest, TResponse> {
 
       // server returned error
       error: (x: JQueryXHR, textStatus: string, errorThrown: any) => {
-        Debug.Response('ApiRequest.Error', $this.Key, $this.Url, x, textStatus, errorThrown);
+        // Debug.Response('ApiRequest.Error', $this.Key, $this.Url, x, textStatus, errorThrown);
+        Debug.Response(this.Method + ' > Error', this.Key, x, textStatus, errorThrown);
 
         if (textStatus == 'abort') {
           // skip

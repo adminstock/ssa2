@@ -74,10 +74,8 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
   render() {
     Debug.Render3('ConnectionSettings');
 
-    if (this.state.ConnectionSettings == null) {
-      return null;
-    }
-
+    let connectionSettings = this.state.ConnectionSettings || new ConnectionSettings();
+        
     let disabled = this.props.Disabled;
 
     return (
@@ -92,7 +90,7 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
               maxLength={100}
               required
               disabled={ disabled }
-              value={ this.state.ConnectionSettings.Host }
+              value={ connectionSettings.Host }
               onChange={ this.Input_TextChanged.bind(this, 'ConnectionSettings_Host', 'Host') }
             />
             <FormControl.Feedback />
@@ -110,7 +108,7 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
               max={65535}
               required
               disabled={ disabled }
-              value={ this.state.ConnectionSettings.Port }
+              value={ connectionSettings.Port }
               onChange={ this.Input_TextChanged.bind(this, 'ConnectionSettings_Port', 'Port') }
             />
             <FormControl.Feedback />
@@ -126,7 +124,7 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
               maxLength={255}
               required
               disabled={ disabled }
-              value={ this.state.ConnectionSettings.User }
+              value={ connectionSettings.User }
               onChange={ this.Input_TextChanged.bind(this, 'ConnectionSettings_User', 'User') }
             />
             <FormControl.Feedback />
@@ -142,7 +140,7 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
               maxLength={255}
               required
               disabled={ disabled }
-              value={ this.state.ConnectionSettings.Password }
+              value={ connectionSettings.Password }
               onChange={ this.Input_TextChanged.bind(this, 'ConnectionSettings_Password', 'Password') }
             />
             <FormControl.Feedback />
@@ -151,7 +149,7 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
         <FormGroup controlId="ConnectionSettings_RequiredPassword" validationState={ null }>
           <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel} />
           <Col xs={12} sm={8} md={9} lg={9}>
-            <Checkbox disabled={ disabled } checked={ this.state.ConnectionSettings.RequiredPassword } onChange={ this.RequiredPassword_Changed.bind(this) }>
+            <Checkbox disabled={ disabled } checked={ connectionSettings.RequiredPassword } onChange={ this.RequiredPassword_Changed.bind(this) }>
               <FormattedMessage id="MDL_CONTROL_REQUIRES_PASSWORD" defaultMessage="always requires a password (recommended)" />
             </Checkbox>
           </Col>

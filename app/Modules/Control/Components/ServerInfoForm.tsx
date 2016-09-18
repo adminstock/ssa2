@@ -28,8 +28,6 @@ import
 import App from 'Core/App';
 import Component from 'Core/Component';
 
-import { Server, ServerStatus } from 'Models/Server';
-
 import IServerInfoFormProps from 'IServerInfoFormProps';
 import IServerInfoFormState from 'IServerInfoFormState';
 
@@ -95,7 +93,7 @@ export default class ServerInfoForm extends Component<IServerInfoFormProps, ISer
           <Col xs={12} sm={8} md={9} lg={9}>
             <FormControl
               componentClass="textarea"
-              rows={5}
+              rows={ 5 }
               disabled={ disabled }
               value={ this.state.ServerDescription }
               onChange={ this.Input_TextChanged.bind(this, 'ServerInfo_Description', 'ServerDescription') }

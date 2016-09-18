@@ -21,13 +21,11 @@ import
 {
   Modal,
   Button, ButtonGroup, ButtonToolbar, Checkbox,
-  Row, Col,
+  Table, Row, Col,
   Form, FormGroup, FormControl,
   ControlLabel,
   Alert,
-  Accordion,
-  Panel,
-  Table
+  PanelGroup, Panel
 } from 'react-bootstrap';
 
 import App from 'Core/App';
@@ -36,7 +34,8 @@ import Component from 'Core/Component';
 import { Server, ServerStatus } from 'Models/Server';
 import Module from 'Models/Module';
 import ModuleSettings from 'Models/ModuleSettings';
-import OperatingSystem from 'Models/OperatingSystem';
+import { OperatingSystem } from 'Models/OperatingSystem';
+import ConnectionSettings from 'Models/ConnectionSettings';
 
 import IServerEditorProps from 'IServerEditorProps';
 import IServerEditorState from 'IServerEditorState';
@@ -57,24 +56,46 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
     super(props, context);
 
     this.state = {
-      Server: this.props.Server,
+      Server: null,
       Processing: false,
-      LoadingModules: false
+      LoadingModules: false,
+      ActiveKey: this.props.ActiveKey
     };
   }
 
-  //componentWillMount() {
-  //  Debug.Call3('ServerEditor.componentWillMount');
-  //}
+  componentWillMount() {
+    Debug.Call3('ServerEditor.componentWillMount');
 
-  componentWillReceiveProps(nextProps: any) {
+    this.Init();
+  }
+
+  componentWillReceiveProps(nextProps: IServerEditorProps) {
     Debug.Call3('ServerEditor.componentWillReceiveProps', nextProps);
 
-    this.setState(nextProps);
+    let needInit = (this.props.FileName != nextProps.FileName);
+
+    this.setState(nextProps, () => {
+      if (needInit) {
+        this.Init();
+      }
+    });
+  }
+
+  private Init(): void {
+    Debug.Call3('ServerEditor.Init', this.props.FileName);
+
+    // reset server
+    this.setState({ Server: this.NormalizeServer(null) }, () => {
+      // load, if filename is not empty
+      if (this.props.FileName != '') {
+        this.Load();
+      }
+    });
   }
 
   private OnHide(): void {
     Debug.Call3('ServerEditor.OnHide', this.state.Server);
+
     this.props.OnHide();
   }
 
@@ -86,8 +107,66 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
     this.setState({ LoadingModules: false });
   }
 
+  private NormalizeServer(server: Server): Server {
+    Debug.Call3('ServerEditor.NormalizeServer', server);
+    
+    if (server == null) {
+      server = new Server();
+    }
+
+    server.Name = server.Name || '';
+    server.Description = server.Description || '';
+    server.FileName = server.FileName || '';
+
+    if (server.Connection == null) {
+      server.Connection = new ConnectionSettings();
+    }
+
+    server.Connection.Host = server.Connection.Host || '';
+    server.Connection.Password = server.Connection.Password || '';
+    server.Connection.User = server.Connection.User || '';
+    server.Connection.Port = server.Connection.Port || 22;
+    server.Connection.RequiredPassword = (server.Connection.RequiredPassword === undefined ? true : server.Connection.RequiredPassword);
+
+    if (server.OS == null) {
+      server.OS = new OperatingSystem();
+    }
+
+    server.OS.Family = server.OS.Family || '';
+    server.OS.Name = server.OS.Name || '';
+    server.OS.Version = server.OS.Version || '';
+    
+    if ((server.Modules == null || server.Modules.length <= 0)) {
+      server.Modules = new Array<ModuleSettings>();
+    }
+
+    return server;
+  }
+
+  /**
+   * Loads server data from server :)
+   */
+  private Load(): void {
+    Debug.Call3('ServerEditor.Load', this.props.FileName);
+
+    this.setState({ Processing: true }, () => {
+      App.MakeRequest<any, Server>('Control.GetServer', { FileName: this.props.FileName }).then((result) => {
+        this.setState({ Server: this.NormalizeServer(result), Processing: false });
+      }).catch((error) => {
+        this.setState({ Processing: false }, () => {
+          App.DefaultApiErrorHandler(error);
+        });
+      });
+    });
+  }
+
+  /**
+   * Saves server data.
+   */
   private Save(): void {
-    Debug.Log('Save', this.ConnectionSettings.Data, this.ServerInfo.Name, this.ServerInfo.Description, this.ModulesList.state.Modules);
+    Debug.Call3('ServerEditor.Save');
+
+
   }
 
   render() {
@@ -99,32 +178,30 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
 
     let title = <FormattedMessage id="MDL_CONTROL_NEW_SERVER" defaultMessage="New server" />;
 
-    if (this.props.Server != null) {
+    if (this.props.FileName != '') {
       title = <FormattedMessage id="LBL_SERVER" defaultMessage="Server" />;
     }
 
     let disabled = this.state.Processing || this.state.LoadingModules;
 
-    if (this.state.Server.OS == null) {
-      this.state.Server.OS = new OperatingSystem();
-    }
+    let progress = null;
 
-    if ((this.state.Server.Modules == null || this.state.Server.Modules.length <= 0)) {
-      this.state.Server.Modules = new Array<ModuleSettings>();
+    if (this.state.Processing || this.state.LoadingModules) {
+      progress = (<i className="glyphicon glyphicon-refresh fa-spin"></i>);
     }
 
     return (
       <Modal show={ this.props.Visible } backdrop="static" onHide={ this.OnHide.bind(this) }>
         <Modal.Header closeButton>
-          <Modal.Title>{title}</Modal.Title>
+          <Modal.Title>{ title } { progress }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Accordion>
+          <PanelGroup activeKey={ this.state.ActiveKey } accordion onSelect={ (activeKey) => this.setState({ ActiveKey: activeKey }) }>
             <Panel header={ App.FormatMessage('MDL_CONTROL_CONNECTION', 'Connection') } eventKey="1">
               <ConnectionSettingsForm
                 Disabled={ disabled }
                 ConnectionSettings={ this.state.Server.Connection }
-                ref={(ref) => this.ConnectionSettings = ref }
+                ref={ (ref) => this.ConnectionSettings = ref }
               />
             </Panel>
             <Panel header={ App.FormatMessage('MDL_CONTROL_INFO', 'Info') } eventKey="2">
@@ -132,7 +209,7 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
                 Disabled={ disabled }
                 ServerName={ this.state.Server.Name }
                 ServerDescription={ this.state.Server.Description }
-                ref={(ref) => this.ServerInfo = ref }
+                ref={ (ref) => this.ServerInfo = ref }
               />
             </Panel>
             <Panel header={ App.FormatMessage('MDL_CONTROL_OS', 'Operating System') } eventKey="3">
@@ -141,7 +218,7 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
                 Name={ this.state.Server.OS.Name }
                 Family={ this.state.Server.OS.Family }
                 Version={ this.state.Server.OS.Version }
-                ref={(ref) => this.OperatingSystem = ref }
+                ref={ (ref) => this.OperatingSystem = ref }
               />
             </Panel>
             <Panel header={ App.FormatMessage('MDL_CONTROL_MODULES', 'Modules') } eventKey="4">
@@ -150,10 +227,10 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
                 Modules={ this.state.Server.Modules }
                 OnLoading={ this.ModuleList_OnLoading.bind(this) }
                 OnLoaded={ this.ModuleList_OnLoaded.bind(this) }
-                ref={(ref) => this.ModulesList = ref }
+                ref={ (ref) => this.ModulesList = ref }
               />
             </Panel>
-          </Accordion>
+          </PanelGroup>
         </Modal.Body>
         <Modal.Footer>
           <Button bsStyle="primary" disabled={ this.state.Processing } onClick={ this.Save.bind(this) }>
