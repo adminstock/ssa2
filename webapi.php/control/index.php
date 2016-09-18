@@ -154,6 +154,99 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
     return $result;
   }
 
+  /**
+   * Saves server.
+   * 
+   * @param array $server 
+   */
+  public function SaveServer($server)
+  {
+    if (!isset($server['FileName']) || $server['FileName'] == '')
+    {
+      // is new server
+      // make unique name
+      $name = 'server';
+
+      if (isset($server['Connection']) && isset($server['Connection']['Host']) && $server['Connection']['Host'] !='')
+      {
+        $name = $server['Connection']['Host'];
+      }
+      
+      $path = \WebAPI\Core\ServerConfig::GetConfigPath($name);
+
+      $i = 1;
+      while (is_file($path) === TRUE)
+      {
+        $path = \WebAPI\Core\ServerConfig::GetConfigPath($name.'-'.$i);
+        $i++;
+      }
+    }
+    else
+    {
+      // load current server config
+      $path = \WebAPI\Core\ServerConfig::GetConfigPath($server['FileName']);
+      $jsonDecode = new \WebAPI\Core\JsonDecode('\WebAPI\Core\ServerConfig', $path);
+      $current = $jsonDecode->GetInstance();
+    }
+
+    if (isset($current))
+    {
+      if (!isset($server['Connection']))
+      {
+        $server['Connection'] = $current->Connection;
+      }
+      else
+      {
+        if (!isset($server['Connection']['Password']) || $server['Connection']['Password'] == '')
+        {
+          $server['Connection']['Password'] = $current->Connection->Password;
+        }
+      }
+    }
+
+    $this->NormalizeKeys($server);
+    $json = json_encode($server);
+
+    // save file
+    if (file_put_contents ($path, $json) === FALSE)
+    {
+      throw new \ErrorException('Unable to save file.');
+    }
+
+    // remove password
+    $server['Connection']['Password'] = NULL;
+
+    // return server
+    return $server;
+  }
+
+  private function NormalizeKeys(&$array)
+  {
+    foreach (array_keys($array) as $key){
+      $value = &$array[$key];
+
+      unset($array[$key]);
+
+      if ($key != 'OS')
+      {
+        $newKey = lcfirst($key);
+      }
+      else
+      {
+        $newKey = strtolower($key);
+      }
+
+      if (is_array($value)) 
+      {
+        $this->NormalizeKeys($value);
+      }
+
+      $array[$newKey] = $value;
+
+      unset($value);
+    }
+  }
+
   #endregion
   #region WebAPI\Core\IModule Members
 

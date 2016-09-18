@@ -42,6 +42,11 @@ import ModuleInfo from 'ModuleInfo';
 
 export default class ModulesList extends Component<IModulesListProps, IModulesListState> {
 
+  /** Gets list of modules. */
+  public get Items(): Array<ModuleSettings> {
+    return this.state.Modules;
+  }
+
   constructor(props?, context?) {
     super(props, context);
 

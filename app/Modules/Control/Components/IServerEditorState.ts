@@ -21,7 +21,9 @@ export interface IServerEditorState {
 
   Server?: Server;
 
-  Processing?: boolean;
+  Loading?: boolean;
+
+  Saving?: boolean;
 
   LoadingModules?: boolean;
 

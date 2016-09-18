@@ -57,7 +57,8 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
 
     this.state = {
       Server: null,
-      Processing: false,
+      Loading: false,
+      Saving: false,
       LoadingModules: false,
       ActiveKey: this.props.ActiveKey
     };
@@ -149,11 +150,11 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
   private Load(): void {
     Debug.Call3('ServerEditor.Load', this.props.FileName);
 
-    this.setState({ Processing: true }, () => {
+    this.setState({ Loading: true }, () => {
       App.MakeRequest<any, Server>('Control.GetServer', { FileName: this.props.FileName }).then((result) => {
-        this.setState({ Server: this.NormalizeServer(result), Processing: false });
+        this.setState({ Server: this.NormalizeServer(result), Loading: false });
       }).catch((error) => {
-        this.setState({ Processing: false }, () => {
+        this.setState({ Loading: false }, () => {
           App.DefaultApiErrorHandler(error);
         });
       });
@@ -166,7 +167,24 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
   private Save(): void {
     Debug.Call3('ServerEditor.Save');
 
+    // validation
 
+    let server = this.state.Server;
+    server.Connection = this.ConnectionSettings.Data;
+    server.OS.Name = this.OperatingSystem.Name;
+    server.OS.Family = this.OperatingSystem.Family;
+    server.OS.Version = this.OperatingSystem.Version;
+    server.Name = this.ServerInfo.Name;
+    server.Description = this.ServerInfo.Description;
+    server.Modules = this.ModulesList.Items;
+    server.FileName = this.props.FileName;
+
+    // save
+    this.setState({ Saving: true, Server: server }, () => {
+      App.MakeRequest<Server, any>('Control.SaveServer', { Server: server }).then(() => {
+
+      });
+    });
   }
 
   render() {
@@ -182,11 +200,11 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
       title = <FormattedMessage id="LBL_SERVER" defaultMessage="Server" />;
     }
 
-    let disabled = this.state.Processing || this.state.LoadingModules;
+    let disabled = this.state.Loading || this.state.LoadingModules || this.state.Saving;
 
     let progress = null;
 
-    if (this.state.Processing || this.state.LoadingModules) {
+    if (this.state.Loading || this.state.LoadingModules || this.state.Saving) {
       progress = (<i className="glyphicon glyphicon-refresh fa-spin"></i>);
     }
 
@@ -233,11 +251,11 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
           </PanelGroup>
         </Modal.Body>
         <Modal.Footer>
-          <Button bsStyle="primary" disabled={ this.state.Processing } onClick={ this.Save.bind(this) }>
-            { this.state.Processing ? <i className="fa fa-refresh fa-spin fa-fw"></i> : null }
+          <Button bsStyle="primary" disabled={ disabled } onClick={ this.Save.bind(this) }>
+            { this.state.Saving ? <i className="fa fa-refresh fa-spin fa-fw"></i> : null }
             <FormattedMessage id="BTN_SAVE" defaultMessage="Save" />
           </Button>
-          <Button bsStyle="default" disabled={ this.state.Processing } onClick={ this.OnHide.bind(this) }>
+          <Button bsStyle="default" disabled={ this.state.Saving } onClick={ this.OnHide.bind(this) }>
             <FormattedMessage id="BTN_CANCEL" defaultMessage="Cancel" />
           </Button>
         </Modal.Footer>
