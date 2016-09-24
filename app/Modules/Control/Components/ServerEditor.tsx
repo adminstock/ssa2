@@ -211,8 +211,12 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
 
     // save
     this.setState({ Saving: true, Server: server }, () => {
-      App.MakeRequest<Server, any>('Control.SaveServer', { Server: server }).then(() => {
-
+      App.MakeRequest<Server, any>('Control.SaveServer', { Server: server }).then((savedServer) => {
+        this.setState({ Saving: false, Server: savedServer }, () => {
+          this.props.OnSave(savedServer, !server.FileName || server.FileName == '');
+        });
+      }).catch((error) => {
+        this.setState({ Saving: false }, () => App.DefaultApiErrorHandler(error));
       });
     });
   }
@@ -240,7 +244,7 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
 
     return (
       <Modal show={ this.props.Visible } backdrop="static" onHide={ this.OnHide.bind(this) }>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton={ !disabled }>
           <Modal.Title>{ title } { progress }</Modal.Title>
         </Modal.Header>
         <Modal.Body>

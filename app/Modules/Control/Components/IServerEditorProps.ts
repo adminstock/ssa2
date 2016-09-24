@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+import { Server } from 'Models/Server';
+
 export interface IServerEditorProps {
 
   FileName: string;
@@ -24,6 +26,8 @@ export interface IServerEditorProps {
   ActiveKey: string;
 
   OnHide: { (): void; };
+
+  OnSave: { (server: Server, isNew: boolean): void; };
 
 }
 

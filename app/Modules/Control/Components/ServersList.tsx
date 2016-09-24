@@ -92,9 +92,11 @@ export default class ServersList extends Component<IServersListProps, IServersLi
   private LoadServers(): void {
     Debug.Call3('LoadServers');
 
-    App.MakeRequest<any, Array<Server>>('Control.GetServers').then((result) => {
-      this.setState({ Servers: result, Loading: false });
-      this.TestCurrentServerConnection();
+    this.setState({ Loading: true }, () => {
+      App.MakeRequest<any, Array<Server>>('Control.GetServers').then((result) => {
+        this.setState({ Servers: result, Loading: false });
+        this.TestCurrentServerConnection();
+      });
     });
   }
 
@@ -197,11 +199,32 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     });
   }
 
-  private HideServerEditor(): void {
-    Debug.Call('HideServerEditor');
+  private ServerEditor_OnHide(): void {
+    Debug.Call('ServerEditor_OnHide');
 
     this.setState({
       ShowEditor: false
+    });
+  }
+
+  private ServerEditor_OnSave(server: Server, isNew: boolean): void {
+    Debug.Call('ServerEditor_OnSave', server, isNew);
+
+    this.setState({
+      ShowEditor: false
+    }, () => {
+      if (isNew) {
+        // reload list of servers
+        this.LoadServers();
+      } else {
+        // get server index
+        let index = this.state.Servers.findIndex((ms) => ms.FileName == server.FileName);
+
+        Debug.Level3('Server Index', index);
+
+        // update server in state
+        this.setState(ReactUpdate(this.state, { Servers: { $splice: [[index, 1, server]] } }));
+      }
     });
   }
 
@@ -275,7 +298,13 @@ export default class ServersList extends Component<IServersListProps, IServersLi
       <div>
         {servers}
 
-        <ServerEditor Visible={ this.state.ShowEditor } FileName={ this.state.SelectedServer } OnHide={ this.HideServerEditor.bind(this) } ActiveKey="connectionSettings" />
+        <ServerEditor
+          Visible={ this.state.ShowEditor }
+          FileName={ this.state.SelectedServer }
+          OnHide={ this.ServerEditor_OnHide.bind(this) }
+          OnSave={ this.ServerEditor_OnSave.bind(this) }
+          ActiveKey="connectionSettings"
+        />
       </div>
     );
   }

@@ -187,6 +187,8 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
       $path = \WebAPI\Core\ServerConfig::GetConfigPath($server['FileName']);
       $jsonDecode = new \WebAPI\Core\JsonDecode('\WebAPI\Core\ServerConfig', $path);
       $current = $jsonDecode->GetInstance();
+      // remove filename
+      unset($server['FileName']);
     }
 
     if (isset($current))
