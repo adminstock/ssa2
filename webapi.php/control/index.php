@@ -208,16 +208,13 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
     $json = json_encode($server);
 
     // save file
-    if (file_put_contents ($path, $json) === FALSE)
+    if (file_put_contents($path, $json) === FALSE)
     {
       throw new \ErrorException('Unable to save file.');
     }
 
-    // remove password
-    $server['Connection']['Password'] = NULL;
-
     // return server
-    return $server;
+    return $this->GetServer(basename($path, '.json'));
   }
 
   private function NormalizeKeys(&$array)

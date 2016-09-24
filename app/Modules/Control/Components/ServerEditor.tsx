@@ -144,6 +144,35 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
     return server;
   }
 
+  private Panel_OnSelect(activeKey: string): void {
+    Debug.Call3('Panel_OnSelect', this.state.ActiveKey, '=>', activeKey);
+
+    let server = this.state.Server;
+
+    switch (this.state.ActiveKey) {
+      case 'connectionSettings':
+        server.Connection = this.ConnectionSettings.Data;
+        break;
+
+      case 'serverInfo':
+        server.Name = this.ServerInfo.Name;
+        server.Description = this.ServerInfo.Description;
+        break;
+
+      case 'os':
+        server.OS.Name = this.OperatingSystem.Name;
+        server.OS.Family = this.OperatingSystem.Family;
+        server.OS.Version = this.OperatingSystem.Version;
+        break;
+
+      case 'modules':
+        server.Modules = this.ModulesList.Items;
+        break;
+    }
+
+    this.setState({ Server: server, ActiveKey: activeKey });
+  }
+
   /**
    * Loads server data from server :)
    */
@@ -168,6 +197,7 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
     Debug.Call3('ServerEditor.Save');
 
     // validation
+    // TODO
 
     let server = this.state.Server;
     server.Connection = this.ConnectionSettings.Data;
@@ -214,15 +244,15 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
           <Modal.Title>{ title } { progress }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <PanelGroup activeKey={ this.state.ActiveKey } accordion onSelect={ (activeKey) => this.setState({ ActiveKey: activeKey }) }>
-            <Panel header={ App.FormatMessage('MDL_CONTROL_CONNECTION', 'Connection') } eventKey="1">
+          <PanelGroup activeKey={ this.state.ActiveKey } accordion onSelect={ this.Panel_OnSelect.bind(this) }>
+            <Panel header={ App.FormatMessage('MDL_CONTROL_CONNECTION', 'Connection') } eventKey="connectionSettings">
               <ConnectionSettingsForm
                 Disabled={ disabled }
                 ConnectionSettings={ this.state.Server.Connection }
                 ref={ (ref) => this.ConnectionSettings = ref }
               />
             </Panel>
-            <Panel header={ App.FormatMessage('MDL_CONTROL_INFO', 'Info') } eventKey="2">
+            <Panel header={ App.FormatMessage('MDL_CONTROL_INFO', 'Info') } eventKey="serverInfo">
               <ServerInfoForm
                 Disabled={ disabled }
                 ServerName={ this.state.Server.Name }
@@ -230,7 +260,7 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
                 ref={ (ref) => this.ServerInfo = ref }
               />
             </Panel>
-            <Panel header={ App.FormatMessage('MDL_CONTROL_OS', 'Operating System') } eventKey="3">
+            <Panel header={ App.FormatMessage('MDL_CONTROL_OS', 'Operating System') } eventKey="os">
               <OperatingSystemForm
                 Disabled={ disabled }
                 Name={ this.state.Server.OS.Name }
@@ -239,7 +269,7 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
                 ref={ (ref) => this.OperatingSystem = ref }
               />
             </Panel>
-            <Panel header={ App.FormatMessage('MDL_CONTROL_MODULES', 'Modules') } eventKey="4">
+            <Panel header={ App.FormatMessage('MDL_CONTROL_MODULES', 'Modules') } eventKey="modules">
               <ModulesList
                 Disabled={ disabled }
                 Modules={ this.state.Server.Modules }

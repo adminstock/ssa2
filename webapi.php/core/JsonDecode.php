@@ -77,14 +77,14 @@ class JsonDecode
       $this->ObjectProperties = $this->Result->GetObjectProperties();
     }
 
-    $data = array_change_key_case($data, CASE_LOWER);
-
     // fill instance
     $this->Fill($this->Result, $data);
   }
 
   private function Fill($instance, $data)
   {
+    $data = array_change_key_case($data, CASE_LOWER);
+
     $r = new \ReflectionClass($instance);
     $propeties = $r->getProperties(\ReflectionProperty::IS_PUBLIC);
 

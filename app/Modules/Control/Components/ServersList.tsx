@@ -275,7 +275,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
       <div>
         {servers}
 
-        <ServerEditor Visible={ this.state.ShowEditor } FileName={ this.state.SelectedServer } OnHide={ this.HideServerEditor.bind(this) } ActiveKey="1" />
+        <ServerEditor Visible={ this.state.ShowEditor } FileName={ this.state.SelectedServer } OnHide={ this.HideServerEditor.bind(this) } ActiveKey="connectionSettings" />
       </div>
     );
   }
