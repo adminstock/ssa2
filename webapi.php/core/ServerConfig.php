@@ -84,7 +84,7 @@ class ServerConfig implements IObjectProperties
     [
       'Connection' => '\WebAPI\Core\ConnectionConfig', 
       'OS' => '\WebAPI\Core\OS',
-      'Modules' => '\WebAPI\Core\Module[]' 
+      'Modules' => '\WebAPI\Core\ModuleSettings[]' 
     ];
   }
 

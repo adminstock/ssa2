@@ -205,7 +205,7 @@ class Index extends \WebAPI\Core\Module implements \WebAPI\Core\IModuleFlags
     }
 
     $this->NormalizeKeys($server);
-    $json = json_encode($server);
+    $json = json_encode($server, JSON_PRETTY_PRINT);
 
     // save file
     if (file_put_contents($path, $json) === FALSE)
