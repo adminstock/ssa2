@@ -25,6 +25,8 @@ import
   ControlLabel,
 } from 'react-bootstrap';
 
+import Typeahead from 'react-bootstrap-typeahead';
+
 import App from 'Core/App';
 import Component from 'Core/Component';
 
@@ -67,8 +69,14 @@ export default class OperatingSystemForm extends Component<IOperatingSystemFormP
     this.setState(nextProps);
   }
 
-  private Input_TextChanged(elementId: string, stateKey: string): void {
-    this.setState({ [stateKey]: (document.getElementById(elementId) as HTMLInputElement).value });
+  private Input_TextChanged(elementId: string, stateKey: string, value?: string): void {
+    // Debug.Call3('Input_TextChanged', elementId, stateKey, value);
+
+    if (value) {
+      this.setState({ [stateKey]: value });
+    } else {
+      this.setState({ [stateKey]: (document.getElementById(elementId) as HTMLInputElement).value });
+    }
   }
 
   private Family_OnClick(e: Event): void {
@@ -80,10 +88,16 @@ export default class OperatingSystemForm extends Component<IOperatingSystemFormP
   render() {
     Debug.Render3('OperatingSystemForm');
 
-    let disabled = this.props.Disabled;
+    const disabled = this.props.Disabled;
 
-    let family = (this.state.Family || '').toLocaleLowerCase();
-    
+    const family = (this.state.Family || '').toLocaleLowerCase();
+
+    const inputProps = {
+      placeholder: `Type 'c'`,
+      value: '',
+      onChange: () => { }
+    };
+
     return (
       <Form horizontal>
         <FormGroup controlId="OperatingSystemForm_Name" validationState={ null }>
@@ -91,12 +105,11 @@ export default class OperatingSystemForm extends Component<IOperatingSystemFormP
             <FormattedMessage id="LBL_NAME" defaultMessage="Name" />:
           </Col>
           <Col xs={12} sm={8} md={9} lg={9}>
-            <FormControl
-              type="text"
-              maxLength={ 50 }
-              disabled={ disabled }
-              value={ this.state.Name }
-              onChange={ this.Input_TextChanged.bind(this, 'OperatingSystemForm_Name', 'Name') }
+            <Typeahead
+              name="OperatingSystemForm_Name"
+              options={ OperatingSystemFamily.GetSupporedOSNames() }
+              selected={ [this.state.Name] }
+              onInputChange={ (value) => { this.Input_TextChanged.apply(this, ['OperatingSystemForm_Name', 'Name', value]); } }
             />
           </Col>
         </FormGroup>

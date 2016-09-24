@@ -32,7 +32,8 @@
     "redux-thunk": "^2.1.0",
     "react-intl": "^2.1.5",
     "react-intl-redux": "^0.1.0",
-    "react-markdown": "^2.4.2"
+    "react-markdown": "^2.4.2",
+    "react-bootstrap-typeahead": "^0.9.2"
   },
   "devDependencies": {
     "webpack": "^1.13.2",
@@ -56,7 +57,7 @@
     "css-loader": "^0.18.0",
     "style-loader": "^0.13.1",
     "sass-loader": "^4.0.0",
-    "bootstrap-loader": "^2.0.0-beta.11",
+    "bootstrap-loader": "^1.2.0-beta.1",
     "font-awesome-loader": "^0.0.1",
     "webpack-spritesmith": "^0.2.5",
     "webpack-notifier": "^1.4.1",

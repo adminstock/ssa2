@@ -101,6 +101,7 @@
     <Content Include="typings\globals\react-intl\typings.json" />
     <Content Include="typings\globals\react-intl-redux\typings.json" />
     <Content Include="typings\globals\isomorphic-fetch\typings.json" />
+    <Content Include="typings\globals\react-bootstrap-typeahead\typings.json" />
     <TypeScriptCompile Include="Actions\ActionType.ts" />
     <TypeScriptCompile Include="AppStart\RouteConfig.tsx" />
     <TypeScriptCompile Include="AppStart\SmallServerAdmin.tsx" />
@@ -215,6 +216,7 @@
     <TypeScriptCompile Include="typings\globals\jquery\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-addons-update\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\react-bootstrap-typeahead\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-bootstrap\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-document-title\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-dom\index.d.ts" />

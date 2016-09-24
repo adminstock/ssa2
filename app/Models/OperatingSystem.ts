@@ -42,6 +42,37 @@ export class OperatingSystemFamily {
     return ['unix', 'linux', 'bsd', 'windows'].indexOf(value.toLowerCase()) != -1;
   }
 
+  public static GetSupporedOSNames(family?: string): Array<string> {
+    return [
+      'Debian',
+      'Ubuntu',
+      'FreeBSD',
+      'OS X',
+      'Mac OS X',
+      'Red Hat',
+      'CentOS',
+      'Windows',
+      'Windows 7',
+      'Windows 8',
+      'Windows 8.1',
+      'Windows 10',
+      'Windows Server 2008',
+      'Windows Server 2008 R2',
+      'Windows Server 2012',
+      'Windows Server 2012 R2',
+      'Windows Server 2016',
+      'Microsoft Windows',
+      'Microsoft Windows 8',
+      'Microsoft Windows 8.1',
+      'Microsoft Windows 10',
+      'Microsoft Windows Server 2008',
+      'Microsoft Windows Server 2008 R2',
+      'Microsoft Windows Server 2012',
+      'Microsoft Windows Server 2012 R2',
+      'Microsoft Windows Server 2016',
+    ];
+  }
+
 }
 
 /**

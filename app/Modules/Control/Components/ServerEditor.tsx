@@ -212,7 +212,7 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
     // save
     this.setState({ Saving: true, Server: server }, () => {
       App.MakeRequest<Server, any>('Control.SaveServer', { Server: server }).then((savedServer) => {
-        this.setState({ Saving: false, Server: savedServer }, () => {
+        this.setState({ Saving: false, Server: this.NormalizeServer(savedServer) }, () => {
           this.props.OnSave(savedServer, !server.FileName || server.FileName == '');
         });
       }).catch((error) => {
