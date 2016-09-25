@@ -24,11 +24,9 @@ namespace WebAPI\Core;
 class JsonDecode
 {
 
-  private $ObjectProperties = NULL;
-
   private $Result = NULL;
 
-  function __construct($type, $path, $objectProperties = NULL)
+  function __construct($type, $path)
   {
     if (!isset($type) || $type == '')
     {
@@ -65,17 +63,9 @@ class JsonDecode
     {
       throw new ApiException('JSON Error: '.json_last_error(), ApiErrorCode::JSON_PARSE_ERROR);
     }
-    
-    // set object properties
-    $this->ObjectProperties = $objectProperties;
-    
+   
     // create instance
     $this->Result = new $type();
-
-    if ($this->Result instanceof IObjectProperties)
-    {
-      $this->ObjectProperties = $this->Result->GetObjectProperties();
-    }
 
     // fill instance
     $this->Fill($this->Result, $data);
@@ -83,6 +73,13 @@ class JsonDecode
 
   private function Fill($instance, $data)
   {
+    $objectProperties = NULL;
+
+    if ($instance instanceof IObjectProperties)
+    {
+      $objectProperties = $instance->GetObjectProperties();
+    }
+
     $data = array_change_key_case($data, CASE_LOWER);
 
     $r = new \ReflectionClass($instance);
@@ -100,21 +97,21 @@ class JsonDecode
       
       // TODO: getDocComment() Hmm...
 
-      if ($this->ObjectProperties != NULL && array_key_exists($propertyName, $this->ObjectProperties))
+      if ($objectProperties != NULL && array_key_exists($propertyName, $objectProperties))
       {
         $elementType = NULL;
 
-        if (strpos($this->ObjectProperties[$propertyName], '[]') === FALSE)
+        if (strpos($objectProperties[$propertyName], '[]') === FALSE)
         {
           // single
-          $value = new $this->ObjectProperties[$propertyName]();
+          $value = new $objectProperties[$propertyName]();
           $this->Fill($value, $data[$key], $elementType);
         }
         else
         {
           // array
           $value = [];
-          $elementType = substr($this->ObjectProperties[$propertyName], 0, -2);
+          $elementType = substr($objectProperties[$propertyName], 0, -2);
 
           foreach ($data[$key] as $item)
           {
