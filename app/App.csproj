@@ -110,6 +110,14 @@
     <TypeScriptCompile Include="Core\IPageContext.ts" />
     <TypeScriptCompile Include="Localization\de.ts" />
     <TypeScriptCompile Include="Localization\ru.ts" />
+    <TypeScriptCompile Include="Modules\Control\Components\IModuleInfoState.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>ModuleInfo.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IModuleSettingsEditorProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>ModuleSettingsEditor.tsx</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="Modules\Control\Models\Author.ts" />
     <TypeScriptCompile Include="Modules\Control\Models\Icon.ts" />
     <TypeScriptCompile Include="Modules\Control\Models\Module.ts" />

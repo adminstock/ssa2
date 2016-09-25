@@ -23,23 +23,31 @@ import
   Button,
   Row, Col,
   ControlLabel,
+  Panel,
+  Tabs, Tab,
+  Form, FormGroup, FormControl
 } from 'react-bootstrap';
+
+import Typeahead from 'react-bootstrap-typeahead';
 
 import App from 'Core/App';
 import Component from 'Core/Component';
 
-import Module from 'Modules/Control/Models/Module';
+import Module from '../Models/Module';
+import ModuleSettingsElement from '../Models/ModuleSettingsElement'
 
 import IModuleSettingsEditorState from 'IModuleSettingsEditorState';
+import IModuleSettingsEditorProps from 'IModuleSettingsEditorProps';
 
-export default class ModuleSettingsEditor extends Component<any, IModuleSettingsEditorState> {
+export default class ModuleSettingsEditor extends Component<IModuleSettingsEditorProps, IModuleSettingsEditorState> {
 
   constructor(props?, context?) {
     super(props, context);
 
     this.state = {
       Visible: this.props.Visible,
-      Module: this.props.Module
+      Module: this.props.Module,
+      Settings: this.props.Settings,
     };
   }
 
@@ -50,7 +58,82 @@ export default class ModuleSettingsEditor extends Component<any, IModuleSettings
   }
 
   private OnHide(): void {
-    this.props.OnHide();
+    //this.props.OnHide();
+  }
+
+  private MakeElement(element: ModuleSettingsElement): JSX.Element {
+    Debug.Call3('MakeElement', element, this.state.Settings[element.Name]);
+    let value = '';
+    
+    if (this.state.Settings && typeof this.state.Settings[element.Name] !== 'undefined') {
+      value = this.state.Settings[element.Name];
+    }
+
+    let elementOutput = null;
+
+    switch ((element.Type || '').toLowerCase()) {
+      case 'text':
+        if (element.Data === undefined || element.Data == null || element.Data.length <= 0) {
+          elementOutput = <FormControl type="text" value={ value } { ...element.Attributes } />;
+        } else {
+          // onInputChange={ (value) => Debug.Log(value) }
+          elementOutput = (
+            <Typeahead
+              name="elementttt"
+              options={ element.Data }
+              selected={ [value.toString()] }
+              { ...element.Attributes }
+            />);
+        }
+        break;
+
+      case 'textarea':
+        elementOutput = <FormControl componentClass="textarea" value={ value } { ...element.Attributes || { rows: 5 } } />;
+        break;
+
+      case 'dropdownlist':
+      case 'dropdown':
+      case 'combobox':
+      case 'select':
+        let items = new Array<JSX.Element>();
+
+        element.Data.forEach((option, optionIndex) => {
+          let optionValue = option;
+          let optionTitle = option;
+
+          if (element.DataDisplayField && element.DataDisplayField != '') {
+            optionTitle = option[element.DataDisplayField] || option;
+          }
+
+          if (element.DataValueField && element.DataValueField != '') {
+            optionValue = option[element.DataValueField] || option;
+          }
+
+          items.push(<option key={ 'option_' + optionIndex } value={ optionValue }>{ optionTitle }</option>);
+        });
+
+        elementOutput = <FormControl componentClass="select" { ...element.Attributes }>{ items }</FormControl>;
+        break;
+
+      case 'list':
+      case 'checkbox':
+      case 'radio':
+
+      default:
+        elementOutput = (<div className="red">Unsupported type: <strong>{ element.Type }</strong></div>);
+        break;
+    }
+
+    return (
+      <FormGroup controlId="todo" validationState={ null }>
+        <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
+          <FormattedMessage id={ element.Name } defaultMessage={ element.Name } />:
+        </Col>
+        <Col xs={12} sm={8} md={9} lg={9}>
+          { elementOutput }
+        </Col>
+      </FormGroup>  
+    );
   }
 
   render() {
@@ -66,7 +149,20 @@ export default class ModuleSettingsEditor extends Component<any, IModuleSettings
       form = new Array<JSX.Element>();
 
       this.state.Module.Settings.forEach((tab, tabIndex) => {
-        form.push(<div>{tab.Name}</div>);  
+        let tabContent = new Array<JSX.Element>();
+
+        tab.Sections.forEach((section, sectionIndex) => {
+
+          let sectionContent = new Array<JSX.Element>();
+
+          section.Elements.forEach((element, elementIndex) => {
+            sectionContent.push(this.MakeElement(element));
+          });
+
+          tabContent.push(<section><h4>{ section.Name }</h4><Form horizontal>{ sectionContent }</Form></section>);
+        });
+
+        form.push(<Tab key={'mod_sttgs_tab_' + tabIndex} eventKey={tab.Name} title={tab.Name}>{tabContent}</Tab>);
       });
     }
 
@@ -80,7 +176,9 @@ export default class ModuleSettingsEditor extends Component<any, IModuleSettings
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {form}
+          <Tabs id="module-settings">
+            {form}
+          </Tabs>
         </Modal.Body>
         <Modal.Footer>
           <Button bsStyle="default" onClick={ this.OnHide.bind(this) }>

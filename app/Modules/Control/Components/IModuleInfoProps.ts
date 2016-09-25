@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import Module from 'Models/Module';
+import Module from '../Models/Module';
 
 export interface IModuleInfoProps {
 

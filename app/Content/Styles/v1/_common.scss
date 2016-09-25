@@ -58,6 +58,24 @@ a:not([href]) {
 
 }
 
+fieldset.module-settings-section {
+	border: 1px solid #c0c0c0;
+  padding: 0.35em 0.625em 0.75em;
+
+	legend {
+    display: block;
+    width: auto;
+    padding: 0 5px;
+    margin-bottom: 0;
+    font-size: inherit;
+		//font-weight: bold;
+		color: #555555;
+    line-height: inherit;
+    border-bottom: none;
+	}
+}
+
+
 .modal-body {
   max-height: calc(100vh - 200px);
   overflow-y: auto;

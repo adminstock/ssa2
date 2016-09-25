@@ -32,7 +32,7 @@ export default class ModuleSettingsElement {
   /**
    * The data for the element. Mainly for lists.
    */
-  public Data: any;
+  public Data: Array<any>;
 
   public DataDisplayField: string;
 

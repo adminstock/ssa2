@@ -28,10 +28,12 @@ import
 import App from 'Core/App';
 import Component from 'Core/Component';
 
-import Module from 'Models/Module';
-import IModuleInfoProps from 'IModuleInfoProps';
+import Module from '../Models/Module';
 
-export default class ModuleInfo extends Component<IModuleInfoProps, any> {
+import IModuleInfoProps from 'IModuleInfoProps';
+import IModuleInfoState from 'IModuleInfoState';
+
+export default class ModuleInfo extends Component<IModuleInfoProps, IModuleInfoState> {
 
   constructor(props?, context?) {
     super(props, context);

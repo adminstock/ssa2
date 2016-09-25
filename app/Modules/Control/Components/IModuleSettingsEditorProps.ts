@@ -1,6 +1,6 @@
-﻿/* 
+﻿/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro, 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,16 @@
  * limitations under the License.
  */
 
-import ModuleSettingsElement from '../Models/ModuleSettingsElement'
+import Module from '../Models/Module';
 
-export default class ModuleSettingsSection {
+export interface IModuleSettingsEditorProps {
 
-  public Name: string;
+  Module: Module;
 
-  public Elements: Array<ModuleSettingsElement>;
+  Visible: boolean;
+
+  Settings: any;
 
 }
+
+export default IModuleSettingsEditorProps;

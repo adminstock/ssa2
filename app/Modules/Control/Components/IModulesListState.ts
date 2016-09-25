@@ -32,6 +32,8 @@ export interface IModulesListState {
 
   SelectedModule?: Module;
 
+  SelectedModuleSettings?: any;
+
 }
 
 export default IModulesListState;

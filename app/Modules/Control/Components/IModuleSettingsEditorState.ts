@@ -15,13 +15,15 @@
  * limitations under the License.
  */
 
-import Module from 'Models/Module';
+import Module from '../Models/Module';
 
 export interface IModuleSettingsEditorState {
 
   Module?: Module;
 
   Visible?: boolean;
+
+  Settings?: any;
 
 }
 

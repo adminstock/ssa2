@@ -19,14 +19,45 @@
           "name": "Common",
           "elements": [
             {
+              "name": "control_source",
               "title": "Source",
-              "type": "dropdownlist",
-              "data": [],
-              "data-ref": "source",
-              "data-display": "title",
-              "data-value": "title"
+              "type": "dropdown",
+              "data": ["test", "123", "data"]
             },
             {
+              "name": "control_aaaaa",
+              "title": "Source",
+              "type": "textarea",
+              "attributes": { "rows": 15 }
+            },
+            {
+              "name": "control_bbb",
+              "title": "Source",
+              "type": "textarea"
+            },
+            {
+              "name": "control_other",
+              "title": "",
+              "type": "text",
+              "attributes": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Test",
+      "sections": [
+        {
+          "name": "abc",
+          "elements": [
+            {
+              "name": "control_test",
+              "title": "Source",
+              "type": "text"
+            },
+            {
+              "name": "control_other_param",
               "title": "",
               "type": "text",
               "attributes": []

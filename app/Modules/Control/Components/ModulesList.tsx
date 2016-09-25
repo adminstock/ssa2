@@ -32,7 +32,7 @@ import Component from 'Core/Component';
 
 import ProcessingIndicator from 'UI/ProcessingIndicator';
 
-import Module from 'Modules/Control/Models/Module';
+import Module from '../Models/Module';
 import ModuleSettings from 'Models/ModuleSettings';
 
 import IModulesListProps from 'IModulesListProps';
@@ -56,6 +56,7 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
       LoadingModules: false,
       AllModules: null,
       SelectedModule: null,
+      SelectedModuleSettings: null,
       ShowModuleInfo: false,
       ShowModuleSettings: false
     };
@@ -125,10 +126,13 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
     });
   }
 
-  private ModuleSettingsShow(module: Module): void {
+  private ModuleSettingsShow(module: Module, serverSettings: any): void {
+    Debug.Call3('ModuleSettingsShow', module, serverSettings);
+
     this.setState({
       ShowModuleSettings: true,
-      SelectedModule: module
+      SelectedModule: module,
+      SelectedModuleSettings: serverSettings
     });
   }
 
@@ -181,7 +185,7 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
               </Button>
             </td>
             <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-              <Button bsSize="small" disabled={ disabled || !m.Settings } onClick={ this.ModuleSettingsShow.bind(this, m) }>
+              <Button bsSize="small" disabled={ disabled || !m.Settings } onClick={ this.ModuleSettingsShow.bind(this, m, moduleSettings.Settings) }>
                 <i className="glyphicon glyphicon-cog"></i>
               </Button>
             </td>
@@ -202,7 +206,7 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
         <ModuleSettingsEditor
           Visible={ this.state.ShowModuleSettings }
           Module={ this.state.SelectedModule }
-          OnHide={ this.ModuleSettingsEditor_OnHide.bind(this) }
+          Settings={ this.state.SelectedModuleSettings }
         />
       </div>
     );

@@ -32,7 +32,7 @@ import App from 'Core/App';
 import Component from 'Core/Component';
 
 import { Server, ServerStatus } from 'Models/Server';
-import Module from 'Modules/Control/Models/Module';
+import Module from '../Models/Module';
 import ModuleSettings from 'Models/ModuleSettings';
 import { OperatingSystem } from 'Models/OperatingSystem';
 import ConnectionSettings from 'Models/ConnectionSettings';
