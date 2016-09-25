@@ -29,6 +29,23 @@ export class OperatingSystemFamily {
 
   public static get FAMILY_UNIX(): string { return 'Unix'; }
 
+  public static get NamesByFamilies(): any {
+    return {
+      [OperatingSystemFamily.FAMILY_UNIX]: ['Unix'],
+      [OperatingSystemFamily.FAMILY_LINUX]: ['Debian', 'Ubuntu', 'Red Hat', 'CentOS', 'openSUSE', 'Mandriva'], // Fedora, Arch Linux,
+      [OperatingSystemFamily.FAMILY_BSD]: ['FreeBSD', 'Mac OS X', 'OS X'], // OpenBSD, NetBSD, DesktopBSD
+      [OperatingSystemFamily.FAMILY_WINDOWS]: [
+        'Windows', 'Windows 7', 'Windows 8', 'Windows 8.1', 'Windows 10',
+        'Windows Server 2008', 'Windows Server 2008 R2', 'Windows Server 2012',
+        'Windows Server 2012 R2', 'Windows Server 2016',
+        'Microsoft Windows', 'Microsoft Windows 8', 'Microsoft Windows 8.1',
+        'Microsoft Windows 10', 'Microsoft Windows Server 2008', 'Microsoft Windows Server 2008 R2',
+        'Microsoft Windows Server 2012', 'Microsoft Windows Server 2012 R2',
+        'Microsoft Windows Server 2016'
+      ]
+    };
+  }
+
   /**
    * Gets a value indicating whether specified value is family of OS.
    *
@@ -43,34 +60,27 @@ export class OperatingSystemFamily {
   }
 
   public static GetSupporedOSNames(family?: string): Array<string> {
-    return [
-      'Debian',
-      'Ubuntu',
-      'FreeBSD',
-      'OS X',
-      'Mac OS X',
-      'Red Hat',
-      'CentOS',
-      'Windows',
-      'Windows 7',
-      'Windows 8',
-      'Windows 8.1',
-      'Windows 10',
-      'Windows Server 2008',
-      'Windows Server 2008 R2',
-      'Windows Server 2012',
-      'Windows Server 2012 R2',
-      'Windows Server 2016',
-      'Microsoft Windows',
-      'Microsoft Windows 8',
-      'Microsoft Windows 8.1',
-      'Microsoft Windows 10',
-      'Microsoft Windows Server 2008',
-      'Microsoft Windows Server 2008 R2',
-      'Microsoft Windows Server 2012',
-      'Microsoft Windows Server 2012 R2',
-      'Microsoft Windows Server 2016',
-    ];
+    let result = new Array<string>();
+    let families = OperatingSystemFamily.NamesByFamilies;
+
+    if (family && family != '') {
+      family = family.toLowerCase();
+
+      if (family == 'bsd') {
+        family = family.toUpperCase();
+      } else {
+        family = family.charAt(0).toUpperCase() + family.slice(1);
+      }
+
+      result = families[family];
+    }
+    else {
+      for (let f in families) {
+        result = result.concat(families[f]);
+      }
+    }
+
+    return result;
   }
 
 }

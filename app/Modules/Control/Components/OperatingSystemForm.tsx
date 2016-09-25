@@ -100,19 +100,6 @@ export default class OperatingSystemForm extends Component<IOperatingSystemFormP
 
     return (
       <Form horizontal>
-        <FormGroup controlId="OperatingSystemForm_Name" validationState={ null }>
-          <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
-            <FormattedMessage id="LBL_NAME" defaultMessage="Name" />:
-          </Col>
-          <Col xs={12} sm={8} md={9} lg={9}>
-            <Typeahead
-              name="OperatingSystemForm_Name"
-              options={ OperatingSystemFamily.GetSupporedOSNames() }
-              selected={ [this.state.Name] }
-              onInputChange={ (value) => { this.Input_TextChanged.apply(this, ['OperatingSystemForm_Name', 'Name', value]); } }
-            />
-          </Col>
-        </FormGroup>
         <FormGroup controlId="OperatingSystemForm_Family" validationState={ null }>
           <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
             <FormattedMessage id="LBL_FAMILY" defaultMessage="Family" />:
@@ -127,6 +114,19 @@ export default class OperatingSystemForm extends Component<IOperatingSystemFormP
                 <Button disabled={ disabled } active={ family == 'windows' } data-family={ OperatingSystemFamily.FAMILY_WINDOWS }>Windows</Button>
               </ButtonGroup>
             </ButtonToolbar>
+          </Col>
+        </FormGroup>
+        <FormGroup controlId="OperatingSystemForm_Name" validationState={ null }>
+          <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
+            <FormattedMessage id="LBL_NAME" defaultMessage="Name" />:
+          </Col>
+          <Col xs={12} sm={8} md={9} lg={9}>
+            <Typeahead
+              name="OperatingSystemForm_Name"
+              options={ OperatingSystemFamily.GetSupporedOSNames(this.state.Family) }
+              selected={ [this.state.Name] }
+              onInputChange={ (value) => { this.Input_TextChanged.apply(this, ['OperatingSystemForm_Name', 'Name', value]); } }
+            />
           </Col>
         </FormGroup>
         <FormGroup controlId="OperatingSystemForm_Version" validationState={ null }>

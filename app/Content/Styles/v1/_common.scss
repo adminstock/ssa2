@@ -50,6 +50,14 @@ a:not([href]) {
 	color: #8a6d3b;
 }
 
+.bootstrap-typeahead {
+
+	ul.dropdown-menu {
+		width: 100%;
+	}
+
+}
+
 .modal-body {
   max-height: calc(100vh - 200px);
   overflow-y: auto;
