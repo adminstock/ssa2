@@ -21,6 +21,7 @@ import App from 'Core/App';
 import Component from 'Core/Component';
 import { ButtonToolbar, ButtonGroup, Button, Col, Image, Alert } from 'react-bootstrap';
 import { Server, ServerStatus } from 'Models/Server';
+import { OperatingSystemFamily } from 'Models/OperatingSystem';
 import IServerItemProps from 'IServerItemProps';
 import { OutputMode } from 'OutputMode';
 
@@ -31,80 +32,6 @@ export default class ServerRow extends Component<IServerItemProps, any> {
 
   constructor(props, context) {
     super(props, context);
-  }
-
-  private GetServerImage(server: Server): string {
-    let result = '';
-
-    if (server.OS) {
-      let name = '';
-      let family = '';
-
-      if (server.OS.Name != null) {
-        name = server.OS.Name.toLowerCase();
-      }
-
-      if (server.OS.Family != null) {
-        family = server.OS.Family.toLowerCase();
-      }
-
-      if (name.indexOf('debian') != -1) {
-        result = 'debian.jpg';
-      }
-      else if (name.indexOf('ubuntu') != -1) {
-        result = 'ubuntu.jpg';
-      }
-      else if (name.indexOf('freebsd') != -1) {
-        result = 'freebsd.jpg';
-      }
-      else if (name.indexOf('redhat') != -1) {
-        result = 'redhat.jpg';
-      }
-      else if (name.indexOf('centos') != -1) {
-        result = 'centos.jpg';
-      }
-      else if (name.indexOf('windows') != -1) {
-        if (name.indexOf('2008') != -1 && name.indexOf('r2') != -1) {
-          result = 'windows2008r2.jpg';
-        }
-        else if (name.indexOf('2008') != -1 && name.indexOf('r2') == -1) {
-          result = 'windows2008.jpg';
-        }
-        else if (name.indexOf('2012') != -1 && name.indexOf('r2') != -1) {
-          result = 'windows2012r2.jpg';
-        }
-        else if (name.indexOf('2012') != -1 && name.indexOf('r2') == -1) {
-          result = 'windows2012.jpg';
-        }
-        else if (name.indexOf('2016') != -1) {
-          result = 'windows2016.jpg';
-        }
-        else {
-          result = 'windows.jpg';
-        }
-      }
-      else if (name.indexOf('osx') != -1 || name.indexOf('os x') != -1 || name.indexOf('mac') != -1) {
-        result = 'osx.jpg';
-      }
-
-      if (result == '' && family != '') {
-        if (family.indexOf('linux') != -1) {
-          result = 'linux.jpg';
-        }
-        // TODO
-        /*else if (family.indexOf('unix') != -1) {
-
-        }
-        else if (family.indexOf('windows') != -1 || family.indexOf('win32') != -1 || family.indexOf('winnt') != -1) {
-        }*/
-      }
-    }
-
-    if (result == '') {
-      result = 'server.jpg';
-    }
-
-    return '/dist/images/' + result;
   }
   
   render() {
@@ -211,7 +138,7 @@ export default class ServerRow extends Component<IServerItemProps, any> {
                 </ButtonGroup>
               </div>
             </div>
-            <Image src={ this.GetServerImage(server) } responsive />
+            <Image src={ OperatingSystemFamily.GetPreviewImageUrl(server.OS) } responsive />
           </div>
           {serverName}
         </Col>

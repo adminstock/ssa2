@@ -83,6 +83,85 @@ export class OperatingSystemFamily {
     return result;
   }
 
+  /**
+   * Returns preview image url.
+   *
+   * @param os OS info.
+   */
+  public static GetPreviewImageUrl(os: OperatingSystem): string {
+    let result = '';
+
+    if (os) {
+      let name = '';
+      let family = '';
+
+      if (os.Name != null) {
+        name = os.Name.toLowerCase();
+      }
+
+      if (os.Family != null) {
+        family = os.Family.toLowerCase();
+      }
+
+      if (name.indexOf('debian') != -1) {
+        result = 'debian.jpg';
+      }
+      else if (name.indexOf('ubuntu') != -1) {
+        result = 'ubuntu.jpg';
+      }
+      else if (name.indexOf('freebsd') != -1 || name.indexOf('free bsd') != -1) {
+        result = 'freebsd.jpg';
+      }
+      else if (name.indexOf('redhat') != -1 || name.indexOf('red hat') != -1) {
+        result = 'redhat.jpg';
+      }
+      else if (name.indexOf('centos') != -1 || name.indexOf('cent os') != -1) {
+        result = 'centos.jpg';
+      }
+      else if (name.indexOf('windows') != -1) {
+        if (name.indexOf('2008') != -1 && name.indexOf('r2') != -1) {
+          result = 'windows2008r2.jpg';
+        }
+        else if (name.indexOf('2008') != -1 && name.indexOf('r2') == -1) {
+          result = 'windows2008.jpg';
+        }
+        else if (name.indexOf('2012') != -1 && name.indexOf('r2') != -1) {
+          result = 'windows2012r2.jpg';
+        }
+        else if (name.indexOf('2012') != -1 && name.indexOf('r2') == -1) {
+          result = 'windows2012.jpg';
+        }
+        else if (name.indexOf('2016') != -1) {
+          result = 'windows2016.jpg';
+        }
+        else {
+          result = 'windows.jpg';
+        }
+      }
+      else if (name.indexOf('osx') != -1 || name.indexOf('os x') != -1 || name.indexOf('mac') != -1) {
+        result = 'osx.jpg';
+      }
+
+      if (result == '' && family != '') {
+        if (family.indexOf('linux') != -1) {
+          result = 'linux.jpg';
+        }
+        // TODO
+        /*else if (family.indexOf('unix') != -1) {
+
+        }
+        else if (family.indexOf('windows') != -1 || family.indexOf('win32') != -1 || family.indexOf('winnt') != -1) {
+        }*/
+      }
+    }
+
+    if (result == '') {
+      result = 'server.jpg';
+    }
+
+    return '/dist/images/' + result;
+  }
+
 }
 
 /**
