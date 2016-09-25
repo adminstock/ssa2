@@ -32,13 +32,14 @@ import Component from 'Core/Component';
 
 import ProcessingIndicator from 'UI/ProcessingIndicator';
 
-import Module from 'Models/Module';
+import Module from 'Modules/Control/Models/Module';
 import ModuleSettings from 'Models/ModuleSettings';
 
 import IModulesListProps from 'IModulesListProps';
 import IModulesListState from 'IModulesListState';
 
 import ModuleInfo from 'ModuleInfo';
+import ModuleSettingsEditor from 'ModuleSettingsEditor';
 
 export default class ModulesList extends Component<IModulesListProps, IModulesListState> {
 
@@ -55,7 +56,8 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
       LoadingModules: false,
       AllModules: null,
       SelectedModule: null,
-      ShowModuleInfo: false
+      ShowModuleInfo: false,
+      ShowModuleSettings: false
     };
   }
 
@@ -123,6 +125,19 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
     });
   }
 
+  private ModuleSettingsShow(module: Module): void {
+    this.setState({
+      ShowModuleSettings: true,
+      SelectedModule: module
+    });
+  }
+
+  private ModuleSettingsEditor_OnHide(): void {
+    this.setState({
+      ShowModuleSettings: false
+    });
+  }
+
   render() {
     Debug.Render3('ModulesList');
 
@@ -158,7 +173,7 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
                 disabled={ disabled }
                 checked={ moduleSettings.Enabled }
                 onChange={ this.ModuleSettings_StatusChanged.bind(this, moduleSettings) }
-              >{ m.Title }</Checkbox>
+              >{ m.Title && m.Title != '' ? m.Title : m.Name }</Checkbox>
             </td>
             <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
               <Button bsSize="small" onClick={ this.ModuleInfoShow.bind(this, m) }>
@@ -166,7 +181,7 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
               </Button>
             </td>
             <td className="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-              <Button bsSize="small" disabled={ disabled || !m.Settings }>
+              <Button bsSize="small" disabled={ disabled || !m.Settings } onClick={ this.ModuleSettingsShow.bind(this, m) }>
                 <i className="glyphicon glyphicon-cog"></i>
               </Button>
             </td>
@@ -184,6 +199,11 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
         </Table>
 
         <ModuleInfo Visible={ this.state.ShowModuleInfo } Module={ this.state.SelectedModule } OnHide={ this.ModuleInfoHide.bind(this) } />
+        <ModuleSettingsEditor
+          Visible={ this.state.ShowModuleSettings }
+          Module={ this.state.SelectedModule }
+          OnHide={ this.ModuleSettingsEditor_OnHide.bind(this) }
+        />
       </div>
     );
   }

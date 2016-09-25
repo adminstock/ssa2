@@ -1,6 +1,9 @@
-﻿/*
+<?php
+namespace WebAPI\Control\Models;
+
+/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +18,31 @@
  * limitations under the License.
  */
 
-import Module from 'Modules/Control/Models/Module';
-import ModuleSettings from 'Models/ModuleSettings';
+/**
+ * Represents tab of module settings.
+ */
+class ModuleSettingsTab implements \WebAPI\Core\IObjectProperties
+{
 
-export interface IModulesListState {
+  /**
+   * Tab name.
+   * 
+   * @var string
+   */
+  public $Name;
+  
+  /**
+   * List of sections.
+   * 
+   * @var \WebAPI\Control\Models\ModuleSettingsSection[]
+   */
+  public $Sections;
 
-  Modules?: Array<ModuleSettings>;
-
-  AllModules?: Array<Module>;
-
-  LoadingModules?: boolean;
-
-  ShowModuleInfo?: boolean;
-
-  ShowModuleSettings?: boolean;
-
-  SelectedModule?: Module;
+  public function GetObjectProperties() 
+  {
+    return [
+      'Sections' => '\WebAPI\Control\Models\ModuleSettingsSection[]'
+    ];
+  }
 
 }
-
-export default IModulesListState;

@@ -1,6 +1,9 @@
-﻿/*
+<?php
+namespace WebAPI\Control\Models;
+
+/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +18,34 @@
  * limitations under the License.
  */
 
-import Module from 'Modules/Control/Models/Module';
-import ModuleSettings from 'Models/ModuleSettings';
+/**
+ * Represents element of module settings.
+ */
+class ModuleSettingsElement
+{
 
-export interface IModulesListState {
+  /**
+   * Name of the element.
+   */
+  public $Name;
 
-  Modules?: Array<ModuleSettings>;
+  /**
+   * Element type: text, textarea, dropdownlist etc.
+   */
+  public $Type;
 
-  AllModules?: Array<Module>;
+  /**
+   * Additional attributes of the element.
+   */
+  public $Attributes;
 
-  LoadingModules?: boolean;
+  /**
+   * The data for the element. Mainly for lists.
+   */
+  public $Data;
 
-  ShowModuleInfo?: boolean;
+  public $DataDisplayField;
 
-  ShowModuleSettings?: boolean;
-
-  SelectedModule?: Module;
-
+  public $DataValueField;
+  
 }
-
-export default IModulesListState;

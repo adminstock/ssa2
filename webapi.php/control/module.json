@@ -13,10 +13,10 @@
   ],
   "settings": [
     {
-      "tab": "Updations",
+      "name": "Updations",
       "sections": [
         {
-          "section": "Common",
+          "name": "Common",
           "elements": [
             {
               "title": "Source",

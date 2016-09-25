@@ -1,6 +1,6 @@
-﻿/*
+﻿/* 
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
- * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro, 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,10 @@
  * limitations under the License.
  */
 
-import Module from 'Modules/Control/Models/Module';
-import ModuleSettings from 'Models/ModuleSettings';
+export default class ModuleSettingsSection {
 
-export interface IModulesListState {
+  public Name: string;
 
-  Modules?: Array<ModuleSettings>;
-
-  AllModules?: Array<Module>;
-
-  LoadingModules?: boolean;
-
-  ShowModuleInfo?: boolean;
-
-  ShowModuleSettings?: boolean;
-
-  SelectedModule?: Module;
+  public Elements: Array<any>;
 
 }
-
-export default IModulesListState;

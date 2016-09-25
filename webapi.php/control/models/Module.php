@@ -19,7 +19,7 @@ namespace WebAPI\Control\Models;
  */
 
 /**
- * Represent module info.
+ * Represents module info.
  */
 class Module implements \WebAPI\Core\IObjectProperties
 {
@@ -101,11 +101,19 @@ class Module implements \WebAPI\Core\IObjectProperties
    */
   public $Icons;
 
+  /** 
+   * Settings schema.
+   * 
+   * @var ModuleSettingsTab[]
+   */
+  public $Settings;
+
   public function GetObjectProperties() 
   {
     return [
       'Authors' => '\WebAPI\Control\Models\Author[]', 
-      'Icons' => '\WebAPI\Control\Models\Icon[]'
+      'Icons' => '\WebAPI\Control\Models\Icon[]',
+      'Settings' => '\WebAPI\Control\Models\ModuleSettingsTab[]'
     ];
   }
 

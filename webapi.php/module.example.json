@@ -22,10 +22,10 @@
   ],
   "settings": [
     {
-      "tab": "Tab title",
+      "name": "Tab title",
       "sections": [
         {
-          "section": "Section name",
+          "name": "Section name",
           "elements": [
             {
               "title": "Source",

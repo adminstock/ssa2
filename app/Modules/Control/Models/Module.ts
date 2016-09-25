@@ -17,6 +17,7 @@
 
 import Author from 'Author';
 import Icon from 'Icon';
+import ModuleSettingsTab from 'ModuleSettingsTab';
 
 /**
  * Represents info about SSA Module.
@@ -30,7 +31,7 @@ export default class Module {
   public Title: string;
 
   /** Settings schema. */
-  public Settings: any;
+  public Settings: Array<ModuleSettingsTab>;
 
   /**
    * Short description.

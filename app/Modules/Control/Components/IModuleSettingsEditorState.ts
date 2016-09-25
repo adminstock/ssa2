@@ -15,23 +15,14 @@
  * limitations under the License.
  */
 
-import Module from 'Modules/Control/Models/Module';
-import ModuleSettings from 'Models/ModuleSettings';
+import Module from 'Models/Module';
 
-export interface IModulesListState {
+export interface IModuleSettingsEditorState {
 
-  Modules?: Array<ModuleSettings>;
+  Module?: Module;
 
-  AllModules?: Array<Module>;
-
-  LoadingModules?: boolean;
-
-  ShowModuleInfo?: boolean;
-
-  ShowModuleSettings?: boolean;
-
-  SelectedModule?: Module;
+  Visible?: boolean;
 
 }
 
-export default IModulesListState;
+export default IModuleSettingsEditorState;
