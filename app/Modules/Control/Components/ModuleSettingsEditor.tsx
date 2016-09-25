@@ -20,12 +20,13 @@ import { FormattedMessage } from 'react-intl';
 import
 {
   Modal,
-  Button,
+  Button, ButtonToolbar, ButtonGroup,
   Row, Col,
   ControlLabel,
   Panel,
   Tabs, Tab,
-  Form, FormGroup, FormControl
+  Form, FormGroup, FormControl,
+  Checkbox
 } from 'react-bootstrap';
 
 import Typeahead from 'react-bootstrap-typeahead';
@@ -70,6 +71,7 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
     }
 
     let elementOutput = null;
+    let items: Array<JSX.Element> = null;
 
     switch ((element.Type || '').toLowerCase()) {
       case 'text':
@@ -95,7 +97,8 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
       case 'dropdown':
       case 'combobox':
       case 'select':
-        let items = new Array<JSX.Element>();
+      case 'list':
+        items = new Array<JSX.Element>();
 
         element.Data.forEach((option, optionIndex) => {
           let optionValue = option;
@@ -111,13 +114,34 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
 
           items.push(<option key={ 'option_' + optionIndex } value={ optionValue }>{ optionTitle }</option>);
         });
-
-        elementOutput = <FormControl componentClass="select" { ...element.Attributes }>{ items }</FormControl>;
+        
+        elementOutput = <FormControl componentClass="select" { ...element.Attributes || (element.Type.toLowerCase() == 'list' ? { size: 5 } : null) }>{ items }</FormControl>;
         break;
 
-      case 'list':
       case 'checkbox':
+        elementOutput = <Checkbox checked={ value } { ...element.Attributes } />;
+        break;
+
       case 'radio':
+        items = new Array<JSX.Element>();
+
+        element.Data.forEach((option, optionIndex) => {
+          let optionValue = option;
+          let optionTitle = option;
+
+          if (element.DataDisplayField && element.DataDisplayField != '') {
+            optionTitle = option[element.DataDisplayField] || option;
+          }
+
+          if (element.DataValueField && element.DataValueField != '') {
+            optionValue = option[element.DataValueField] || option;
+          }
+
+          items.push(<Button>{ optionTitle }</Button>);
+        });
+
+        elementOutput = <ButtonToolbar><ButtonGroup { ...element.Attributes }>{ items }</ButtonGroup></ButtonToolbar>;
+        break;
 
       default:
         elementOutput = (<div className="red">Unsupported type: <strong>{ element.Type }</strong></div>);

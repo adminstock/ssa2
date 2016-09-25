@@ -22,13 +22,37 @@
               "name": "control_source",
               "title": "Source",
               "type": "dropdown",
-              "data": ["test", "123", "data"]
+              "data": [ "test", "123", "data" ]
+            },
+            {
+              "name": "control_snnn",
+              "title": "Source",
+              "type": "list",
+              "data": [ "test", "123", "data" ]
+            },
+            {
+              "name": "control_snnn2",
+              "title": "Source",
+              "type": "list",
+              "data": [ "test", "123", "data" ],
+              "attributes": { "size": 2 }
             },
             {
               "name": "control_aaaaa",
               "title": "Source",
-              "type": "textarea",
-              "attributes": { "rows": 15 }
+              "type": "radio",
+              "data": [
+                {
+                  "id": 1,
+                  "title": "test"
+                },
+                {
+                  "id": 2,
+                  "title": "abc"
+                }
+              ],
+              "dataDisplayField": "title",
+              "dataValueField": "id"
             },
             {
               "name": "control_bbb",
@@ -40,6 +64,11 @@
               "title": "",
               "type": "text",
               "attributes": []
+            },
+            {
+              "name": "control_check",
+              "title": "Check me",
+              "type": "checkbox"
             }
           ]
         }
