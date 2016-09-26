@@ -48,6 +48,8 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
     return this.state.Modules;
   }
 
+  private ModuleSettingsEditor: ModuleSettingsEditor;
+
   constructor(props?, context?) {
     super(props, context);
 
@@ -142,6 +144,21 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
     });
   }
 
+  private ModuleSettingsEditor_OnSave(): void {
+    Debug.Call3('ModulesList.ModuleSettingsEditor_OnSave', this.ModuleSettingsEditor.Settings);
+
+    let editor = this.ModuleSettingsEditor
+
+    // get module index
+    let index = this.state.Modules.findIndex((ms) => ms.Name == editor.Name);
+
+    // update module in collection
+    let updatedSettings = ReactUpdate(this.state.Modules[index], { Settings: { $set: editor.Settings } });
+
+    // update module in server
+    this.setState(ReactUpdate(this.state, { Modules: { $splice: [[index, 1, updatedSettings]] }, ShowModuleSettings: { $set: false }}));
+  }
+
   render() {
     Debug.Render3('ModulesList');
 
@@ -153,7 +170,7 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
       return <Alert bsStyle="danger">No modules...</Alert>;
     }
 
-    let disabled = this.props.Disabled;
+    let disabled = this.props.Disabled || this.state.ShowModuleInfo || this.state.ShowModuleSettings;
 
     let allModules = [];
 
@@ -207,6 +224,9 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
           Visible={ this.state.ShowModuleSettings }
           Module={ this.state.SelectedModule }
           Settings={ this.state.SelectedModuleSettings }
+          OnHide={ this.ModuleSettingsEditor_OnHide.bind(this) }
+          OnSave={ this.ModuleSettingsEditor_OnSave.bind(this) }
+          ref={ (ref) => this.ModuleSettingsEditor = ref }
         />
       </div>
     );

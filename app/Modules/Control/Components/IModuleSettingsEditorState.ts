@@ -19,6 +19,7 @@ import Module from '../Models/Module';
 
 export interface IModuleSettingsEditorState {
 
+  /** List of modules on the server. */
   Module?: Module;
 
   Visible?: boolean;

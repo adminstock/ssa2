@@ -22,7 +22,7 @@
               "name": "control_source",
               "title": "Source",
               "type": "dropdown",
-              "data": [ "test", "123", "data" ]
+              "data": [ "111", "222", "333", "444", "555", "666", "777", "888", "999" ]
             },
             {
               "name": "control_snnn",
@@ -34,7 +34,7 @@
               "name": "control_snnn2",
               "title": "Source",
               "type": "list",
-              "data": [ "test", "123", "data" ],
+              "data": [ "aaa", "bbb", "ccc", "ddd", "eee", "fff" ],
               "attributes": { "size": 2 }
             },
             {
@@ -69,6 +69,17 @@
               "name": "control_check",
               "title": "Check me",
               "type": "checkbox"
+            }
+          ]
+        },
+        {
+          "name": "Test",
+          "elements": [
+            {
+              "name": "control_11234",
+              "title": "Source",
+              "type": "text",
+              "data": [ "test", "123", "data", "one", "two" ]
             }
           ]
         }

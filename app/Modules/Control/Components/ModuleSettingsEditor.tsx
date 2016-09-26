@@ -42,6 +42,16 @@ import IModuleSettingsEditorProps from 'IModuleSettingsEditorProps';
 
 export default class ModuleSettingsEditor extends Component<IModuleSettingsEditorProps, IModuleSettingsEditorState> {
 
+  /** Gets settings. */
+  public get Settings(): any {
+    return this.state.Settings;
+  }
+
+  /** Gets name of the module. */
+  public get Name(): string {
+    return this.state.Module.Name;
+  }
+
   constructor(props?, context?) {
     super(props, context);
 
@@ -59,11 +69,32 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
   }
 
   private OnHide(): void {
-    //this.props.OnHide();
+    this.props.OnHide();
   }
 
-  private MakeElement(element: ModuleSettingsElement): JSX.Element {
+  private OnSave(): void {
+    this.props.OnSave();
+  }
+
+  private Input_OnChange(name: string, value: string): void {
+    //Debug.Call3('Input_OnChange', name, value);
+
+    let newState = ReactUpdate(this.state, { Settings: { [name]: { $set: value } } });
+
+    this.setState(newState);
+  }
+
+  private Input_CheckChanged(name: string, value: boolean): void {
+    //Debug.Call3('Input_CheckChanged', name, value);
+
+    let newState = ReactUpdate(this.state, { Settings: { [name]: { $set: value } } });
+
+    this.setState(newState);
+  }
+
+  private MakeElement(element: ModuleSettingsElement, elementKey: string): JSX.Element {
     Debug.Call3('MakeElement', element, this.state.Settings[element.Name]);
+    
     let value = '';
     
     if (this.state.Settings && typeof this.state.Settings[element.Name] !== 'undefined') {
@@ -76,21 +107,36 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
     switch ((element.Type || '').toLowerCase()) {
       case 'text':
         if (element.Data === undefined || element.Data == null || element.Data.length <= 0) {
-          elementOutput = <FormControl type="text" value={ value } { ...element.Attributes } />;
+          elementOutput = (
+            <FormControl
+              key={ elementKey }
+              type="text"
+              value={ value.toString() }
+              onChange={ (e) => this.Input_OnChange.apply(this, [element.Name, (e.target as HTMLInputElement).value]) }
+              { ...element.Attributes }
+            />);
         } else {
-          // onInputChange={ (value) => Debug.Log(value) }
           elementOutput = (
             <Typeahead
-              name="elementttt"
+              key={ elementKey }
+              name={ elementKey }
               options={ element.Data }
               selected={ [value.toString()] }
+              onInputChange={ (value) => { this.Input_OnChange.apply(this, [element.Name, value]); } }
               { ...element.Attributes }
             />);
         }
         break;
 
       case 'textarea':
-        elementOutput = <FormControl componentClass="textarea" value={ value } { ...element.Attributes || { rows: 5 } } />;
+        elementOutput = (
+          <FormControl
+            key={ elementKey }
+            componentClass="textarea"
+            value={ value.toString() }
+            onChange={ (e) => this.Input_OnChange.apply(this, [element.Name, (e.target as HTMLInputElement).value]) }
+            { ...element.Attributes || { rows: 5 } }
+          />);
         break;
 
       case 'dropdownlist':
@@ -112,14 +158,36 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
             optionValue = option[element.DataValueField] || option;
           }
 
-          items.push(<option key={ 'option_' + optionIndex } value={ optionValue }>{ optionTitle }</option>);
+          items.push(
+            <option
+              key={ elementKey + '_option_' + optionIndex }
+              value={ optionValue.toString() }
+            >
+              { optionTitle }
+            </option>);
+          // selected={ optionValue.toString() == value.toString() }
         });
-        
-        elementOutput = <FormControl componentClass="select" { ...element.Attributes || (element.Type.toLowerCase() == 'list' ? { size: 5 } : null) }>{ items }</FormControl>;
+
+        elementOutput = (
+          <FormControl
+            key={ elementKey }
+            componentClass="select"
+            { ...element.Attributes || (element.Type.toLowerCase() == 'list' ? { size: 5 } : null) }
+            onChange={ (e) => this.Input_OnChange.apply(this, [element.Name, (e.target as HTMLInputElement).value]) }
+            defaultValue={ value.toString() }
+          >
+            { items }
+          </FormControl>);
         break;
 
       case 'checkbox':
-        elementOutput = <Checkbox checked={ value } { ...element.Attributes } />;
+        elementOutput = (
+          <Checkbox
+            key={ elementKey }
+            checked={ value }
+            onChange={ (e) => this.Input_CheckChanged.apply(this, [element.Name, (e.target as HTMLInputElement).checked]) }
+            { ...element.Attributes }
+          />);
         break;
 
       case 'radio':
@@ -137,19 +205,31 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
             optionValue = option[element.DataValueField] || option;
           }
 
-          items.push(<Button>{ optionTitle }</Button>);
+          items.push(
+            <Button
+              key={ elementKey + '_radio_' + optionIndex }
+              active={ optionValue.toString() == value.toString() }
+              data-value={ optionValue.toString() }
+            >
+              { optionTitle }
+            </Button>);
         });
 
-        elementOutput = <ButtonToolbar><ButtonGroup { ...element.Attributes }>{ items }</ButtonGroup></ButtonToolbar>;
+        elementOutput = (
+          <ButtonToolbar key={ elementKey }>
+            <ButtonGroup onClick={ (e) => this.Input_OnChange.apply(this, [element.Name, $(e.target).data('value')]) } { ...element.Attributes }>
+              { items }
+            </ButtonGroup>
+          </ButtonToolbar>);
         break;
 
       default:
-        elementOutput = (<div className="red">Unsupported type: <strong>{ element.Type }</strong></div>);
+        elementOutput = (<div key={ elementKey } className="form-control-static red">Unsupported type: <strong>{ element.Type }</strong></div>);
         break;
     }
 
     return (
-      <FormGroup controlId="todo" validationState={ null }>
+      <FormGroup key={ elementKey + '_group' } controlId="todo" validationState={ null }>
         <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
           <FormattedMessage id={ element.Name } defaultMessage={ element.Name } />:
         </Col>
@@ -167,26 +247,38 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
       return null;
     }
 
-    let form = null;
+    let tabs = null;
 
     if (this.state.Module.Settings && this.state.Module.Settings.length > 0) {
-      form = new Array<JSX.Element>();
+      tabs = new Array<JSX.Element>();
 
       this.state.Module.Settings.forEach((tab, tabIndex) => {
+        let tabKey = 'mod_sttgs_tab_' + tabIndex;
         let tabContent = new Array<JSX.Element>();
 
         tab.Sections.forEach((section, sectionIndex) => {
-
+          let sectionKey = tabKey + '_section_' + sectionIndex;
           let sectionContent = new Array<JSX.Element>();
 
           section.Elements.forEach((element, elementIndex) => {
-            sectionContent.push(this.MakeElement(element));
+            let elementKey = sectionKey + '_element_' + elementIndex;
+
+            sectionContent.push(this.MakeElement(element, elementKey));
           });
 
-          tabContent.push(<section><h4>{ section.Name }</h4><Form horizontal>{ sectionContent }</Form></section>);
+          tabContent.push(
+            <fieldset key={sectionKey} className="module-settings-section">
+              {(() => {
+                if (tab.Sections.length > 1) return <legend>{ section.Name }</legend>;
+              })()}
+              <Form horizontal>
+                { sectionContent }
+              </Form>
+            </fieldset>
+          );
         });
 
-        form.push(<Tab key={'mod_sttgs_tab_' + tabIndex} eventKey={tab.Name} title={tab.Name}>{tabContent}</Tab>);
+        tabs.push(<Tab key={tabKey} eventKey={tab.Name} title={tab.Name}>{tabContent}</Tab>);
       });
     }
 
@@ -200,12 +292,20 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Tabs id="module-settings">
-            {form}
-          </Tabs>
+          {(() => {
+            if (tabs.length > 1) {
+              return (
+                <Tabs id="module-settings">
+                  {tabs}
+                </Tabs>
+              );
+            } else {
+              return <div>{ tabs[0]}</div>;
+            }
+          })()}
         </Modal.Body>
         <Modal.Footer>
-          <Button bsStyle="default" onClick={ this.OnHide.bind(this) }>
+          <Button bsStyle="primary" onClick={ this.OnSave.bind(this) }>
             <FormattedMessage id="BTN_SAVE" defaultMessage="Save" />
           </Button>
           <Button bsStyle="default" onClick={ this.OnHide.bind(this) }>

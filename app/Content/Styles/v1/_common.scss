@@ -59,8 +59,9 @@ a:not([href]) {
 }
 
 fieldset.module-settings-section {
-	border: 1px solid #c0c0c0;
+	border: 1px solid #e5e5e5;
   padding: 0.35em 0.625em 0.75em;
+	margin: 8px 0 4px 0;
 
 	legend {
     display: block;
@@ -68,8 +69,8 @@ fieldset.module-settings-section {
     padding: 0 5px;
     margin-bottom: 0;
     font-size: inherit;
-		//font-weight: bold;
-		color: #555555;
+		font-weight: bold;
+		//color: #555555;
     line-height: inherit;
     border-bottom: none;
 	}

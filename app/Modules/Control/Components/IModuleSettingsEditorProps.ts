@@ -19,11 +19,16 @@ import Module from '../Models/Module';
 
 export interface IModuleSettingsEditorProps {
 
+  /** List of modules on the server. */
   Module: Module;
 
   Visible: boolean;
 
   Settings: any;
+
+  OnHide: () => void;
+
+  OnSave: () => void;
 
 }
 
