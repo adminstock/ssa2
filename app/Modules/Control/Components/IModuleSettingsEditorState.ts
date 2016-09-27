@@ -26,7 +26,7 @@ export interface IModuleSettingsEditorState {
 
   Settings?: any;
 
-  Validators?: any;
+  Validation?: any;
 
   ActiveTab?: string;
 

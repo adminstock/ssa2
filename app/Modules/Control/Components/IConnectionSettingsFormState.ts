@@ -21,6 +21,8 @@ export interface IConnectionSettingsFormState {
 
   ConnectionSettings?: ConnectionSettings;
 
+  Validation?: any;
+
 }
 
 export default IConnectionSettingsFormState;

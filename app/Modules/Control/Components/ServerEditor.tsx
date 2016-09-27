@@ -173,6 +173,10 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
     this.setState({ Server: server, ActiveKey: activeKey });
   }
 
+  private IsValid(): boolean {
+    return this.ConnectionSettings.IsValid();
+  }
+
   /**
    * Loads server data from server :)
    */
@@ -197,7 +201,9 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
     Debug.Call3('ServerEditor.Save');
 
     // validation
-    // TODO
+    if (!this.IsValid()) {
+      return;
+    }
 
     let server = this.state.Server;
     server.Connection = this.ConnectionSettings.Data;
@@ -243,20 +249,20 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
     }
 
     return (
-      <Modal show={ this.props.Visible } backdrop="static" onHide={ this.OnHide.bind(this) }>
+      <Modal id="serverEditor" show={ this.props.Visible } backdrop="static" onHide={ this.OnHide.bind(this) }>
         <Modal.Header closeButton={ !disabled }>
           <Modal.Title>{ title } { progress }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <PanelGroup activeKey={ this.state.ActiveKey } accordion onSelect={ this.Panel_OnSelect.bind(this) }>
-            <Panel header={ App.FormatMessage('MDL_CONTROL_CONNECTION', 'Connection') } eventKey="connectionSettings">
+            <Panel header={ App.FormatMessage('MDL_CONTROL_CONNECTION', 'Connection') } eventKey="connectionSettings" data-name="connectionSettings">
               <ConnectionSettingsForm
                 Disabled={ disabled }
                 ConnectionSettings={ this.state.Server.Connection }
                 ref={ (ref) => this.ConnectionSettings = ref }
               />
             </Panel>
-            <Panel header={ App.FormatMessage('MDL_CONTROL_INFO', 'Info') } eventKey="serverInfo">
+            <Panel header={ App.FormatMessage('MDL_CONTROL_INFO', 'Info') } eventKey="serverInfo" data-name="serverInfo">
               <ServerInfoForm
                 Disabled={ disabled }
                 ServerName={ this.state.Server.Name }
@@ -264,7 +270,7 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
                 ref={ (ref) => this.ServerInfo = ref }
               />
             </Panel>
-            <Panel header={ App.FormatMessage('MDL_CONTROL_OS', 'Operating System') } eventKey="os">
+            <Panel header={ App.FormatMessage('MDL_CONTROL_OS', 'Operating System') } eventKey="os" data-name="os">
               <OperatingSystemForm
                 Disabled={ disabled }
                 Name={ this.state.Server.OS.Name }
@@ -273,7 +279,7 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
                 ref={ (ref) => this.OperatingSystem = ref }
               />
             </Panel>
-            <Panel header={ App.FormatMessage('MDL_CONTROL_MODULES', 'Modules') } eventKey="modules">
+            <Panel header={ App.FormatMessage('MDL_CONTROL_MODULES', 'Modules') } eventKey="modules" data-name="modules">
               <ModulesList
                 Disabled={ disabled }
                 Modules={ this.state.Server.Modules }

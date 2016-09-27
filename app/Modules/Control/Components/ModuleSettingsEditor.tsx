@@ -60,7 +60,7 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
       Module: this.props.Module,
       Settings: this.props.Settings,
       ActiveTab: null,
-      Validators: {},
+      Validation: {},
       Focus: null
     };
   }
@@ -86,14 +86,14 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
 
   private OnSave(): void {
     let isValid = true;
-    let validators = {};
+    let validation = {};
     let activeTab = null;
     let focus = null;
 
     $('form', '#moduleSettingsEditor').each((i, form) => {
-      $('input', form).each((i, input: HTMLInputElement) => {
+      $('input', form).each((j, input: HTMLInputElement) => {
         if (!input.checkValidity()) {
-          Object.assign(validators, { [$(input).data('name')]: 'error' });
+          Object.assign(validation, { [$(input).data('name')]: 'error' });
 
           if (isValid) {
             focus = input;
@@ -109,16 +109,16 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
     });
 
     if (isValid) {
-      this.setState({ Validators: null, ActiveTab: null, Focus: null });
+      this.setState({ Validation: {}, ActiveTab: null, Focus: null });
       this.props.OnSave();
     } else {
       //Debug.Log('OnSave', validators, activeTab);
-      this.setState({ Validators: validators, ActiveTab: activeTab, Focus: focus });
+      this.setState({ Validation: validation, ActiveTab: activeTab, Focus: focus });
     }
   }
 
   private Tabs_OnSelect(key: string): void {
-    this.setState({ ActiveTab: key });
+    this.setState({ ActiveTab: key, Focus: null });
   }
 
   private Input_OnChange(name: string, value: string): void {
@@ -279,7 +279,7 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
     }
 
     return (
-      <FormGroup key={ elementKey + '_group' } controlId="todo" validationState={ this.state.Validators[element.Name] || null }>
+      <FormGroup key={ elementKey + '_group' } controlId="todo" validationState={ this.state.Validation[element.Name] || null }>
         <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
           <FormattedMessage id={ element.Title || element.Name } defaultMessage={ element.Title || element.Name } />:
         </Col>

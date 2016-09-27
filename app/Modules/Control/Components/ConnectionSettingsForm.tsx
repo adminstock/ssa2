@@ -44,7 +44,8 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
     super(props, context);
 
     this.state = {
-      ConnectionSettings: this.props.ConnectionSettings
+      ConnectionSettings: this.props.ConnectionSettings,
+      Validation: {}
     };
   }
 
@@ -53,6 +54,10 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
 
     this.setState(nextProps);
   }
+
+  // componentDidMount
+  // componentDidUpdate() {
+  // }
 
   private RequiredPassword_Changed(e: Event): void {
     let newState = ReactUpdate(this.state, { ConnectionSettings: { RequiredPassword: { $set: (e.target as HTMLInputElement).checked } } });
@@ -71,6 +76,30 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
     this.setState(newState);
   }
 
+  public IsValid(): boolean {
+    let isValid = true;
+    let validation = {};
+
+    $('input', '#ConnectionSettings_Form').each((i, input: HTMLInputElement) => {
+      if (!input.checkValidity()) {
+        Object.assign(validation, { [$(input).attr('id')]: 'error' });
+
+        if (isValid) {
+          $(input).focus();
+          isValid = false;
+        }
+      }
+    });
+
+    if (isValid) {
+      this.setState({ Validation: {} });
+    } else {
+      this.setState({ Validation: validation });
+    }
+
+    return isValid;
+  }
+
   render() {
     Debug.Render3('ConnectionSettings');
 
@@ -79,8 +108,8 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
     let disabled = this.props.Disabled;
 
     return (
-      <Form horizontal>
-        <FormGroup controlId="ConnectionSettings_Host" validationState={ null }>
+      <Form id="ConnectionSettings_Form" horizontal>
+        <FormGroup controlId="ConnectionSettings_Host" validationState={ this.state.Validation['ConnectionSettings_Host'] }>
           <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
             <FormattedMessage id="LBL_HOST" defaultMessage="Host" />:
           </Col>
@@ -96,7 +125,7 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
             <FormControl.Feedback />
           </Col>
         </FormGroup>
-        <FormGroup controlId="ConnectionSettings_Port" validationState={ null }>
+        <FormGroup controlId="ConnectionSettings_Port" validationState={ this.state.Validation['ConnectionSettings_Port'] }>
           <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
             <FormattedMessage id="LBL_PORT" defaultMessage="Port" />:
           </Col>
@@ -114,7 +143,7 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
             <FormControl.Feedback />
           </Col>
         </FormGroup>
-        <FormGroup controlId="ConnectionSettings_User" validationState={ null }>
+        <FormGroup controlId="ConnectionSettings_User" validationState={ this.state.Validation['ConnectionSettings_User'] }>
           <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
             <FormattedMessage id="LBL_USERNAME" defaultMessage="Username" />:
           </Col>
@@ -130,15 +159,14 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
             <FormControl.Feedback />
           </Col>
         </FormGroup>
-        <FormGroup controlId="ConnectionSettings_Password" validationState={ null }>
+        <FormGroup controlId="ConnectionSettings_Password">
           <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
             <FormattedMessage id="LBL_PASSWORD" defaultMessage="Password" />:
           </Col>
           <Col xs={12} sm={8} md={9} lg={9}>
             <FormControl
               type="password"
-              maxLength={255}
-              required
+              maxLength={ 255 }
               disabled={ disabled }
               value={ connectionSettings.Password }
               onChange={ this.Input_TextChanged.bind(this, 'ConnectionSettings_Password', 'Password') }
@@ -146,7 +174,7 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
             <FormControl.Feedback />
           </Col>
         </FormGroup>
-        <FormGroup controlId="ConnectionSettings_RequiredPassword" validationState={ null }>
+        <FormGroup controlId="ConnectionSettings_RequiredPassword">
           <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel} />
           <Col xs={12} sm={8} md={9} lg={9}>
             <Checkbox disabled={ disabled } checked={ connectionSettings.RequiredPassword } onChange={ this.RequiredPassword_Changed.bind(this) }>
