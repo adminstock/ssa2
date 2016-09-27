@@ -22,23 +22,23 @@
   ],
   "settings": [
     {
-      "name": "Tab title",
+      "title": "Tab title",
       "sections": [
         {
-          "name": "Section name",
+          "title": "Section name",
           "elements": [
             {
+              "name": "name",
               "title": "Source",
-              "type": "dropdownlist",
+              "type": "dropdown",
               "data": [],
-              "data-ref": "source",
               "data-display": "title",
               "data-value": "title"
             },
             {
               "title": "",
               "type": "text",
-              "attributes": []
+              "attributes": {}
             }
           ]
         }

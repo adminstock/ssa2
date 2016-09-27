@@ -10,6 +10,7 @@
     'BTN_CANCEL': 'Отмена',
     'BTN_CLOSE': 'Закрыть',
     'BTN_SAVE': 'Сохранить',
+    'BTN_APPLY': 'Применить',
 
     'LBL_SERVER': 'Сервер',
     'LBL_HOST': 'Хост',

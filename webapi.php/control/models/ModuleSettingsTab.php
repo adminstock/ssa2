@@ -25,11 +25,11 @@ class ModuleSettingsTab implements \WebAPI\Core\IObjectProperties
 {
 
   /**
-   * Tab name.
+   * Tab title.
    * 
    * @var string
    */
-  public $Name;
+  public $Title;
   
   /**
    * List of sections.

@@ -59,6 +59,9 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
       Visible: this.props.Visible,
       Module: this.props.Module,
       Settings: this.props.Settings,
+      ActiveTab: null,
+      Validators: {},
+      Focus: null
     };
   }
 
@@ -68,12 +71,54 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
     this.setState(nextProps);
   }
 
+  componentDidUpdate() {
+    Debug.Call3('ModuleSettingsEditor.componentDidUpdate', this.state.Focus);
+
+    if (this.state.Focus != null) {
+      // TODO: find the best solution
+      window.setTimeout(() => $(this.state.Focus).focus(), 500);
+    }
+  }
+
   private OnHide(): void {
     this.props.OnHide();
   }
 
   private OnSave(): void {
-    this.props.OnSave();
+    let isValid = true;
+    let validators = {};
+    let activeTab = null;
+    let focus = null;
+
+    $('form', '#moduleSettingsEditor').each((i, form) => {
+      $('input', form).each((i, input: HTMLInputElement) => {
+        if (!input.checkValidity()) {
+          Object.assign(validators, { [$(input).data('name')]: 'error' });
+
+          if (isValid) {
+            focus = input;
+
+            if ($(input).parents('.tab-pane').length > 0) {
+              activeTab = $(input).parents('.tab-pane').attr('data-name');
+            }
+
+            isValid = false;
+          }
+        }
+      });
+    });
+
+    if (isValid) {
+      this.setState({ Validators: null, ActiveTab: null, Focus: null });
+      this.props.OnSave();
+    } else {
+      //Debug.Log('OnSave', validators, activeTab);
+      this.setState({ Validators: validators, ActiveTab: activeTab, Focus: focus });
+    }
+  }
+
+  private Tabs_OnSelect(key: string): void {
+    this.setState({ ActiveTab: key });
   }
 
   private Input_OnChange(name: string, value: string): void {
@@ -91,9 +136,9 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
 
     this.setState(newState);
   }
-
+  
   private MakeElement(element: ModuleSettingsElement, elementKey: string): JSX.Element {
-    Debug.Call3('MakeElement', element, this.state.Settings[element.Name]);
+    //Debug.Call3('MakeElement', element, this.state.Settings[element.Name]);
     
     let value = '';
     
@@ -109,8 +154,9 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
         if (element.Data === undefined || element.Data == null || element.Data.length <= 0) {
           elementOutput = (
             <FormControl
-              key={ elementKey }
               type="text"
+              key={ elementKey }
+              data-name={ element.Name }
               value={ value.toString() }
               onChange={ (e) => this.Input_OnChange.apply(this, [element.Name, (e.target as HTMLInputElement).value]) }
               { ...element.Attributes }
@@ -120,6 +166,7 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
             <Typeahead
               key={ elementKey }
               name={ elementKey }
+              data-name={ element.Name }
               options={ element.Data }
               selected={ [value.toString()] }
               onInputChange={ (value) => { this.Input_OnChange.apply(this, [element.Name, value]); } }
@@ -132,6 +179,7 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
         elementOutput = (
           <FormControl
             key={ elementKey }
+            data-name={ element.Name }
             componentClass="textarea"
             value={ value.toString() }
             onChange={ (e) => this.Input_OnChange.apply(this, [element.Name, (e.target as HTMLInputElement).value]) }
@@ -171,6 +219,7 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
         elementOutput = (
           <FormControl
             key={ elementKey }
+            data-name={ element.Name }
             componentClass="select"
             { ...element.Attributes || (element.Type.toLowerCase() == 'list' ? { size: 5 } : null) }
             onChange={ (e) => this.Input_OnChange.apply(this, [element.Name, (e.target as HTMLInputElement).value]) }
@@ -184,6 +233,7 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
         elementOutput = (
           <Checkbox
             key={ elementKey }
+            data-name={ element.Name }
             checked={ value }
             onChange={ (e) => this.Input_CheckChanged.apply(this, [element.Name, (e.target as HTMLInputElement).checked]) }
             { ...element.Attributes }
@@ -229,9 +279,9 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
     }
 
     return (
-      <FormGroup key={ elementKey + '_group' } controlId="todo" validationState={ null }>
+      <FormGroup key={ elementKey + '_group' } controlId="todo" validationState={ this.state.Validators[element.Name] || null }>
         <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
-          <FormattedMessage id={ element.Name } defaultMessage={ element.Name } />:
+          <FormattedMessage id={ element.Title || element.Name } defaultMessage={ element.Title || element.Name } />:
         </Col>
         <Col xs={12} sm={8} md={9} lg={9}>
           { elementOutput }
@@ -241,13 +291,14 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
   }
 
   render() {
-    Debug.Render3('ModuleSettingsEditor');
+    Debug.Render3('ModuleSettingsEditor', this.state.Visible);
 
     if (!this.state.Visible && this.state.Module == null) {
       return null;
     }
 
     let tabs = null;
+    let activeTab = this.state.ActiveTab;
 
     if (this.state.Module.Settings && this.state.Module.Settings.length > 0) {
       tabs = new Array<JSX.Element>();
@@ -269,7 +320,9 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
           tabContent.push(
             <fieldset key={sectionKey} className="module-settings-section">
               {(() => {
-                if (tab.Sections.length > 1) return <legend>{ section.Name }</legend>;
+                if (tab.Sections.length > 1) {
+                  return <legend><FormattedMessage id={ section.Title } defaultMessage={ section.Title } /></legend>;
+                }
               })()}
               <Form horizontal>
                 { sectionContent }
@@ -278,12 +331,16 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
           );
         });
 
-        tabs.push(<Tab key={tabKey} eventKey={tab.Name} title={tab.Name}>{tabContent}</Tab>);
+        tabs.push(<Tab key={ tabKey } eventKey={ tab.Title } title={ App.FormatMessage(tab.Title, tab.Title) } data-name={ tab.Title }>{ tabContent }</Tab>);
+
+        if (!activeTab) {
+          activeTab = tab.Title;
+        }
       });
     }
-
+    
     return (
-      <Modal show={ this.state.Visible } onHide={ this.OnHide.bind(this) }>
+      <Modal id="moduleSettingsEditor" backdrop="static" show={ this.state.Visible } onHide={ this.OnHide.bind(this) }>
         <Modal.Header closeButton>
           <Modal.Title>
             <i className="glyphicon glyphicon-cog"></i> { ' ' }
@@ -295,18 +352,18 @@ export default class ModuleSettingsEditor extends Component<IModuleSettingsEdito
           {(() => {
             if (tabs.length > 1) {
               return (
-                <Tabs id="module-settings">
-                  {tabs}
+                <Tabs id="module-settings" activeKey={ activeTab } onSelect={ this.Tabs_OnSelect.bind(this) }>
+                  { tabs }
                 </Tabs>
               );
             } else {
-              return <div>{ tabs[0]}</div>;
+              return <div>{ tabs[0] }</div>;
             }
           })()}
         </Modal.Body>
         <Modal.Footer>
           <Button bsStyle="primary" onClick={ this.OnSave.bind(this) }>
-            <FormattedMessage id="BTN_SAVE" defaultMessage="Save" />
+            <FormattedMessage id="BTN_APPLY" defaultMessage="Apply" />
           </Button>
           <Button bsStyle="default" onClick={ this.OnHide.bind(this) }>
             <FormattedMessage id="BTN_CANCEL" defaultMessage="Cancel" />

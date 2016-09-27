@@ -19,7 +19,7 @@ import ModuleSettingsSection from 'ModuleSettingsSection';
 
 export default class ModuleSettingsTab {
 
-  public Name: string;
+  public Title: string;
 
   public Sections: Array<ModuleSettingsSection>;
 

@@ -25,11 +25,11 @@ class ModuleSettingsSection implements \WebAPI\Core\IObjectProperties
 {
 
   /**
-   * Section name.
+   * Section title.
    * 
    * @var string
    */
-  public $Name;
+  public $Title;
   
   /**
    * List of sections.

@@ -25,9 +25,14 @@ class ModuleSettingsElement
 {
 
   /**
-   * Name of the element.
+   * Parameter name.
    */
   public $Name;
+
+  /** 
+   * Element title
+   */
+  public $Title;
 
   /**
    * Element type: text, textarea, dropdownlist etc.
@@ -41,11 +46,27 @@ class ModuleSettingsElement
 
   /**
    * The data for the element. Mainly for lists.
+   * 
+   * @var []
    */
   public $Data;
 
+  /**
+   * Gets or sets the property to display.
+   * 
+   * The name of an object property that is contained in the collection specified by the $Data property.
+   * 
+   * @var string
+   */
   public $DataDisplayField;
 
+  /**
+   * Gets or sets the property to use as the actual value for the items in the collection.
+   * 
+   * The name of an object property that is contained in the collection specified by the $Data property.
+   * 
+   * @var string
+   */
   public $DataValueField;
   
 }

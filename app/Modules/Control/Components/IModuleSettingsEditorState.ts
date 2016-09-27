@@ -26,6 +26,13 @@ export interface IModuleSettingsEditorState {
 
   Settings?: any;
 
+  Validators?: any;
+
+  ActiveTab?: string;
+
+  /** Focused element. */
+  Focus?: HTMLInputElement;
+
 }
 
 export default IModuleSettingsEditorState;

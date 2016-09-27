@@ -17,7 +17,11 @@
 
 export default class ModuleSettingsElement {
 
+  /** Parameter name. */
   public Name: string;
+
+  /** Element title. */
+  public Title: string;
 
   /**
    * Element type: text, textarea, dropdownlist etc.

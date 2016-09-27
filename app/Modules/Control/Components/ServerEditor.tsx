@@ -222,9 +222,9 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
   }
 
   render() {
-    Debug.Render3('ServerEditor');
+    Debug.Render3('ServerEditor', this.props.Visible);
 
-    if (this.state.Server == null) {
+    if (!this.props.Visible || this.state.Server == null) {
       return null;
     }
 

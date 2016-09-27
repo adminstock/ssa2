@@ -13,10 +13,10 @@
   ],
   "settings": [
     {
-      "name": "Updations",
+      "title": "Updations",
       "sections": [
         {
-          "name": "Common",
+          "title": "Common",
           "elements": [
             {
               "name": "control_source",
@@ -63,7 +63,7 @@
               "name": "control_other",
               "title": "",
               "type": "text",
-              "attributes": []
+              "attributes": { "required": "required" }
             },
             {
               "name": "control_check",
@@ -73,23 +73,23 @@
           ]
         },
         {
-          "name": "Test",
+          "title": "Test",
           "elements": [
             {
               "name": "control_11234",
               "title": "Source",
               "type": "text",
-              "data": [ "test", "123", "data", "one", "two" ]
+              "attributes": { "required": "required" }
             }
           ]
         }
       ]
     },
     {
-      "name": "Test",
+      "title": "Test",
       "sections": [
         {
-          "name": "abc",
+          "title": "abc",
           "elements": [
             {
               "name": "control_test",

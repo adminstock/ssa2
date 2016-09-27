@@ -19,7 +19,7 @@ import ModuleSettingsElement from '../Models/ModuleSettingsElement'
 
 export default class ModuleSettingsSection {
 
-  public Name: string;
+  public Title: string;
 
   public Elements: Array<ModuleSettingsElement>;
 
