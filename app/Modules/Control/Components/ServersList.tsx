@@ -27,6 +27,7 @@ import ServerItem from 'ServerItem';
 import ServerEditor from 'ServerEditor';
 import { OutputMode } from 'OutputMode';
 import { SetServer } from 'Actions/Global';
+import { LoadServers, TestConnection } from '../Actions/ServerActions';
 
 import {
   Table,
@@ -92,11 +93,11 @@ export default class ServersList extends Component<IServersListProps, IServersLi
   private LoadServers(): void {
     Debug.Call3('LoadServers');
 
-    this.setState({ Loading: true }, () => {
-      App.MakeRequest<any, Array<Server>>('Control.GetServers').then((result) => {
-        this.setState({ Servers: result, Loading: false });
-        this.TestCurrentServerConnection();
-      });
+    this.setState2({ Loading: true }).then(() => {
+      return this.dispatch(LoadServers());
+    }).then((result) => {
+      this.setState({ Servers: result, Loading: false });
+      this.TestCurrentServerConnection();
     });
   }
 
@@ -105,44 +106,39 @@ export default class ServersList extends Component<IServersListProps, IServersLi
 
     server.Status = ServerStatus.Connecting;
     
-    this.setState({ Testing: true }, () => {
+    this.setState2({ Testing: true }).then(() => {
       this.TestConnection(server, true);
     });
   }
 
   private TestConnection(server: Server, setServer: boolean): void {
     Debug.Call3('TestConnection', server);
-    
-    App.MakeRequest({
-      Method: 'Control.ConnectionTest',
-      Server: server.FileName,
-      SuccessCallback: (result) => {
-        Debug.Level3('TestConnection.Success', server);
 
-        // set status to tested server
-        server.Status = ServerStatus.Connected; // TODO: Tested
-        server.StatusMessage = null;
+    this.dispatch(TestConnection(server)).then((result) => {
+      Debug.Level3('TestConnection.Success', server);
 
-        if (setServer) {
-          // reset status of all servers
-          this.state.Servers.forEach((s) => {
-            if (s.FileName != server.FileName && (s.Status & ServerStatus.Connected)) {
-              s.Status = ServerStatus.None;
-            }
-          });
+      // set status to tested server
+      server.Status = ServerStatus.Connected; // TODO: Tested
+      server.StatusMessage = null;
 
-          // set tested server as current server
-          App.Store.dispatch(SetServer(server));
-        }
-      },
-      ErrorCallback: (error) => {
-        Debug.Level3('TestConnection.Error', server);
-        server.Status = ServerStatus.ConnectionError;
-        server.StatusMessage = error.Text || error.Code;
-      },
-      CompleteCallback: () => {
-        this.setState({ Testing: false });
+      if (setServer) {
+        // reset status of all servers
+        this.state.Servers.forEach((s) => {
+          if (s.FileName != server.FileName && (s.Status & ServerStatus.Connected)) {
+            s.Status = ServerStatus.None;
+          }
+        });
+
+        // set tested server as current server
+        this.dispatch(SetServer(server));
       }
+
+      this.setState({ Testing: false });
+    }).catch((error) => {
+      Debug.Level3('TestConnection.Error', server);
+      server.Status = ServerStatus.ConnectionError;
+      server.StatusMessage = error.Text || error.Code;
+      this.setState({ Testing: false });
     });
   }
 
@@ -157,7 +153,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
       if (this.state.Servers[i].FileName == currentServerName) {
         this.state.Servers[i].Status = ServerStatus.Testing;
 
-        this.setState({ Testing: true }, () => {
+        this.setState2({ Testing: true }).then(() => {
           this.TestConnection(this.state.Servers[i], false);
         });
 

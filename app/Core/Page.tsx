@@ -34,7 +34,8 @@ export default class Page<P, S> extends React.Component<P, S> {
   // registration of the context type, already defined into the containing component
   static contextTypes: React.ValidationMap<any> = {
     router: React.PropTypes.object.isRequired,
-    intl: React.PropTypes.object.isRequired
+    intl: React.PropTypes.object.isRequired,
+    dispatch: React.PropTypes.func.isRequired
   }
 
   constructor(props?, context?) {
@@ -49,6 +50,40 @@ export default class Page<P, S> extends React.Component<P, S> {
 
   public SetBreadcrumbs(breadcrumbs: string): void {
     App.Store.dispatch(SetBreadcrumbs(breadcrumbs));
+  }
+
+  // public dispatch(action: any): any;
+
+  // public dispatch<A extends Redux.Action>(action: A): A;
+
+  // public dispatch(action: any): any;
+
+  // public dispatch<A extends Redux.Action>(action: A): A;
+
+  // public dispatch<A>(action: A): A;
+
+  /*public dispatch<R, E>(asyncAction: (dispatch: Redux.Dispatch<any> | R, getState?: () => any, extraArgument?: E) => R): R {
+    return this.context.dispatch<R, E>(asyncAction);
+  }*/
+
+  public dispatch = this.context.dispatch;
+
+  /**
+   * Sets state and return Promise.
+   *
+   * @param state
+   * @param callback
+   */
+  public setState2(state: S, callback?: () => any): Promise<S> {
+    return new Promise((resolve) => {
+      this.setState(state, () => {
+        resolve(this.state);
+
+        if (typeof callback === 'function') {
+          callback();
+        }
+      });
+    });
   }
 
 }

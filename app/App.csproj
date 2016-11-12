@@ -113,6 +113,7 @@
     <TypeScriptCompile Include="Core\IPageContext.ts" />
     <TypeScriptCompile Include="Localization\de.ts" />
     <TypeScriptCompile Include="Localization\ru.ts" />
+    <TypeScriptCompile Include="Modules\Control\Actions\ServerActions.ts" />
     <TypeScriptCompile Include="Modules\Control\Components\IModuleInfoState.ts">
       <SubType>Code</SubType>
       <DependentUpon>ModuleInfo.tsx</DependentUpon>
@@ -298,7 +299,6 @@
     <TypeScriptCompile Include="UI\ProcessingIndicator.tsx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Modules\Control\Actions\" />
     <Folder Include="Modules\Files\" />
     <Folder Include="Modules\Monitoring\" />
     <Folder Include="Modules\Services\" />

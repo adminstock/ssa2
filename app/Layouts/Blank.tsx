@@ -29,12 +29,14 @@ export default class Blank extends React.Component<any, any> implements IMainCon
 
   static contextTypes: React.ValidationMap<any> = {
     router: React.PropTypes.object.isRequired,
-    intl: React.PropTypes.object.isRequired
+    intl: React.PropTypes.object.isRequired,
+    dispatch: React.PropTypes.func.isRequired
   }
 
   static childContextTypes: React.ValidationMap<any> = {
     router: React.PropTypes.object.isRequired,
-    intl: React.PropTypes.object.isRequired
+    intl: React.PropTypes.object.isRequired,
+    dispatch: React.PropTypes.func.isRequired
   }
 
   static defaultProps = {

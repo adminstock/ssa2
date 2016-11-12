@@ -41,12 +41,14 @@ export default class Main extends React.Component<any, any> implements IMainCont
 
   static contextTypes: React.ValidationMap<any> = {
     router: React.PropTypes.object.isRequired,
-    intl: React.PropTypes.object.isRequired
+    intl: React.PropTypes.object.isRequired,
+    dispatch: React.PropTypes.func.isRequired
   }
 
   static childContextTypes: React.ValidationMap<any> = {
     router: React.PropTypes.object.isRequired,
-    intl: React.PropTypes.object.isRequired
+    intl: React.PropTypes.object.isRequired,
+    dispatch: React.PropTypes.func.isRequired
   }
 
   static defaultProps = {
@@ -62,7 +64,8 @@ export default class Main extends React.Component<any, any> implements IMainCont
   public getChildContext(): any {
     return {
       router: (this.context as any).router,
-      intl: (this.context as any).intl
+      intl: (this.context as any).intl,
+      dispatch: (this.context as any).dispatch
     };
   }
   

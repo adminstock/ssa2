@@ -24,6 +24,8 @@ export interface IMainContext {
 
   intl?: ReactIntl.InjectedIntlProps;
 
+  dispatch?: Redux.Dispatch<any>;
+
 }
 
 export default IMainContext;

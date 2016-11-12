@@ -30,10 +30,21 @@ import { OverlayType } from 'UI/Overlay/OverlayType';
  */
 export class SmallServerAdmin extends React.Component<any, any> {
 
+  static childContextTypes: React.ValidationMap<any> = {
+    dispatch: React.PropTypes.func.isRequired
+  }
+
   constructor(props, context) {
     super(props, context);
 
     Debug.Init(this);
+  }
+
+  public getChildContext(): any {
+    console.log('SmallServerAdmin.getChildContext', this);
+    return {
+      dispatch: this.props.dispatch
+    };
   }
 
   componentWillMount() {
