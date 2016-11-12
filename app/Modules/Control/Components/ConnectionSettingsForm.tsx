@@ -17,12 +17,13 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
+// import { Field, reduxForm } from 'redux-form';
 import
 {
   Button, Checkbox,
   Row, Col,
   Form, FormGroup, FormControl,
-  ControlLabel,
+  ControlLabel, HelpBlock
 } from 'react-bootstrap';
 
 import App from 'Core/App';
@@ -53,6 +54,9 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
     Debug.Call3('ConnectionSettingsForm.componentWillReceiveProps', nextProps);
 
     this.setState(nextProps);
+
+    //App.Store.dispatch(change('simple', 'ConnectionSettings_Host', nextProps.ConnectionSettings.Host));
+    //App.Store.dispatch(change('simple', 'ConnectionSettings_Port', nextProps.ConnectionSettings.Port.toString()));
   }
 
   // componentDidMount
@@ -67,13 +71,30 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
     this.setState(newState);
   }
 
-  private Input_TextChanged(elementId: string, stateKey: string): void {
-    let value = (document.getElementById(elementId) as HTMLInputElement).value;
-    let newState = ReactUpdate(this.state, { ConnectionSettings: { [stateKey]: { $set: value } } });
+  private Input_TextChanged(e: Event): void {
+    let input = $(e.target);
+    let newState = ReactUpdate(this.state, { ConnectionSettings: { [input.data('field')]: { $set: input.val() } } });
 
     //Debug.Log('newState', newState);
 
     this.setState(newState);
+  }
+
+  private Input_LostFocus(e: Event): void {
+    // Debug.Call3('Input_LostFocus', $(e.target).attr('id'));
+    let input = $(e.target);
+
+    let newState = ReactUpdate(this.state, { Validation: { [input.attr('id')]: { $set: (!this.IsValidField(input[0]) ? 'error' : null) } } });
+
+    this.setState(newState);
+  }
+
+  private IsValidField(selector: string | JQuery | HTMLInputElement | HTMLElement, parent?: string | JQuery | HTMLElement): boolean {
+    if (typeof selector === 'object') {
+      return (selector as HTMLInputElement).checkValidity();
+    } else {
+      return ($(selector)[0] as HTMLInputElement).checkValidity();
+    }
   }
 
   public IsValid(): boolean {
@@ -81,7 +102,7 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
     let validation = {};
 
     $('input', '#ConnectionSettings_Form').each((i, input: HTMLInputElement) => {
-      if (!input.checkValidity()) {
+      if (!this.IsValidField(input)) {
         Object.assign(validation, { [$(input).attr('id')]: 'error' });
 
         if (isValid) {
@@ -101,50 +122,55 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
   }
 
   render() {
-    Debug.Render3('ConnectionSettings');
+    Debug.Render3('ConnectionSettings', this.props);
 
     let connectionSettings = this.state.ConnectionSettings || new ConnectionSettings();
-        
+
     let disabled = this.props.Disabled;
 
     return (
       <Form id="ConnectionSettings_Form" horizontal>
         <FormGroup controlId="ConnectionSettings_Host" validationState={ this.state.Validation['ConnectionSettings_Host'] }>
-          <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
+          <Col xs={12} sm={4} md={3} lg={3} componentClass={ ControlLabel }>
             <FormattedMessage id="LBL_HOST" defaultMessage="Host" />:
           </Col>
           <Col xs={12} sm={8} md={9} lg={9}>
             <FormControl
               type="text"
-              maxLength={100}
+              maxLength={ 100 }
               required
               disabled={ disabled }
               value={ connectionSettings.Host }
-              onChange={ this.Input_TextChanged.bind(this, 'ConnectionSettings_Host', 'Host') }
+              data-field="Host"
+              onChange={ e => this.Input_TextChanged.apply(this, [e]) }
+              onBlur={ e => this.Input_LostFocus.apply(this, [e]) }
             />
             <FormControl.Feedback />
           </Col>
         </FormGroup>
         <FormGroup controlId="ConnectionSettings_Port" validationState={ this.state.Validation['ConnectionSettings_Port'] }>
-          <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
+          <Col xs={12} sm={4} md={3} lg={3} componentClass={ ControlLabel }>
             <FormattedMessage id="LBL_PORT" defaultMessage="Port" />:
           </Col>
-          <Col xs={12} sm={6} md={5} lg={3}>
+          <Col xs={12} sm={6} md={4} lg={3}>
             <FormControl
               type="number"
-              maxLength={4}
-              min={0}
-              max={65535}
+              maxLength={ 4 }
+              min={ 0 }
+              max={ 65535 }
               required
               disabled={ disabled }
               value={ connectionSettings.Port }
-              onChange={ this.Input_TextChanged.bind(this, 'ConnectionSettings_Port', 'Port') }
+              data-field="Port"
+              onChange={ e => this.Input_TextChanged.apply(this, [e]) }
+              onBlur={ e => this.Input_LostFocus.apply(this, [e]) }
             />
             <FormControl.Feedback />
           </Col>
         </FormGroup>
+
         <FormGroup controlId="ConnectionSettings_User" validationState={ this.state.Validation['ConnectionSettings_User'] }>
-          <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
+          <Col xs={12} sm={4} md={3} lg={3} componentClass={ ControlLabel }>
             <FormattedMessage id="LBL_USERNAME" defaultMessage="Username" />:
           </Col>
           <Col xs={12} sm={8} md={9} lg={9}>
@@ -154,28 +180,35 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
               required
               disabled={ disabled }
               value={ connectionSettings.User }
-              onChange={ this.Input_TextChanged.bind(this, 'ConnectionSettings_User', 'User') }
+              data-field="User"
+              onChange={ e => this.Input_TextChanged.apply(this, [e]) }
+              onBlur={ e => this.Input_LostFocus.apply(this, [e]) }
             />
             <FormControl.Feedback />
           </Col>
         </FormGroup>
-        <FormGroup controlId="ConnectionSettings_Password">
-          <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel}>
+
+        <FormGroup controlId="ConnectionSettings_Password" validationState={ this.state.Validation['ConnectionSettings_Password']}>
+          <Col xs={12} sm={4} md={3} lg={3} componentClass={ ControlLabel }>
             <FormattedMessage id="LBL_PASSWORD" defaultMessage="Password" />:
           </Col>
           <Col xs={12} sm={8} md={9} lg={9}>
             <FormControl
               type="password"
               maxLength={ 255 }
+              required
               disabled={ disabled }
               value={ connectionSettings.Password }
-              onChange={ this.Input_TextChanged.bind(this, 'ConnectionSettings_Password', 'Password') }
+              data-field="Password"
+              onChange={ e => this.Input_TextChanged.apply(this, [e]) }
+              onBlur={ e => this.Input_LostFocus.apply(this, [e]) }
             />
             <FormControl.Feedback />
           </Col>
         </FormGroup>
+
         <FormGroup controlId="ConnectionSettings_RequiredPassword">
-          <Col xs={12} sm={4} md={3} lg={3} componentClass={ControlLabel} />
+          <Col xs={12} sm={4} md={3} lg={3} componentClass={ ControlLabel } />
           <Col xs={12} sm={8} md={9} lg={9}>
             <Checkbox disabled={ disabled } checked={ connectionSettings.RequiredPassword } onChange={ this.RequiredPassword_Changed.bind(this) }>
               <FormattedMessage id="MDL_CONTROL_REQUIRES_PASSWORD" defaultMessage="always requires a password (recommended)" />
@@ -187,3 +220,9 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
   }
 
 }
+
+/*
+export default reduxForm({
+  form: 'simple',
+  initialValues: { 'ConnectionSettings_Host': 'test' }
+})(ConnectionSettingsForm);*/

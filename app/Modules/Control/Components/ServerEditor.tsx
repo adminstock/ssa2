@@ -47,7 +47,7 @@ import ModulesList from 'ModulesList';
 
 export default class ServerEditor extends Component<IServerEditorProps, IServerEditorState> {
 
-  private ConnectionSettings: ConnectionSettingsForm;
+  private ConnectionSettings: any;// ConnectionSettingsForm;
   private ServerInfo: ServerInfoForm;
   private OperatingSystem: OperatingSystemForm;
   private ModulesList: ModulesList;

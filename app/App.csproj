@@ -68,6 +68,7 @@
     <Content Include="Content\Sprites\web-servers\apache24.png" />
     <Content Include="Content\Sprites\web-servers\nginx16.png" />
     <Content Include="Content\Sprites\web-servers\nginx24.png" />
+    <Content Include="debug.config.js" />
     <Content Include="Templates\index.html" />
     <Content Include="typings\globals\history\typings.json" />
     <Content Include="typings\globals\jquery\typings.json" />
@@ -102,6 +103,8 @@
     <Content Include="typings\globals\react-intl-redux\typings.json" />
     <Content Include="typings\globals\isomorphic-fetch\typings.json" />
     <Content Include="typings\globals\react-bootstrap-typeahead\typings.json" />
+    <Content Include="typings\globals\redux-form\typings.json" />
+    <Content Include="typings\globals\react-router-redux\typings.json" />
     <TypeScriptCompile Include="Actions\ActionType.ts" />
     <TypeScriptCompile Include="AppStart\RouteConfig.tsx" />
     <TypeScriptCompile Include="AppStart\SmallServerAdmin.tsx" />
@@ -240,11 +243,13 @@
     <TypeScriptCompile Include="typings\globals\react-intl\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-redux\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-router-bootstrap\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\react-router-redux\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react-router\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\react\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\redux-devtools-dock-monitor\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\redux-devtools-log-monitor\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\redux-devtools\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\redux-form\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\redux-thunk\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\redux\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\source-map\index.d.ts" />
@@ -311,15 +316,14 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>33454</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:33454/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:9090/</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

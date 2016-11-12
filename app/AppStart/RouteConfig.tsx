@@ -131,7 +131,8 @@ export function LoadedComponent(component: any): void {
 
   App.Store.dispatch(HideOverlay('Loaded'));
 
-  this.callback(null, props => React.createElement(component.default, this.location.query || this.location.params));
+  // this.callback(null, props => React.createElement(component.default, this.location.query || this.location.params));
+  this.callback(null, component.default);
 }
 
 /**

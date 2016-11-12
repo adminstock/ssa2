@@ -16,12 +16,14 @@
  */
 
 import * as React from 'react';
+import { browserHistory } from 'react-router';
 import { createDevTools } from 'redux-devtools';
 import LogMonitor from 'redux-devtools-log-monitor';
 import DockMonitor from 'redux-devtools-dock-monitor';
 
 import { applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
 
 export const ReduxDevTools = createDevTools(
   <DockMonitor
@@ -35,7 +37,8 @@ export const ReduxDevTools = createDevTools(
 
 export const ReduxEnhancer = compose<any>(
   // Middleware you want to use in development:
-  applyMiddleware(thunk),
+  // applyMiddleware(thunk),
+  applyMiddleware(routerMiddleware(browserHistory), thunk),
   // Required! Enable Redux DevTools with the monitors you chose
   ReduxDevTools.instrument()
 );

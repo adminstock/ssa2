@@ -10,6 +10,8 @@
     <ProjectTypeGuids>{A0786B88-2ADB-4C21-ABE8-AA2D79766269}</ProjectTypeGuids>
     <AssemblyName>SmallServerAdmin</AssemblyName>
     <ProjectHome />
+    <Runtime>PHP</Runtime>
+    <RuntimeVersion>5.5</RuntimeVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <IncludeDebugInformation>true</IncludeDebugInformation>

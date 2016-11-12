@@ -33,7 +33,9 @@
     "react-intl": "^2.1.5",
     "react-intl-redux": "^0.1.0",
     "react-markdown": "^2.4.2",
-    "react-bootstrap-typeahead": "^0.9.2"
+    "react-bootstrap-typeahead": "^0.9.2",
+    "redux-form": "^6.2.0",
+    "react-router-redux": "^4.0.7"
   },
   "devDependencies": {
     "webpack": "^1.13.2",

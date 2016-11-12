@@ -17,6 +17,7 @@
 
 import { combineReducers } from 'redux';
 import { intlReducer } from 'react-intl-redux';
+import { routerReducer } from 'react-router-redux';
 
 import AppReducer from 'AppReducer';
 import UserReducer from 'UserReducer';
@@ -28,5 +29,6 @@ export const RootReducer = combineReducers<any>({
   CurrentUser: UserReducer,
   CurrentPage: PageReducer,
   Overlay: OverlayReducer,
-  intl: intlReducer
+  intl: intlReducer,
+  routing: routerReducer
 });

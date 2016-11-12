@@ -15,6 +15,8 @@
     "redux-devtools": "github:DefinitelyTyped/DefinitelyTyped/redux-devtools/redux-devtools.d.ts#d417f687ab0c81ed72bffbc5dace5f643369bb70",
     "redux-devtools-log-monitor": "github:DefinitelyTyped/DefinitelyTyped/redux-devtools-log-monitor/redux-devtools-log-monitor.d.ts#a507ed9ef2955734b3cf362a0a74b21c7241cebc",
     "redux-devtools-dock-monitor": "github:DefinitelyTyped/DefinitelyTyped/redux-devtools-dock-monitor/redux-devtools-dock-monitor.d.ts#a507ed9ef2955734b3cf362a0a74b21c7241cebc",
+    "redux-form": "github:alekseynemiro/TypeScriptTypeDefinitions/redux-form/redux-form.d.ts#07856976c8a229395f44b8837460882eb9504079",
+    "react-router-redux": "github:DefinitelyTyped/DefinitelyTyped/react-router-redux/react-router-redux.d.ts#da9bf4d701ded823f1a98fce9b7d2fcc2ef98922",
     "react-bootstrap": "github:DefinitelyTyped/DefinitelyTyped/react-bootstrap/react-bootstrap.d.ts#6f664bd4fecc70dac11661e4b67436d8aa12fa4d",
     "react-bootstrap-typeahead": "github:alekseynemiro/TypeScriptTypeDefinitions/react-bootstrap-typeahead/react-bootstrap-typeahead.d.ts#c038dd4fc11496503c2630c063975eb5da0aab93",
     "isomorphic-fetch": "github:DefinitelyTyped/DefinitelyTyped/isomorphic-fetch/isomorphic-fetch.d.ts#bfc32a918e8f7fb9896b60fe2f03e3d47a0caf16",

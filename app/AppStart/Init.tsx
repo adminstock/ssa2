@@ -39,9 +39,10 @@ addLocaleData([...reactIntlEn, ...reactIntlRu, ...reactIntlDe]);
 // redux
 import { applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
+// import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
 // import { Provider } from 'react-intl-redux';
 import { IntlProvider } from 'react-intl-redux'
-import thunk from 'redux-thunk';
+// import thunk from 'redux-thunk';
 
 // redux-dev-tools
 import { ReduxDevTools, ReduxEnhancer } from 'ReduxDevTools';
