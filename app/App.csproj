@@ -298,6 +298,7 @@
     <TypeScriptCompile Include="UI\ProcessingIndicator.tsx" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Modules\Control\Actions\" />
     <Folder Include="Modules\Files\" />
     <Folder Include="Modules\Monitoring\" />
     <Folder Include="Modules\Services\" />

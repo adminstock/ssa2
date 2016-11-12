@@ -358,14 +358,27 @@ export default class App {
 
   public static MakeRequest<TRequest, TResponse>(method: string, data?: any, settings?: IMakeRequestProps<TRequest, TResponse>): Promise<TResponse>;
 
+  public static MakeRequest<TRequest, TResponse>(method: string, data?: any, disableDefaultErrorHandler?: boolean): Promise<TResponse>;
+
   public static MakeRequest<TRequest, TResponse>(settings: IMakeRequestProps<TRequest, TResponse>): Promise<TResponse>;
 
   public static MakeRequest<TRequest, TResponse>(settings: { (): IMakeRequestProps<TRequest, TResponse> }): Promise<TResponse>;
 
   // string | IMakeRequestProps<TRequest, TResponse> | { (): IMakeRequestProps<TRequest, TResponse> }
+  // IMakeRequestProps<TRequest, TResponse> | boolean
 
-  public static MakeRequest<TRequest, TResponse>(methodNameOrSettings: any, data?: any, settings?: IMakeRequestProps<TRequest, TResponse>): Promise<TResponse> {
+  public static MakeRequest<TRequest, TResponse>(methodNameOrSettings: any, data?: any, settings?: any): Promise<TResponse> {
     Debug.Call2('App.MakeRequest', methodNameOrSettings, data, settings);
+
+    if (typeof settings === 'boolean') {
+      let s: IMakeRequestProps<TRequest, TResponse> = {
+        Method: methodNameOrSettings.toString(),
+        Data: data,
+        DisableDefaultErrorHandler: (settings as boolean),
+      };
+
+      settings = s;
+    }
 
     if (typeof methodNameOrSettings === 'string') {
       let s: IMakeRequestProps<TRequest, TResponse> = {
@@ -455,9 +468,34 @@ export default class App {
    * @param error Error instance.
    */
   public static DefaultApiErrorHandler(error: ApiError): void {
+    let message: string = '', trace: string = null;
+
+    if (typeof error.Text !== 'undefined' && error.Text != '') {
+      message = error.Text;
+      trace = error.Trace;
+    }
+    else if (error instanceof Error) {
+      // exception of JavaScript
+      if (typeof (error as any).message !== 'undefined') {
+        message += (error as any).message;
+      }
+
+      if (typeof (error as any).stack !== 'undefined') {
+        trace = (error as any).stack;
+      }
+
+      if (message == '') {
+        message = error.toString();
+      }
+    } else if (typeof error === 'object') {
+      message = JSON.stringify(error);
+    } else {
+      message = error.toString();
+    }
+
     App.Alert({
       title: (<FormattedMessage id="dlgTitleError" defaultMessage="Error" />),
-      message: <div>{error.Text} {error.Trace != null ? (<div><hr /><pre>{error.Trace}</pre></div>) : ''}</div>
+      message: <div>{message} {trace ? (<div><hr /><pre>{trace}</pre></div>) : ''}</div>
     });
   }
 
