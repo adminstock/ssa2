@@ -45,6 +45,8 @@ import ServerInfoForm from 'ServerInfoForm';
 import OperatingSystemForm from 'OperatingSystemForm';
 import ModulesList from 'ModulesList';
 
+import { LoadServer, SaveServer } from '../Actions/ServerActions';
+
 export default class ServerEditor extends Component<IServerEditorProps, IServerEditorState> {
 
   private ConnectionSettings: any;// ConnectionSettingsForm;
@@ -183,13 +185,15 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
   private Load(): void {
     Debug.Call3('ServerEditor.Load', this.props.FileName);
 
-    this.setState({ Loading: true }, () => {
-      App.MakeRequest<any, Server>('Control.GetServer', { FileName: this.props.FileName }).then((result) => {
-        this.setState({ Server: this.NormalizeServer(result), Loading: false });
-      }).catch((error) => {
-        this.setState({ Loading: false }, () => {
-          App.DefaultApiErrorHandler(error);
-        });
+    this.setState2({
+      Loading: true
+    }).then(() => {
+      return this.dispatch(LoadServer(this.props.FileName));
+    }).then((result) => {
+      return this.setState2({ Server: this.NormalizeServer(result), Loading: false });
+    }).catch((error) => {
+      this.setState({ Loading: false }, () => {
+        App.DefaultApiErrorHandler(error);
       });
     });
   }
@@ -216,14 +220,14 @@ export default class ServerEditor extends Component<IServerEditorProps, IServerE
     server.FileName = this.props.FileName;
 
     // save
-    this.setState({ Saving: true, Server: server }, () => {
-      App.MakeRequest<Server, any>('Control.SaveServer', { Server: server }).then((savedServer) => {
-        this.setState({ Saving: false, Server: this.NormalizeServer(savedServer) }, () => {
-          this.props.OnSave(savedServer, !server.FileName || server.FileName == '');
-        });
-      }).catch((error) => {
-        this.setState({ Saving: false }, () => App.DefaultApiErrorHandler(error));
-      });
+    this.setState2({ Saving: true, Server: server }).then(() => {
+      return this.dispatch(SaveServer(server));
+    }).then((savedServer) => {
+      return this.setState2({ Saving: false, Server: this.NormalizeServer(savedServer) });
+    }).then(() => {
+      this.props.OnSave(this.state.Server, !server.FileName || server.FileName == '');
+    }).catch((error) => {
+      this.setState({ Saving: false }, () => App.DefaultApiErrorHandler(error));
     });
   }
 

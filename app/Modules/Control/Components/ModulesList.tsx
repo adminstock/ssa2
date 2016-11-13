@@ -41,6 +41,8 @@ import IModulesListState from 'IModulesListState';
 import ModuleInfo from 'ModuleInfo';
 import ModuleSettingsEditor from 'ModuleSettingsEditor';
 
+import { LoadModules } from '../Actions/ServerActions';
+
 export default class ModulesList extends Component<IModulesListProps, IModulesListState> {
 
   /** Gets list of modules. */
@@ -81,19 +83,19 @@ export default class ModulesList extends Component<IModulesListProps, IModulesLi
   private LoadModules(): void {
     Debug.Call3('ModulesList.LoadModules');
 
-    this.setState({
+    this.setState2({
       LoadingModules: true
-    }, () => {
-
+    }).then(() => {
       this.props.OnLoading();
-
-      App.MakeRequest<any, Array<Module>>('Control.GetModules').then((result) => {
-        this.setState({ AllModules: result, LoadingModules: false }, () => this.props.OnLoaded());
-      }).catch((error) => {
-        this.setState({ LoadingModules: false }, () => {
-          App.DefaultApiErrorHandler(error);
-          this.props.OnLoaded();
-        });
+      return this.dispatch(LoadModules());
+    }).then((result) => {
+      return this.setState2({ AllModules: result, LoadingModules: false });
+    }).then(() => {
+      return this.props.OnLoaded();
+    }).catch((error) => {
+      this.setState({ LoadingModules: false }, () => {
+        App.DefaultApiErrorHandler(error);
+        this.props.OnLoaded();
       });
     });
   }

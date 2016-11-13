@@ -195,13 +195,11 @@ export default class ConnectionSettingsForm extends Component<IConnectionSetting
           <Col xs={12} sm={8} md={9} lg={9}>
             <FormControl
               type="password"
-              maxLength={ 255 }
-              required
+              maxLength={ 100 }
               disabled={ disabled }
               value={ connectionSettings.Password }
               data-field="Password"
               onChange={ e => this.Input_TextChanged.apply(this, [e]) }
-              onBlur={ e => this.Input_LostFocus.apply(this, [e]) }
             />
             <FormControl.Feedback />
           </Col>
