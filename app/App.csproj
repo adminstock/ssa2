@@ -191,6 +191,9 @@
     <TypeScriptCompile Include="Modules\Control\Components\ModulesList.tsx" />
     <TypeScriptCompile Include="Modules\Control\Components\OperatingSystemForm.tsx" />
     <TypeScriptCompile Include="Modules\Control\Components\ServerInfoForm.tsx" />
+    <TypeScriptCompile Include="Pages\Login\ILoginState.ts">
+      <DependentUpon>Index.tsx</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="Reducers\Combination.ts" />
     <TypeScriptCompile Include="Reducers\PageReducer.ts" />
     <TypeScriptCompile Include="Reducers\UserReducer.ts" />
@@ -211,7 +214,6 @@
     <TypeScriptCompile Include="Modules\Control\Components\ServerItem.tsx" />
     <TypeScriptCompile Include="Modules\Control\Components\ServersList.tsx" />
     <TypeScriptCompile Include="Modules\Control\Components\OutputMode.ts" />
-    <TypeScriptCompile Include="Pages\Login\ILoginState.ts" />
     <TypeScriptCompile Include="Pages\Login\Index.tsx" />
     <TypeScriptCompile Include="Pages\Error.tsx" />
     <TypeScriptCompile Include="Core\App.tsx" />

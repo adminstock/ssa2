@@ -240,3 +240,12 @@ export function SetBreadcrumbs(breadcrumbs: string | Array<string> | Array<any>)
     Breadcrumbs: breadcrumbs
   };
 }
+
+export function Logout() {
+  Debug.Action('Logout');
+
+  return (dispatch: Redux.Dispatch<any>) => {
+    // dispatch(SetServer(null));
+    dispatch(SetAccessToken(null));
+  };
+}

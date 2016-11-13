@@ -17,7 +17,7 @@
 
 import * as React from 'react';
 import { Router, Route, Link, IndexRoute, IndexRedirect, browserHistory } from 'react-router';
-import { LoadServer, SetServer, ShowOverlay, HideOverlay } from 'Actions/Global';
+import { LoadServer, SetServer, ShowOverlay, HideOverlay, Logout } from 'Actions/Global';
 import { OverlayType } from 'UI/Overlay/OverlayType';
 import { Cookies } from 'Helpers/Storage';
 import App from 'Core/App';
@@ -87,38 +87,35 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
   // currently not found a better solution
   // the problem is that need explicitly specify [require] for Webpack
 
-  switch (location.pathname) {
-    case '/':
-    case '/index':
-      require(['Pages/Index'], LoadedComponent.bind(me));
-      break;
+  const { pathname } = location;
 
-    case '/login':
-      require(['Pages/Login/Index'], LoadedComponent.bind(me));
-      break;
-
-    case '/error':
-      require(['Pages/Error'], LoadedComponent.bind(me));
-      break;
-
-    case '/control/servers':
-      require(['Modules/Control/Servers'], LoadedComponent.bind(me));
-      break;
-
-    case '/users':
-      require(['Modules/Users/Index'], LoadedComponent.bind(me));
-      break;
-
-    case '/users/edit':
-      require(['Modules/Users/Edit'], LoadedComponent.bind(me));
-      break;
-
-    default:
-      //console.error('Cannot find path "' + location.pathname + '"');
-      App.Store.dispatch(HideOverlay('Loaded'));
-      App.Redirect('/error', { msg: 'Cannot find path "' + location.pathname + '"', code: 'HTTP404' });
+  if (pathname == '/' || pathname == '/index') {
+    require(['Pages/Index'], LoadedComponent.bind(me));
   }
-
+  else if (pathname == '/login') {
+    require(['Pages/Login/Index'], LoadedComponent.bind(me));
+  }
+  else if (pathname == '/logout') {
+    App.Store.dispatch(Logout()); 
+    App.Store.dispatch(HideOverlay('Loaded'));
+    App.Redirect('/login');
+  }
+  else if (pathname == '/error') {
+    require(['Pages/Error'], LoadedComponent.bind(me));
+  }
+  else if (pathname == '/control/servers') {
+    require(['Modules/Control/Servers'], LoadedComponent.bind(me));
+  }
+  else if (pathname == '/users') {
+    require(['Modules/Users/Index'], LoadedComponent.bind(me));
+  }
+  else if (pathname == '/users/edit') {
+    require(['Modules/Users/Edit'], LoadedComponent.bind(me));
+  } else {
+    //console.error('Cannot find path "' + location.pathname + '"');
+    App.Store.dispatch(HideOverlay('Loaded'));
+    App.Redirect('/error', { msg: 'Cannot find path "' + location.pathname + '"', code: 'HTTP404' });
+  }
 }
 
 /**
@@ -181,6 +178,8 @@ export default class RouteConfig extends React.Component<any, any> {
         <Route component={LayoutBlank}>
           {/* login page */}
           <Route path="/login" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+          {/* logout */}
+          <Route path="/logout" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
           {/* error page */}
           <Route path="/error" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
         </Route>
