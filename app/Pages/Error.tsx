@@ -40,13 +40,23 @@ export default class Error extends Page<any, any> {
   }
 
   render() {
+    Debug.Render('Error', this.props);
+
+    let title = this.props.Title;
+    let text = this.props.Text;
+
+    if (!text && this.props.location && this.props.location.query) {
+      title = this.props.location.query.code;
+      text = this.props.location.query.msg;
+    }
+
     return (
-      <DocumentTitle title={this.props.Title}>
+      <DocumentTitle title={ title }>
         <Grid>
           <PageHeader>Application Error</PageHeader>
           <Alert bsStyle="danger">
-            <h4>{this.props.Title}</h4>
-            {this.props.Text}
+            <h4>{ title }</h4>
+            { text }
           </Alert>
         </Grid>
       </DocumentTitle>

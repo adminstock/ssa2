@@ -165,7 +165,7 @@ export default class RouteConfig extends React.Component<any, any> {
           <Route path="/users">
             <IndexRoute getComponent={(location, callback) => { LoadComponent(location, callback); } } />
             <Route path="/users/edit" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
-            <Route path="/users/edit?id=:id" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+            <Route path="/users/edit/:id" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
           </Route>
 
           <Route path="/services" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
