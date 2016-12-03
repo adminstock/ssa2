@@ -198,13 +198,13 @@ export default class DialogManager extends React.Component<any, IDialogManagerSt
     }
 
     dialog.Element =
-      (
-        <Modal key={'modal_' + dialog.Key} show={dialog.Visible} onHide={() => {
-          if (dialog.Closed) {
-            $this.CloseDialog(dialog.Key);
-          }
-        } }>{modal}</Modal>
-      );
+    (
+      <Modal key={'modal_' + dialog.Key} show={dialog.Visible} onHide={(e) => {
+        if (dialog.Closed || $(e.target).parent('button.close').length > 0) {
+          $this.CloseDialog(dialog.Key);
+        }
+      } }>{modal}</Modal>
+    );
 
     // hide all
     DialogManager.HideAll(true);

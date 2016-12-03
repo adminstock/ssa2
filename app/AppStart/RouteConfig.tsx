@@ -31,8 +31,39 @@ import LayoutBlank from 'Layouts/Blank';
  * @param params Parameters to be passed to a component instance.
  * @param callback The callback function.
  */
-export function LoadComponent(location: any, callback: (error: any, component?: string | React.ComponentClass<any> | React.StatelessComponent<any>) => void): void {
+export function LoadComponent(location: any, callback: (error: any, component?: string | React.ComponentClass<any> | React.StatelessComponent<any>) => void, state?: any): void {
   Debug.Call('Loading', location.pathname, location);
+
+  if (state) {
+    SetLocationState(location, state);
+  }
+
+  var me = { location: location, callback: callback };
+
+  // idiocy...
+  // currently not found a better solution
+  // the problem is that need explicitly specify [require] for Webpack
+
+  let pathname = location.pathname;
+  let routeIsChanged = false;
+
+  if (pathname.indexOf('//') != -1) {
+    // double slashes
+    pathname = pathname.replace(/\/{1,}/g, '/');
+    routeIsChanged = true;
+  }
+
+  if (pathname != '/' && pathname.endsWith('/')) {
+    // remove slash from the end of string
+    pathname = pathname.substring(0, pathname.length - 1);
+    routeIsChanged = true;
+  }
+
+  if (routeIsChanged) {
+    // replace route
+    browserHistory.replace(pathname);
+    return;
+  }
 
   App.Store.dispatch(ShowOverlay(OverlayType.White | OverlayType.Loader | OverlayType.Opacity90, 'Page loading...'));
 
@@ -65,7 +96,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
           // remove server from cookies
           Cookies.Delete('managed-server');
           // redirect to error page
-          App.Redirect('/error', {msg: error.Text});
+          App.Redirect('/error', { msg: error.Text });
         }));
 
         return;
@@ -81,14 +112,6 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
     }
   }
 
-  var me = { location: location, callback: callback };
-
-  // idiocy...
-  // currently not found a better solution
-  // the problem is that need explicitly specify [require] for Webpack
-
-  const { pathname } = location;
-
   if (pathname == '/' || pathname == '/index') {
     require(['Pages/Index'], LoadedComponent.bind(me));
   }
@@ -103,7 +126,7 @@ export function LoadComponent(location: any, callback: (error: any, component?: 
   else if (pathname == '/error') {
     require(['Pages/Error'], LoadedComponent.bind(me));
   }
-  else if (pathname == '/control/servers') {
+  else if (/^\/control\/servers((\/.+)|)$/.test(pathname)) {
     require(['Modules/Control/Servers'], LoadedComponent.bind(me));
   }
   else if (pathname == '/users') {
@@ -133,6 +156,16 @@ export function LoadedComponent(component: any): void {
 }
 
 /**
+ * Sets state to location.
+ *
+ * @param location The instance of location.
+ * @param state The state to set.
+ */
+export function SetLocationState(location: any, state: any): void {
+  location.state = Object.assign({}, location.state, state);
+}
+
+/**
  * Routes.
  */
 export default class RouteConfig extends React.Component<any, any> {
@@ -158,14 +191,19 @@ export default class RouteConfig extends React.Component<any, any> {
           {/* modules */}
 
           <Route path="/control">
-            <IndexRedirect to="/error?code=HTTP404" />
-            <Route path="/control/servers" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+            {/*<IndexRedirect to="/error?code=HTTP404" />*/}
+
+            <Route path="servers">
+              <IndexRoute getComponent={(location, callback) => { LoadComponent(location, callback); } } />
+              <Route path="new" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback, { newServer: true }); } } />
+              <Route path=":fileName" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+            </Route>
           </Route>
 
           <Route path="/users">
             <IndexRoute getComponent={(location, callback) => { LoadComponent(location, callback); } } />
-            <Route path="/users/edit" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
-            <Route path="/users/edit/:id" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+            <Route path="edit" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
+            <Route path="edit/:id" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />
           </Route>
 
           <Route path="/services" getComponent={(nextState, callback) => { LoadComponent(nextState.location, callback); } } />

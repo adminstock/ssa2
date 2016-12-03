@@ -49,7 +49,30 @@ module.exports = {
     contentBase: '.',
     host: 'localhost',
     port: 9090,
-    historyApiFallback: true
+    historyApiFallback: {
+      rewrites: [
+        {
+          from: /^\/servers.json$/i,
+          to: function (context) {
+            return 'servers.json';
+          }
+        },
+        {
+          from: /^((.+?)\.(js|css|png|gif|jpeg|jpg|svg|css|woff|woff2|ttf|ogf|eot)(.*))$/i,
+          to: function (context) {
+            // console.log('rewrite static', context);
+            return context.parsedUrl.href;
+          }
+        },
+        {
+          from: /./,
+          to: function (context) {
+            // console.log('rewrite default', context);
+            return 'index.html';
+          }
+        }
+      ]
+    }
   },
 
   plugins: [

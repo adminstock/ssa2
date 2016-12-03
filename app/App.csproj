@@ -122,6 +122,10 @@
       <SubType>Code</SubType>
       <DependentUpon>ModuleSettingsEditor.tsx</DependentUpon>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\IServersState.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>Servers.tsx</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="Modules\Control\Models\Author.ts" />
     <TypeScriptCompile Include="Modules\Control\Models\Icon.ts" />
     <TypeScriptCompile Include="Modules\Control\Models\Module.ts" />

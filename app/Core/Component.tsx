@@ -47,7 +47,23 @@ export default class Component<P, S> extends React.Component<P, S> {
     return this.context.dispatch<R, E>(asyncAction);
   }*/
 
+  /** Gets dispatch of the context. */
   public dispatch = this.context.dispatch;
+
+  /** Gets router of the context. */
+  public router = this.context.router;
+
+  public intl = this.context.intl;
+
+  /** Gets current location. */
+  public get Location(): HistoryModule.Location {
+    return (this.props as any).location;
+  }
+
+  /** Gets state of the current location. */
+  public GetLocationState<T>(): T {
+    return (this.props as any).location.state;
+  }
 
   /**
    * Sets state and return Promise.

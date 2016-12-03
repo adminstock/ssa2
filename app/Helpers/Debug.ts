@@ -141,7 +141,7 @@ export default class Debug {
         // remove <level>
         args.shift();
 
-        if (args && args.length > 0) {
+        if (args && args.length > 0 && !Debug.UserAgentIsIE()) {
           if (typeof args[0] === 'object' && args[0].constructor && args[0].constructor.name) {
             args.splice(0, 1, '%c' + level + ':%c ' + args[0].constructor.name);
           } else {
@@ -179,6 +179,33 @@ export default class Debug {
         console.log.apply(this, args);
       }
     }
+  }
+
+  private static UserAgentIsIE(): boolean {
+    const ua = window.navigator.userAgent;
+    const msie = ua.indexOf('MSIE ');
+
+    if (msie > 0) {
+      // IE 10 or older
+      return true;
+    }
+
+    const trident = ua.indexOf('Trident/');
+
+    if (trident > 0) {
+      // IE 11
+      return true;
+    }
+
+    const edge = ua.indexOf('Edge/');
+
+    if (edge > 0) {
+      // Edge (IE 12+)
+      return true;
+    }
+
+    // other browser
+    return false;
   }
 
 }

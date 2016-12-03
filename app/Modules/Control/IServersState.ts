@@ -15,23 +15,17 @@
  * limitations under the License.
  */
 
-import { OutputMode } from 'OutputMode';
+import { OutputMode } from 'Components/OutputMode';
 import { Server } from 'Models/Server';
 
-export interface IServersListProps {
+export interface IServersState {
 
-  OutputMode: OutputMode;
-
-  ShowControl: boolean;
-
-  //Servers: Array<Server>;
+  OutputMode?: OutputMode;
 
   SelectedServer?: string;
 
-  OnDelete?: (server: Server) => void;
-
-  OnEdit?: (server: Server) => void;
+  ShowEditor?: boolean;
 
 }
 
-export default IServersListProps;
+export default IServersState;

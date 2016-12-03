@@ -1,20 +1,29 @@
-﻿{
-  "name": "Example",
-  "description": "Example of configuration file.",
-  "os": 
-  {
-    "name": "Debian",
-    "family": "Linux",
-    "version": "8.5"
-  },
-  "connection": 
-  {
-    "client": "SshClient",
-    "host": "192.168.56.139",
-    "port": 22,
-    "user": "ssa",
-    "password": "123456",
-    "requiredPassword": true
-  },
-  "modules": "users,svn,dbadmin,sites,files,monitoring,services,ssh,settings"
+{
+    "name": "Example",
+    "description": "Example of configuration file.",
+    "disabled": null,
+    "logoutRedirect": null,
+    "connection": {
+        "client": "SshClient",
+        "host": "192.168.56.139",
+        "port": 22,
+        "user": "ssa",
+        "password": "123456",
+        "requiredPassword": true
+    },
+    "os": {
+        "name": "Debian",
+        "family": "Linux",
+        "version": "8.5"
+    },
+    "modules": [
+        {
+            "name": "control",
+            "enabled": true
+        },
+        {
+            "name": "users",
+            "enabled": true
+        }
+    ]
 }

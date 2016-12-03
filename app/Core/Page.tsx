@@ -17,31 +17,21 @@
 
 import * as React from 'react';
 import IMainContext from 'IMainContext';
-import App from 'App';
+import Component from 'Component';
 import { SetBreadcrumbs } from 'Actions/Global';
 
 /**
  * The base class for pages.
  */
-export default class Page<P, S> extends React.Component<P, S> {
+export default class Page<P, S> extends Component<P, S> {
 
   static defaultProps = {
     Title: 'SmallServerAdminV2'
   }
 
-  context: IMainContext;
-
-  // registration of the context type, already defined into the containing component
-  static contextTypes: React.ValidationMap<any> = {
-    router: React.PropTypes.object.isRequired,
-    intl: React.PropTypes.object.isRequired,
-    dispatch: React.PropTypes.func.isRequired
-  }
-
   constructor(props?, context?) {
     super(props, context);
-    
-    Debug.Init2('Page', (this.props as any).Title, this);
+    Debug.Init2('Page', (this.props as any).Title);
   }
 
   componentWillMount() {
@@ -49,41 +39,7 @@ export default class Page<P, S> extends React.Component<P, S> {
   }
 
   public SetBreadcrumbs(breadcrumbs: string): void {
-    App.Store.dispatch(SetBreadcrumbs(breadcrumbs));
-  }
-
-  // public dispatch(action: any): any;
-
-  // public dispatch<A extends Redux.Action>(action: A): A;
-
-  // public dispatch(action: any): any;
-
-  // public dispatch<A extends Redux.Action>(action: A): A;
-
-  // public dispatch<A>(action: A): A;
-
-  /*public dispatch<R, E>(asyncAction: (dispatch: Redux.Dispatch<any> | R, getState?: () => any, extraArgument?: E) => R): R {
-    return this.context.dispatch<R, E>(asyncAction);
-  }*/
-
-  public dispatch = this.context.dispatch;
-
-  /**
-   * Sets state and return Promise.
-   *
-   * @param state
-   * @param callback
-   */
-  public setState2(state: S, callback?: () => any): Promise<S> {
-    return new Promise((resolve) => {
-      this.setState(state, () => {
-        resolve(this.state);
-
-        if (typeof callback === 'function') {
-          callback();
-        }
-      });
-    });
+    this.dispatch(SetBreadcrumbs(breadcrumbs));
   }
 
 }

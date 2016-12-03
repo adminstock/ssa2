@@ -22,9 +22,13 @@ import { FormattedMessage } from 'react-intl';
 
 import Page from 'Core/Page';
 import App from 'Core/App';
-import ServersList from 'Modules/Control/Components/ServersList';
+import ServersList from 'Components/ServersList';
+import ServerEditor from 'Components/ServerEditor';
 //import ServerEditor from 'Modules/Control/Components/ServerEditor';
-import { OutputMode } from 'Modules/Control/Components/OutputMode';
+import { OutputMode } from 'Components/OutputMode';
+import { Server } from 'Models/Server';
+
+import { LoadServers, TestConnection } from 'Modules/Control/Actions/ServerActions';
 
 import { connect } from 'react-redux';
 
@@ -39,8 +43,9 @@ import {
 } from 'react-bootstrap';
 
 import { SetBreadcrumbs } from 'Actions/Global';
+import IServersState from 'IServersState';
 
-export class Servers extends Page<any, any> {
+export class Servers extends Page<any, IServersState> {
 
   static defaultProps = {
     Title: 'Servers',
@@ -55,14 +60,50 @@ export class Servers extends Page<any, any> {
     let outputMode = App.GetValue<OutputMode>('Control.Servers.OutputMode');
 
     this.state = {
-      OutputMode: outputMode || OutputMode.List
+      OutputMode: outputMode || OutputMode.List,
+      SelectedServer: ''
     };
+  }
 
+  componentWillReceiveProps(nextProps: any) {
+    Debug.Call3('Servers.componentWillReceiveProps', nextProps);
+
+    this.Init(nextProps);
   }
 
   componentWillMount() {
-    //App.MakeRequest('Users.GetUsers', {page: 1 });
-    App.Store.dispatch(SetBreadcrumbs('Servers123'));
+    Debug.Call3('Servers.componentWillMount');
+
+    this.Init(this.props);
+  }
+
+  private Init(props: any): void {
+    Debug.Call3('Servers.Init', props);
+
+    if (props.location.state && props.location.state.newServer) {
+      this.setState({
+        ShowEditor: true,
+        SelectedServer: ''
+      });
+    }
+    else if (props.location.state && props.location.state.saved) {
+      this.setState2({
+        ShowEditor: false,
+        SelectedServer: ''
+      }).then(() => {
+        if (props.location.state.isNew) {
+          this.List.LoadServers();
+        } else {
+          this.List.SetServerToState(props.location.state.server);
+        }
+      });
+    }
+    else if (props.params) {
+      this.setState({
+        ShowEditor: (props.params.fileName ? true : false),
+        SelectedServer: props.params.fileName || ''
+      });
+    }
   }
 
   private OutputMode_Click(newMode: OutputMode): void {
@@ -71,14 +112,58 @@ export class Servers extends Page<any, any> {
     });
   }
 
-  private NewServer(): void {
-    Debug.Call('NewServer');
+  private ServerEditor_Closed(): void {
+    Debug.Call('ServerEditor_Closed');
 
-    this.List.NewServer();
+    // remove filename from url
+    this.router.push('/control/servers');
+  }
+
+  private ServerEditor_Saved(server: Server, isNew: boolean): void {
+    Debug.Call('ServerEditor_Saved', server, isNew);
+
+    // remove filename from url
+    this.router.push({ pathname: '/control/servers', state: { saved: true, isNew: isNew, server: server } });
+  }
+
+  private ServerEditor_Show(server: Server): void {
+    Debug.Call('ServerEditor_Show', server);
+
+    if (server == null) {
+      this.router.push('/control/servers/new');
+    } else {
+      this.router.push('/control/servers/' + server.FileName);
+    }
+  }
+
+  private ServerEditor_Deleted(server: Server): void {
+    Debug.Call('ServerEditor_OnDelete', server);
+
+    let serverName = null;
+
+    if (server.Connection != null && server.Connection.Host != '') {
+      serverName = server.Connection.Host;
+    }
+
+    if (server.Name != null && server.Name != '' && (server.Connection == null || server.Name != server.Connection.Host)) {
+      serverName = server.Name + ' (' + server.Connection.Host + ')';
+    }
+
+    if (serverName == null) {
+      serverName = server.FileName;
+    }
+
+    App.Confirm({
+      message: <div>{ 'Are you sure you want to delete the' } <strong>{ serverName }</strong>?</div>,
+      buttonOkTitle: 'Yes, delete the server',
+      callback: (d, confirmed) => {
+
+      }
+    });
   }
 
   render() {
-    Debug.Render2('Servers');
+    Debug.Render2('Servers', this.props);
 
     let alertMessage = null;
 
@@ -99,7 +184,7 @@ export class Servers extends Page<any, any> {
           <h2 className="pull-left">
             <ButtonToolbar>
               <ButtonGroup>
-                <Button bsStyle="primary" onClick={ this.NewServer.bind(this) }><Glyphicon glyph="plus" /> <FormattedMessage id="module.control.servers.addServer" defaultMessage="Add server" /></Button>
+                <Button bsStyle="primary" onClick={ this.ServerEditor_Show.bind(this, null) }><Glyphicon glyph="plus" /> <FormattedMessage id="module.control.servers.addServer" defaultMessage="Add server" /></Button>
               </ButtonGroup>
             </ButtonToolbar>
           </h2>
@@ -119,7 +204,18 @@ export class Servers extends Page<any, any> {
           <ServersList
             OutputMode={ this.state.OutputMode }
             ShowControl={ true }
+            SelectedServer={ this.props.params ? this.props.params.fileName : null }
+            OnEdit={ this.ServerEditor_Show.bind(this) }
+            OnDelete={ this.ServerEditor_Deleted.bind(this) }
             ref={ (ref) => this.List = ref }
+          />
+
+          <ServerEditor
+            Visible={ this.state.ShowEditor }
+            FileName={ this.state.SelectedServer }
+            OnHide={ this.ServerEditor_Closed.bind(this) }
+            OnSave={ this.ServerEditor_Saved.bind(this) }
+            ActiveKey="connectionSettings"
           />
         </div>
       </DocumentTitle>

@@ -50,14 +50,18 @@ export default class ServersList extends Component<IServersListProps, IServersLi
       Testing: false,
       OutputMode: this.props.OutputMode || OutputMode.List,
       ShowEditor: false,
-      SelectedServer: ''
+      SelectedServer: this.props.SelectedServer || ''
     };
   }
 
   componentWillMount() {
-    Debug.Call3('ServersList.componentWillMount');
+    Debug.Call3('ServersList.componentWillMount', this.props);
 
-    this.LoadServers();
+    this.LoadServers().then(() => {
+      if (this.props.SelectedServer && this.props.SelectedServer != '') {
+        this.setState({ ShowEditor: true, SelectedServer: this.props.SelectedServer });
+      }
+    });
   }
 
   componentDidMount() {
@@ -82,27 +86,54 @@ export default class ServersList extends Component<IServersListProps, IServersLi
   componentWillReceiveProps(nextProps: IServersListProps) {
     Debug.Call3('ServersList.componentWillReceiveProps', nextProps);
 
+    let newState = null;
+
     if (nextProps.OutputMode != this.state.OutputMode) {
-      this.setState({ OutputMode: nextProps.OutputMode });
+      newState = { OutputMode: nextProps.OutputMode };
     }
+
+    if (nextProps.SelectedServer != this.props.SelectedServer) {
+      if (newState == null) { newState = {}; }
+
+      if (nextProps.SelectedServer && nextProps.SelectedServer != '') {
+        let fileName = nextProps.SelectedServer;
+
+        //if (nextProps.SelectedServer == 'new') {
+        //  fileName = '';
+        // }
+
+        $.extend(newState, { ShowEditor: true, SelectedServer: fileName });
+      } else {
+        $.extend(newState, { ShowEditor: false });
+      }
+    }
+
+    if (newState) {
+      this.setState(newState);
+    }
+  }
+
+  componentWillUnmount() {
+    Debug.Call3('ServersList.componentWillUnmount');
   }
 
   /**
    * Loads list of servers.
    */
-  private LoadServers(): void {
-    Debug.Call3('LoadServers');
+  public LoadServers(): Promise<any> {
+    Debug.Call3('ServersList.LoadServers');
 
-    this.setState2({ Loading: true }).then(() => {
+    return this.setState2({ Loading: true }).then(() => {
       return this.dispatch(LoadServers());
     }).then((result) => {
-      this.setState({ Servers: result, Loading: false });
+      return this.setState2({ Servers: result, Loading: false });
+    }).then(() => {
       this.TestCurrentServerConnection();
     });
   }
 
   private ConnectToServer(server: Server): void {
-    Debug.Call3('ConnectToServer', server);
+    Debug.Call3('ServersList.ConnectToServer', server);
 
     server.Status = ServerStatus.Connecting;
     
@@ -112,10 +143,10 @@ export default class ServersList extends Component<IServersListProps, IServersLi
   }
 
   private TestConnection(server: Server, setServer: boolean): void {
-    Debug.Call3('TestConnection', server);
+    Debug.Call3('ServersList.TestConnection', server);
 
     this.dispatch(TestConnection(server)).then((result) => {
-      Debug.Level3('TestConnection.Success', server);
+      Debug.Level3('ServersList.TestConnection.Success', server);
 
       // set status to tested server
       server.Status = ServerStatus.Connected; // TODO: Tested
@@ -135,7 +166,7 @@ export default class ServersList extends Component<IServersListProps, IServersLi
 
       this.setState({ Testing: false });
     }).catch((error) => {
-      Debug.Level3('TestConnection.Error', server);
+      Debug.Level3('ServersList.TestConnection.Error', server);
       server.Status = ServerStatus.ConnectionError;
       server.StatusMessage = error.Text || error.Code;
       this.setState({ Testing: false });
@@ -177,81 +208,35 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     }
   }
 
-  public NewServer(): void {
-    Debug.Call2('NewServer');
+  /**
+   * Sets of replaces server to state.
+   *
+   * @param server Server to set.
+   */
+  public SetServerToState(server: Server): void {
+    Debug.Call3('ServersList.SetServerToState', server);
 
-    this.setState({
-      ShowEditor: true,
-      SelectedServer: ''
-    });
-  }
+    // get server index
+    let index = this.state.Servers.findIndex((ms) => ms.FileName == server.FileName);
 
-  private EditServer(server: Server): void {
-    Debug.Call('EditServer', server);
+    Debug.Level3('Server Index', index);
 
-    this.setState({
-      ShowEditor: true,
-      SelectedServer: server.FileName
-    });
-  }
-
-  private ServerEditor_OnHide(): void {
-    Debug.Call('ServerEditor_OnHide');
-
-    this.setState({
-      ShowEditor: false
-    });
-  }
-
-  private ServerEditor_OnSave(server: Server, isNew: boolean): void {
-    Debug.Call('ServerEditor_OnSave', server, isNew);
-
-    this.setState({
-      ShowEditor: false
-    }, () => {
-      if (isNew) {
-        // reload list of servers
-        this.LoadServers();
-      } else {
-        // get server index
-        let index = this.state.Servers.findIndex((ms) => ms.FileName == server.FileName);
-
-        Debug.Level3('Server Index', index);
-
-        // update server in state
-        this.setState(ReactUpdate(this.state, { Servers: { $splice: [[index, 1, server]] } }));
+    if (index == -1) {
+      let servers = this.state.Servers;
+      if (!servers) {
+        servers = [];
       }
-    });
-  }
+      servers.push(server);
 
-  private DeleteServer(server: Server): void {
-    Debug.Call('DeleteServer', server);
-
-    let serverName = null;
-
-    if (server.Connection != null && server.Connection.Host != '') {
-      serverName = server.Connection.Host;
+      this.setState({ Servers: servers });
+    } else {
+      // update server in state
+      this.setState(ReactUpdate(this.state, { Servers: { $splice: [[index, 1, server]] } }));
     }
-
-    if (server.Name != null && server.Name != '' && (server.Connection == null || server.Name != server.Connection.Host)) {
-      serverName = server.Name + ' (' + server.Connection.Host + ')';
-    }
-
-    if (serverName == null) {
-      serverName = server.FileName;
-    }
-
-    App.Confirm({
-      message: <div>{ 'Are you sure you want to delete the' } <strong>{ serverName }</strong>?</div>,
-      buttonOkTitle: 'Yes, delete the server',
-      callback: (d, confirmed) => {
-
-      }
-    });
   }
 
   render() {
-    Debug.Render2('ServersList', this.state.Loading);
+    Debug.Render2('ServersList', this.props);
 
     if (this.state.Loading) {
       return (<ProcessingIndicator Text={ 'Loading. Please wait...' } />);
@@ -261,17 +246,20 @@ export default class ServersList extends Component<IServersListProps, IServersLi
 
     if (this.state.Servers != null) {
       this.state.Servers.forEach((server, index) => {
+        const onEdit = (this.props.OnEdit ? this.props.OnEdit.bind(this, server) : null);
+        const onDelete = (this.props.OnDelete ? this.props.OnDelete.bind(this, server) : null);
+
         list.push(
           <ServerItem
             Server={server}
             OutputMode={ this.state.OutputMode }
             key={'server-' + index}
             OnConnect={ this.ConnectToServer.bind(this) }
-            OnEdit={ this.EditServer.bind(this) }
-            OnDelete={ this.DeleteServer.bind(this) }
+            OnEdit={ onEdit }
+            OnDelete={ onDelete }
             Disabled={ this.state.Testing }
             ShowControl={ this.props.ShowControl }
-            />
+          />
         );
       });
     }
@@ -293,14 +281,6 @@ export default class ServersList extends Component<IServersListProps, IServersLi
     return (
       <div>
         {servers}
-
-        <ServerEditor
-          Visible={ this.state.ShowEditor }
-          FileName={ this.state.SelectedServer }
-          OnHide={ this.ServerEditor_OnHide.bind(this) }
-          OnSave={ this.ServerEditor_OnSave.bind(this) }
-          ActiveKey="connectionSettings"
-        />
       </div>
     );
   }
