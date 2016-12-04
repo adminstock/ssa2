@@ -43,7 +43,7 @@ export default function ModalReducer(state: IState = initState, action) {
         Results: state.Results.filter((itm) => itm.Key != action.key).concat({ Key: action.key, Value: action.value })
       });
 
-    case ActionType.SET_MODAL_RESULT:
+    case ActionType.REMOVE_MODAL_RESULT:
       return Object.assign({}, state, {
         Results: state.Results.filter((modal) => modal.Key != action.key)
       });
