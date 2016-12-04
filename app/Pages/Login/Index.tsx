@@ -21,6 +21,7 @@ import { Modal, Button, Row, Col, Form, FormGroup, FormControl, ControlLabel } f
 import ILoginState from 'ILoginState';
 import App from 'Core/App';
 import Page from 'Core/Page';
+import IPageProps from 'Core/IPageProps';
 import ApiRequest from 'API/ApiRequest';
 import AuthResult from 'API/AuthResult';
 import Success from 'API/Success';
@@ -29,7 +30,7 @@ import { SetAccessToken } from 'Actions/Global';
 /**
  * Login page.
  */
-export default class Index extends Page<any, ILoginState> {
+export default class Index extends Page<IPageProps, ILoginState> {
 
   static defaultProps = {
     Title: 'Login',
@@ -75,26 +76,24 @@ export default class Index extends Page<any, ILoginState> {
   }
 
   private Login(username: string, password: string): void {
-    let $this = this;
-
-    $this.setState({
-      ValidationStateUsername: ($this.state.Username == '' ? 'error' : null),
-      ValidationStatePassword: ($this.state.Password == '' ? 'error' : null)
+    this.setState({
+      ValidationStateUsername: (this.state.Username == '' ? 'error' : null),
+      ValidationStatePassword: (this.state.Password == '' ? 'error' : null)
     });
 
-    if ($this.state.Username == '' || $this.state.Password == '') {
+    if (this.state.Username == '' || this.state.Password == '') {
       return;
     }
 
-    $this.setState({ LoginProcessing: true });
+    this.setState({ LoginProcessing: true });
 
     let redirecToHome = false;
 
     let api = new ApiRequest<any, AuthResult>(
       'Auth.GetToken',
       {
-        Username: $this.state.Username,
-        Password: $this.state.Password
+        Username: this.state.Username,
+        Password: this.state.Password
       },
       App.CurrentUser.ApiServer.AuthUrl,
       null, null
@@ -118,11 +117,11 @@ export default class Index extends Page<any, ILoginState> {
 
     api.CompleteCallback = () => {
       if (redirecToHome) {
-        $this.setState({ ShowDialog: false }, () => {
-          App.Redirect($this.props.returnUrl);
+        this.setState({ ShowDialog: false }, () => {
+          App.Redirect((this.props as any).returnUrl);
         });
       } else {
-        $this.setState({ LoginProcessing: false });
+        this.setState({ LoginProcessing: false });
       }
     }
 
@@ -130,9 +129,7 @@ export default class Index extends Page<any, ILoginState> {
   }
 
   private CheckToken(): void {
-    let $this = this;
-
-    $this.setState({ Checking: true });
+    this.setState({ Checking: true });
 
     let redirecToHome = false;
 
@@ -161,11 +158,11 @@ export default class Index extends Page<any, ILoginState> {
 
     api.CompleteCallback = () => {
       if (redirecToHome) {
-        $this.setState({ ShowDialog: false }, () => {
-          App.Redirect($this.props.returnUrl);
+        this.setState({ ShowDialog: false }, () => {
+          App.Redirect((this.props as any).returnUrl);
         });
       } else {
-        $this.setState({ Checking: false });
+        this.setState({ Checking: false });
       }
     }
 

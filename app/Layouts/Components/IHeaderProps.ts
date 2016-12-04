@@ -15,32 +15,16 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import IMainContext from 'IMainContext';
-import Component from 'Component';
-import IPageProps from 'IPageProps';
-import { SetBreadcrumbs } from 'Actions/Global';
+import IPageContext from 'Core/IPageContext';
+import ICurrentUser from 'Core/ICurrentUser';
+import { Server } from 'Models/Server';
 
-/**
- * The base class for pages.
- */
-export default class Page<P extends IPageProps, S> extends Component<P, S> {
+export interface IHeaderProps {
 
-  static defaultProps = {
-    Title: 'SmallServerAdminV2'
-  }
-
-  constructor(props?, context?) {
-    super(props, context);
-    Debug.Init2('Page', (this.props as any).Title);
-  }
-
-  componentWillMount() {
-    this.SetBreadcrumbs('Dashboard');
-  }
-
-  public SetBreadcrumbs(breadcrumbs: string): void {
-    this.dispatch(SetBreadcrumbs(breadcrumbs));
-  }
+  CurrentPage?: IPageContext,
+  CurrentUser?: ICurrentUser,
+  CurrentServer?: Server
 
 }
+
+export default IHeaderProps;

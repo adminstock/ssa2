@@ -16,15 +16,16 @@
  */
 
 import * as React from 'react';
-import App from 'Core/App';
-import { OverlayType } from 'OverlayType';
-
 import { connect } from 'react-redux';
+
+import IAppStore from 'Core/IAppStore';
+import { OverlayType } from 'OverlayType';
+import IOverlayProps from 'IOverlayProps';
 
 /**
  * Represent overlay.
  */
-export class Overlay extends React.Component<any, any> {
+export class Overlay extends React.Component<IOverlayProps, any> {
 
   constructor(props, context) {
     super(props, context);
@@ -34,7 +35,7 @@ export class Overlay extends React.Component<any, any> {
   private GetClassName(): string {
     let result = 'overlay-wrapper';
 
-    let overlayType = App.Overlay.OverlayType;
+    let overlayType = this.props.Overlay.OverlayType;
 
     if (overlayType & OverlayType.Opacity15) {
       result += ' overlay-opacity15';
@@ -56,7 +57,7 @@ export class Overlay extends React.Component<any, any> {
   }
 
   private GetLoadingIndicator(): JSX.Element {
-    let overlayType = App.Overlay.OverlayType;
+    let overlayType = this.props.Overlay.OverlayType;
 
     if ((overlayType & OverlayType.Loader) != OverlayType.Loader) {
       return null;
@@ -81,8 +82,8 @@ export class Overlay extends React.Component<any, any> {
     // text
     let text = null;
 
-    if (App.Overlay.Text != null && App.Overlay.Text != '') {
-      text = (<div className="loader-text">{ App.Overlay.Text }</div>);
+    if (this.props.Overlay.Text != null && this.props.Overlay.Text != '') {
+      text = (<div className="loader-text">{ this.props.Overlay.Text }</div>);
     }
 
     return (
@@ -94,9 +95,9 @@ export class Overlay extends React.Component<any, any> {
   }
 
   render() {
-    Debug.Render('Overlay', App.Overlay.OverlayType, App.Overlay.Text);
+    Debug.Render('Overlay', this.props.Overlay.OverlayType, this.props.Overlay.Text);
 
-    if (App.Overlay.OverlayType == OverlayType.Invisible) {
+    if (this.props.Overlay.OverlayType == OverlayType.Invisible) {
       return null;
     } else {
       return (
@@ -109,6 +110,6 @@ export class Overlay extends React.Component<any, any> {
   
 }
 
-export default connect(state => ({
+export default connect<IAppStore, IOverlayProps, any>(state => ({
   Overlay: state.Overlay
 }))(Overlay);

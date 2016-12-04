@@ -22,6 +22,7 @@ import { FormattedMessage } from 'react-intl';
 
 import Page from 'Core/Page';
 import App from 'Core/App';
+import IAppStore from 'Core/IAppStore';
 import ServersList from 'Components/ServersList';
 import ServerEditor from 'Components/ServerEditor';
 //import ServerEditor from 'Modules/Control/Components/ServerEditor';
@@ -44,8 +45,9 @@ import {
 
 import { SetBreadcrumbs } from 'Actions/Global';
 import IServersState from 'IServersState';
+import IServersProps from 'IServersProps';
 
-export class Servers extends Page<any, IServersState> {
+export class Servers extends Page<IServersProps, IServersState> {
 
   static defaultProps = {
     Title: 'Servers',
@@ -167,7 +169,7 @@ export class Servers extends Page<any, IServersState> {
 
     let alertMessage = null;
 
-    if (App.CurrentUser.Server == null) {
+    if (this.props.CurrentUser.Server == null) {
       alertMessage = (
         <Alert bsStyle="danger">
           <p><FormattedMessage id="MDL_CONTROL_SELECT_SERVER" defaultMessage="To continue, you need to select the server." /></p>
@@ -224,6 +226,6 @@ export class Servers extends Page<any, IServersState> {
 
 }
 
-export default connect(
+export default connect<IAppStore, IServersProps, any>(
   state => ({ CurrentUser: state.CurrentUser })
 )(Servers);

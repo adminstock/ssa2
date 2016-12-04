@@ -18,9 +18,10 @@
 import * as React from 'react';
 import DocumentTitle from 'react-document-title';
 import Page from 'Core/Page';
+import IPageProps from 'Core/IPageProps';
 import App from 'Core/App';
 
-export default class Edit extends Page<any, any> {
+export default class Edit extends Page<IPageProps, any> {
 
   static defaultProps = {
     Title: 'Users Editor'

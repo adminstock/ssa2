@@ -111,6 +111,11 @@
     <TypeScriptCompile Include="AppStart\Init.tsx" />
     <TypeScriptCompile Include="Core\IAppStore.ts" />
     <TypeScriptCompile Include="Core\IPageContext.ts" />
+    <TypeScriptCompile Include="Core\IPageProps.ts" />
+    <TypeScriptCompile Include="Layouts\Components\IHeaderProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>Header.tsx</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="Layouts\Components\IHeaderState.ts">
       <SubType>Code</SubType>
       <DependentUpon>Header.tsx</DependentUpon>
@@ -131,6 +136,10 @@
       <DependentUpon>ServersListDialog.tsx</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="Modules\Control\Components\ServersListDialog.tsx" />
+    <TypeScriptCompile Include="Modules\Control\IServersProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>Servers.tsx</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="Modules\Control\IServersState.ts">
       <SubType>Code</SubType>
       <DependentUpon>Servers.tsx</DependentUpon>
@@ -309,6 +318,10 @@
     <TypeScriptCompile Include="UI\Overlay\IOverlay.ts" />
     <TypeScriptCompile Include="Layouts\Components\Header.tsx" />
     <TypeScriptCompile Include="Layouts\Components\Menu.tsx" />
+    <TypeScriptCompile Include="UI\Overlay\IOverlayProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>Overlay.tsx</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="UI\Overlay\Overlay.tsx" />
     <TypeScriptCompile Include="UI\Overlay\OverlayType.ts" />
     <TypeScriptCompile Include="UI\ProcessingIndicator.tsx" />

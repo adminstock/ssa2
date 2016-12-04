@@ -19,9 +19,10 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import DocumentTitle from 'react-document-title';
 import Page from 'Core/Page';
+import IPageProps from 'Core/IPageProps';
 import App from 'Core/App';
 
-export default class Index extends Page<any, any> {
+export default class Index extends Page<IPageProps, any> {
 
   static defaultProps = {
     Title: 'Users'

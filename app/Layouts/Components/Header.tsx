@@ -23,18 +23,18 @@ import { connect } from 'react-redux';
 
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Button } from 'react-bootstrap';
 
-//import CurrentUser from 'Core/CurrentUser';
 import Component from 'Core/Component';
-import App from 'Core/App';
+import IAppStore from 'Core/IAppStore';
 import IMainContext from 'Core/IMainContext';
 import ServersListDialog from 'Modules/Control/Components/ServersListDialog';
 import { OutputMode } from 'Modules/Control/Components/OutputMode';
 
 import { LoadLanguage } from 'Actions/Global';
 
+import IHeaderProps from 'IHeaderProps';
 import IHeaderState from 'IHeaderState';
 
-export class Header extends Component<any, IHeaderState> {
+export class Header extends Component<IHeaderProps, IHeaderState> {
   
   constructor(props, context) {
     super(props, context);
@@ -65,7 +65,7 @@ export class Header extends Component<any, IHeaderState> {
    * @param newLanguage New language: en, ru, de etc.
    */
   private SetLanguage(newLanguage: string): void {
-    App.Store.dispatch(LoadLanguage(newLanguage));
+    this.dispatch(LoadLanguage(newLanguage));
   }
 
   private GetServerIcon(): string {
@@ -126,10 +126,10 @@ export class Header extends Component<any, IHeaderState> {
   }
 
   render() {
-    Debug.Render3('Header');
+    Debug.Render3('Header', this.props);
 
-    let currentPage = App.CurrentPage;
-    let currentUser = App.CurrentUser;
+    let currentPage = this.props.CurrentPage;
+    let currentUser = this.props.CurrentUser;
 
     let serverName = null;
 
@@ -220,7 +220,7 @@ export class Header extends Component<any, IHeaderState> {
 
 }
 
-export default connect(state => ({
+export default connect<IAppStore, IHeaderProps, any>(state => ({
   CurrentPage: state.CurrentPage,
   CurrentUser: state.CurrentUser,
   CurrentServer: state.CurrentServer
