@@ -15,12 +15,26 @@
  * limitations under the License.
  */
 
-import Dialog from 'Dialog';
+import IButton from 'IButton';
 
-export interface IDialogProviderState {
+/**
+ * Represents settings of modal dialog.
+ */
+export interface IModalProps {
 
-  Items: Array<Dialog>;
+  /** alert | confirm */
+  Type: string;
+
+  Key: string;
+
+  Title?: string;
+
+  Text: string;
+
+  Buttons?: Array<IButton>;
+
+  UseHtml?: boolean;
 
 }
 
-export default IDialogProviderState;
+export default IModalProps;

@@ -38,8 +38,8 @@ export default class Edit extends Page<IPageProps, any> {
     App.Alert('test1');
     App.Alert(<div>hello world</div>);
     App.Confirm(<div>hello world11111</div>);
-    App.Confirm(<div>This is test<br />test<br />tessst</div>, (s, confirmed) => { Debug.Log('Confirmed', confirmed); });
-    App.Confirm({ message: '123', title: 'Are you want?', callback: (s, confirmed) => { Debug.Log('Confirmed', confirmed); } });
+    App.Confirm(<div>This is test<br />test<br />tessst</div>).then(confirmed => { Debug.Log('Confirmed', confirmed) });
+    App.Confirm({ Text: '123', Title: 'Are you want?' }).then(confirmed => Debug.Log('Confirmed', confirmed));
   }
 
   render() {

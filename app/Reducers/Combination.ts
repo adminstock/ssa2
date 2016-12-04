@@ -23,12 +23,14 @@ import AppReducer from 'AppReducer';
 import UserReducer from 'UserReducer';
 import OverlayReducer from 'OverlayReducer';
 import PageReducer from 'PageReducer';
+import ModalReducer from 'UI/Modal/Reducer';
 
 export const RootReducer = combineReducers<any>({
   AppContext: AppReducer,
   CurrentUser: UserReducer,
   CurrentPage: PageReducer,
   Overlay: OverlayReducer,
+  ModalManager: ModalReducer,
   intl: intlReducer,
   routing: routerReducer
 });

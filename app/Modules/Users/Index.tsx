@@ -21,6 +21,7 @@ import DocumentTitle from 'react-document-title';
 import Page from 'Core/Page';
 import IPageProps from 'Core/IPageProps';
 import App from 'Core/App';
+import { Alert, Confirm } from 'UI/Modal/Actions';
 
 export default class Index extends Page<IPageProps, any> {
 
@@ -32,9 +33,24 @@ export default class Index extends Page<IPageProps, any> {
     super(props, context);
   }
 
-  /*componentWillMount() {
-    App.MakeRequest({ Method: 'Users.GetUsers', Data: { page: 1 } });
-  }*/
+  componentWillMount() {
+    //App.MakeRequest({ Method: 'Users.GetUsers', Data: { page: 1 } });
+    this.dispatch(Alert(<h1>test</h1>)).then(() => {
+      Debug.Log('Alert is closed.');
+    });
+
+    this.dispatch(Alert('Hello <.>!')).then(() => {
+      Debug.Log('Alert 2 is closed.');
+    });
+
+    this.dispatch(Alert({ Text: (<div><h1>test</h1><p>test test</p><p>12345</p></div>), Title: 'Testtttt', ButtonOk: { BsStyle: 'primary', Text: <em>Yes</em> } })).then(() => {
+      Debug.Log('Alert 3 is closed.');
+    });
+
+    this.dispatch(Confirm('Вы хотите это сделать?')).then((result) => {
+      Debug.Log('Confirm: ', result);
+    });
+  }
 
   render() {
     return (

@@ -34,14 +34,14 @@ import IOverlay from 'UI/Overlay/IOverlay';
 
 import IMakeRequestProps from 'IMakeRequestProps';
 
-import Dialog from 'UI/Dialog/Dialog';
-import DialogManager from 'UI/Dialog/DialogManager';
-import DialogSettings from 'UI/Dialog/DialogSettings';
-
 import { RootReducer } from 'Reducers/Combination';
 
 import { Session, Cookies } from 'Helpers/Storage';
 import TextHelper from 'Helpers/TextHelper';
+
+import { Alert, Confirm } from 'UI/Modal/Actions';
+import IAlertSettings from 'UI/Modal/IAlertSettings';
+import IConfirmSettings from 'UI/Modal/IConfirmSettings';
 
 /**
  * The main class of the application.
@@ -205,65 +205,31 @@ export default class App {
    *
    * @param message Message text.
    */
-  public static Alert(message?: string): void;
+  public static Alert(message?: string): Promise<boolean>;
 
   /**
    * Displays an alert box with a specified message and an OK button.
    *
    * @param message Any elements. For example: <div>Hello world!</div>
    */
-  public static Alert(message?: JSX.Element): void;
+  public static Alert(message?: JSX.Element): Promise<boolean>;
 
   /**
    * Displays an alert box with a specified message and an OK button.
    *
    * @param settings Set of key/value pairs that configure the Alert dialog. All settings are optional.
    */
-  public static Alert(settings?: { message?: string | JSX.Element, title?: string | JSX.Element, buttonTitle?: string, callback?: { (dialog: Dialog): void; } }): void;
+  public static Alert(settings?: IAlertSettings): Promise<boolean>;
 
   /**
    * Displays an alert box with a specified message and an OK button.
    *
    * @param settings Text, elements or message settings.
    */
-  public static Alert(settings?: any): void {
+  public static Alert(settings?: any): Promise<boolean> {
     Debug.Call('App.Alert', typeof settings, settings);
 
-    let s = new DialogSettings();
-
-    let text, title, buttonTitle, callback;
-
-    if (typeof settings === 'object' && typeof settings.type !== 'undefined') {
-      text = settings;
-    }
-    else if (typeof settings === 'object' && typeof settings.type === 'undefined') {
-      text = settings.message;
-      title = settings.title;
-      buttonTitle = settings.buttonTitle;
-      callback = settings.callback;
-    }
-    else if (typeof settings === 'function') {
-      text = settings();
-    }
-    else {
-      text = settings;
-    }
-
-    if (buttonTitle === undefined || buttonTitle == null || buttonTitle == '') {
-      buttonTitle = (<FormattedMessage id="btnOk" defaultMessage="Ok" />);
-    }
-
-    s.Header = title || (<FormattedMessage id="dlgTitleMessage" defaultMessage="Message" />);
-    s.Body = text;
-    s.Footer = (<Button bsStyle="default" onClick={s.OnCloseDialog.bind(s) }>{buttonTitle}</Button>);
-
-    if (typeof callback === 'function') {
-      s.ClosedHandler = (sender, args) => {
-        callback(sender);
-      }
-    }
-
-    DialogManager.CreateDialog(s);
+    return App.Dispatch(Alert(settings));
   }
 
   // #endregion
@@ -275,7 +241,7 @@ export default class App {
    * @param message Specifies the text to display in the confirm box.
    * @param callback Callback function.
    */
-  public static Confirm(message?: string, callback?: { (dialog: Dialog, confirmed: boolean): void; }): void;
+  public static Confirm(message?: string): Promise<boolean>;
 
   /**
    * Displays a dialog box with a specified message, along with an OK and a Cancel button.
@@ -283,74 +249,24 @@ export default class App {
    * @param message Specifies any elements to display in the confirm box.
    * @param callback Callback function.
    */
-  public static Confirm(message?: JSX.Element, callback?: { (dialog: Dialog, confirmed: boolean): void; }): void;
+  public static Confirm(message?: JSX.Element): Promise<boolean>;
 
   /**
    * Displays a dialog box with a specified message, along with an OK and a Cancel button.
    *
    * @param settings Set of key/value pairs that configure the Confirm dialog. All settings are optional.
    */
-  public static Confirm(settings?: { message?: string | JSX.Element, title?: string | JSX.Element, buttonOkTitle?: string, buttonCancelTitle?: string, callback?: { (dialog: Dialog, confirmed: boolean): void; } }): void;
+  public static Confirm(settings?: IConfirmSettings): Promise<boolean>;
 
   /**
    * Displays a dialog box with a specified message, along with an OK and a Cancel button.
    *
    * @param settings Set of key/value pairs that configure the Confirm dialog. All settings are optional.
    */
-  public static Confirm(settings?: any): void {
+  public static Confirm(settings?: any): Promise<boolean> {
     Debug.Call('App.Confirm', typeof settings, settings);
 
-    let s = new DialogSettings();
-
-    let text, title, buttonOkTitle, buttonCancelTitle, callback;
-
-    if (typeof settings === 'object' && typeof settings.type !== 'undefined') {
-      text = settings;
-    }
-    else if (typeof settings === 'object' && typeof settings.type === 'undefined') {
-      text = settings.message;
-      title = settings.title;
-      buttonOkTitle = settings.buttonOkTitle;
-      buttonCancelTitle = settings.buttonCancelTitle;
-      callback = settings.callback;
-    }
-    else if (typeof settings === 'function') {
-      text = settings();
-    }
-    else {
-      text = settings;
-    }
-
-    if (buttonOkTitle === undefined || buttonOkTitle == null || buttonOkTitle == '') {
-      buttonOkTitle = (<FormattedMessage id="btnOk" defaultMessage="Ok" />);
-    }
-
-    if (buttonCancelTitle === undefined || buttonCancelTitle == null || buttonCancelTitle == '') {
-      buttonCancelTitle = (<FormattedMessage id="btnCancel" defaultMessage="Cancel" />);
-    }
-
-    s.Header = title || <FormattedMessage id="dlgTitleConfirm" defaultMessage="Confirm" />;
-    s.Body = text;
-    s.Footer = (
-      <div>
-        <Button bsStyle="default" onClick={() => { Debug.Log('Confirmed', true); s.State = true; s.OnCloseDialog.apply(s); } }>{buttonOkTitle}</Button>
-        <Button bsStyle="default" onClick={() => { Debug.Log('Confirmed', false); s.State = false; s.OnCloseDialog.apply(s); } }>{buttonCancelTitle}</Button>
-      </div>
-    );
-
-    s.ClosingHandler = (sender, args) => {
-      if (s.State === undefined || s.State == null) {
-        s.State = false;
-      }
-    }
-
-    if (typeof callback === 'function') {
-      s.ClosedHandler = (sender, args) => {
-        callback(sender, (s.State as boolean));
-      }
-    }
-
-    DialogManager.CreateDialog(s);
+    return App.Dispatch(Confirm(settings));
   }
 
   // #endregion
@@ -494,8 +410,8 @@ export default class App {
     }
 
     App.Alert({
-      title: (<FormattedMessage id="dlgTitleError" defaultMessage="Error" />),
-      message: <div>{message} {trace ? (<div><hr /><pre>{trace}</pre></div>) : ''}</div>
+      Title: (<FormattedMessage id="dlgTitleError" defaultMessage="Error" />),
+      Text: <div>{message} {trace ? (<div><hr /><pre>{trace}</pre></div>) : ''}</div>
     });
   }
 

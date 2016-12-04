@@ -156,11 +156,10 @@ export class Servers extends Page<IServersProps, IServersState> {
     }
 
     App.Confirm({
-      message: <div>{ 'Are you sure you want to delete the' } <strong>{ serverName }</strong>?</div>,
-      buttonOkTitle: 'Yes, delete the server',
-      callback: (d, confirmed) => {
+      Text: <div>{ 'Are you sure you want to delete the' } <strong>{ serverName }</strong>?</div>,
+      ButtonOk: { Text: 'Yes, delete the server' }
+    }).then((confirmed) => {
 
-      }
     });
   }
 

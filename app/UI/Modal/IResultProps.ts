@@ -1,5 +1,6 @@
 ﻿/*
  * Copyright © AdminStock Team (www.adminstock.net), 2016. All rights reserved.
+ * Copyright © Aleksey Nemiro (aleksey.nemiro.ru), 2016. All rights reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +15,14 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { Link } from 'react-router';
-import Page from 'Core/Page';
-import { FormattedMessage } from 'react-intl';
+export interface IResultProps {
 
-/**
- * The main page.
- */
-export default class Index extends Page<any, any> {
+  /** Key of modal. */
+  Key: string;
 
-  constructor(props, context) {
-    super(props, context);
-  }
-
-  render() {
-    return (<div>
-      <h1><FormattedMessage id="hello" defaultMessage="Hello world!" /></h1>
-      <span className="glyphicon glyphicon-music"></span>
-      <Link to="/users">Users</Link>
-    </div>);
-  }
-
+  /** Modal result. */
+  Value: any;
+  
 }
+
+export default IResultProps;

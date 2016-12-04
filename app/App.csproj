@@ -105,7 +105,10 @@
     <Content Include="typings\globals\react-bootstrap-typeahead\typings.json" />
     <Content Include="typings\globals\redux-form\typings.json" />
     <Content Include="typings\globals\react-router-redux\typings.json" />
+    <Content Include="typings\globals\jsx-to-html\typings.json" />
     <TypeScriptCompile Include="Actions\ActionType.ts" />
+    <TypeScriptCompile Include="typings\globals\jsx-to-html\index.d.ts" />
+    <TypeScriptCompile Include="UI\Modal\Actions.ts" />
     <TypeScriptCompile Include="AppStart\RouteConfig.tsx" />
     <TypeScriptCompile Include="AppStart\SmallServerAdmin.tsx" />
     <TypeScriptCompile Include="AppStart\Init.tsx" />
@@ -217,6 +220,24 @@
       <DependentUpon>Index.tsx</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="Reducers\Combination.ts" />
+    <TypeScriptCompile Include="UI\Modal\Confirm.tsx" />
+    <TypeScriptCompile Include="UI\Modal\IAlertSettings.ts" />
+    <TypeScriptCompile Include="UI\Modal\IButton.ts" />
+    <TypeScriptCompile Include="UI\Modal\IConfirmProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>Confirm.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="UI\Modal\IConfirmSettings.ts" />
+    <TypeScriptCompile Include="UI\Modal\IModalManagerProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>ModalManager.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="UI\Modal\IResultProps.ts" />
+    <TypeScriptCompile Include="UI\Modal\IStore.ts" />
+    <TypeScriptCompile Include="UI\Modal\IModalProps.ts" />
+    <TypeScriptCompile Include="UI\Modal\IState.ts" />
+    <TypeScriptCompile Include="UI\Modal\ModalManager.tsx" />
+    <TypeScriptCompile Include="UI\Modal\Reducer.ts" />
     <TypeScriptCompile Include="Reducers\PageReducer.ts" />
     <TypeScriptCompile Include="Reducers\UserReducer.ts" />
     <TypeScriptCompile Include="Reducers\AppReducer.ts" />
@@ -282,8 +303,8 @@
     <TypeScriptCompile Include="typings\globals\webpack-env\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\webpack\index.d.ts" />
     <TypeScriptCompile Include="typings\index.d.ts" />
-    <TypeScriptCompile Include="UI\Dialog\DialogManager.tsx" />
-    <TypeScriptCompile Include="UI\Dialog\DialogSettings.ts" />
+    <TypeScriptCompile Include="UI\Modal\Alert.tsx" />
+    <TypeScriptCompile Include="UI\Modal\ActionType.ts" />
     <TypeScriptCompile Include="API\ApiRequest.ts" />
     <TypeScriptCompile Include="Helpers\TextHelper.ts" />
     <TypeScriptCompile Include="Helpers\Cookies.ts" />
@@ -291,7 +312,6 @@
     <TypeScriptCompile Include="Pages\Index.tsx" />
     <TypeScriptCompile Include="Layouts\Main.tsx" />
     <TypeScriptCompile Include="Models\ApiServer.ts" />
-    <TypeScriptCompile Include="UI\Dialog\Dialog.ts" />
     <TypeScriptCompile Include="Models\OperatingSystem.ts" />
     <TypeScriptCompile Include="Models\Server.ts" />
     <TypeScriptCompile Include="Models\User.ts" />
@@ -308,8 +328,9 @@
     <TypeScriptCompile Include="typings.local\ReactUpdate.d.ts" />
     <TypeScriptCompile Include="typings.local\_constants.d.ts" />
     <TypeScriptCompile Include="typings.local\index.d.ts" />
-    <TypeScriptCompile Include="UI\Dialog\IDialogManagerState.ts">
-      <DependentUpon>DialogManager.tsx</DependentUpon>
+    <TypeScriptCompile Include="UI\Modal\IAlertProps.tsx">
+      <SubType>Code</SubType>
+      <DependentUpon>Alert.tsx</DependentUpon>
     </TypeScriptCompile>
     <TypeScriptCompile Include="UI\IProcessingIndicatorProps.ts">
       <DependentUpon>ProcessingIndicator.tsx</DependentUpon>

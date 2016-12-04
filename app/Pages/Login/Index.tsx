@@ -110,8 +110,8 @@ export default class Index extends Page<IPageProps, ILoginState> {
     api.ErrorCallback = (error) => {
       // show error
       App.Alert({
-        message: 'Server error: ' + error.Text,
-        title: 'Error'
+        Text: 'Server error: ' + error.Text,
+        Title: 'Error'
       });
     }
 
@@ -151,8 +151,8 @@ export default class Index extends Page<IPageProps, ILoginState> {
 
       // show error
       App.Alert({
-        message: 'Server error: ' + error.Text,
-        title: 'Error'
+        Text: 'Server error: ' + error.Text,
+        Title: 'Error'
       });
     }
 

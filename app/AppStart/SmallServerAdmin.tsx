@@ -22,8 +22,8 @@ import { connect } from 'react-redux';
 import App from 'Core/App';
 import { SetVisible, SetActiveApiServer, LoadApiServers, SetError, ShowOverlay, HideOverlay } from 'Actions/Global';
 import Error from 'Pages/Error';
-import DialogManager from 'UI/Dialog/DialogManager';
 import { OverlayType } from 'UI/Overlay/OverlayType';
+import ModalManager from 'UI/Modal/ModalManager';
 
 /**
  * SmallServerAdmin.
@@ -146,7 +146,7 @@ export class SmallServerAdmin extends React.Component<any, any> {
       <div>
         {children}
 
-        <DialogManager/>
+        <ModalManager />
       </div>
     );
   }
