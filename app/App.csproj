@@ -111,6 +111,10 @@
     <TypeScriptCompile Include="AppStart\Init.tsx" />
     <TypeScriptCompile Include="Core\IAppStore.ts" />
     <TypeScriptCompile Include="Core\IPageContext.ts" />
+    <TypeScriptCompile Include="Layouts\Components\IHeaderState.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>Header.tsx</DependentUpon>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="Localization\de.ts" />
     <TypeScriptCompile Include="Localization\ru.ts" />
     <TypeScriptCompile Include="Modules\Control\Actions\ServerActions.ts" />
@@ -122,6 +126,11 @@
       <SubType>Code</SubType>
       <DependentUpon>ModuleSettingsEditor.tsx</DependentUpon>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\IServersListDialogProps.ts">
+      <SubType>Code</SubType>
+      <DependentUpon>ServersListDialog.tsx</DependentUpon>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="Modules\Control\Components\ServersListDialog.tsx" />
     <TypeScriptCompile Include="Modules\Control\IServersState.ts">
       <SubType>Code</SubType>
       <DependentUpon>Servers.tsx</DependentUpon>

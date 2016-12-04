@@ -19,6 +19,7 @@ import * as React from 'react';
 import { Link } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import { FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
 
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Button } from 'react-bootstrap';
 
@@ -26,21 +27,21 @@ import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Button } from 'react-boots
 import Component from 'Core/Component';
 import App from 'Core/App';
 import IMainContext from 'Core/IMainContext';
-import ServersList from 'Modules/Control/Components/ServersList';
+import ServersListDialog from 'Modules/Control/Components/ServersListDialog';
 import { OutputMode } from 'Modules/Control/Components/OutputMode';
 
 import { LoadLanguage } from 'Actions/Global';
 
-import { connect } from 'react-redux';
+import IHeaderState from 'IHeaderState';
 
-import Dialog from 'UI/Dialog/Dialog';
-import DialogManager from 'UI/Dialog/DialogManager';
-import DialogSettings from 'UI/Dialog/DialogSettings';
-
-export class Header extends Component<any, any> {
+export class Header extends Component<any, IHeaderState> {
   
   constructor(props, context) {
     super(props, context);
+
+    this.state = {
+      ShowServerList: false
+    }
   }
 
   componentWillMount() {
@@ -124,26 +125,6 @@ export class Header extends Component<any, any> {
     return 'os-icon24 ' + result;
   }
 
-  private ShowServers(): void {
-    let s = new DialogSettings();
-    s.Header = (
-      <h4 className="modal-title">
-        <i className="fa fa-server"></i>
-        { ' ' }
-        <FormattedMessage id="DLG_SERVERS" defaultMessage="Servers" />
-      </h4>
-    );
-    s.Body = (<ServersList ShowControl={ false } OutputMode={ OutputMode.List } />);
-    s.Footer = (
-      <Button bsStyle="default" onClick={ s.OnCloseDialog.bind(s) }>
-        <FormattedMessage id="BTN_CLOSE" defaultMessage="Close" />
-      </Button>
-    );
-    s.ShowCloseButton = true;
-    
-    DialogManager.CreateDialog(s);
-  }
-
   render() {
     Debug.Render3('Header');
 
@@ -212,7 +193,7 @@ export class Header extends Component<any, any> {
     return (
       <Navbar>
         <Navbar.Header>
-          <a className="navbar-brand" title="All servers" onClick={ this.ShowServers.bind(this) }>
+          <a className="navbar-brand" title="All servers" onClick={ () => this.setState({ ShowServerList: true }) }>
             <i className="fa fa-server" style={ { float: 'none' } }></i>
           </a>
           <Link to="/" className="navbar-brand" title="Dashboard">
@@ -232,6 +213,7 @@ export class Header extends Component<any, any> {
             </NavItem>
           </LinkContainer>
         </Nav>
+        <ServersListDialog Visible={ this.state.ShowServerList } OnHide={ () => this.setState({ ShowServerList: false }) } />
       </Navbar>
     )
   }
