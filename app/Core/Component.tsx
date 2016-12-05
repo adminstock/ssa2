@@ -18,6 +18,10 @@
 import * as React from 'react';
 import IMainContext from 'IMainContext';
 
+import { Alert, Confirm } from 'UI/Modal/Actions';
+import IAlertSettings from 'UI/Modal/IAlertSettings';
+import IConfirmSettings from 'UI/Modal/IConfirmSettings';
+
 /**
  * The base class for user controls.
  */
@@ -82,5 +86,74 @@ export default class Component<P, S> extends React.Component<P, S> {
       });
     });
   }
+
+  // #region ..Alert..
+
+  /**
+   * Displays an alert box with a specified message and an OK button.
+   *
+   * @param message Message text.
+   */
+  public alert(message?: string): Promise<boolean>;
+
+  /**
+   * Displays an alert box with a specified message and an OK button.
+   *
+   * @param message Any elements. For example: <div>Hello world!</div>
+   */
+  public alert(message?: JSX.Element): Promise<boolean>;
+
+  /**
+   * Displays an alert box with a specified message and an OK button.
+   *
+   * @param settings Set of key/value pairs that configure the Alert dialog. All settings are optional.
+   */
+  public alert(settings?: IAlertSettings): Promise<boolean>;
+
+  /**
+   * Displays an alert box with a specified message and an OK button.
+   *
+   * @param settings Text, elements or message settings.
+   */
+  public alert(settings?: any): Promise<boolean> {
+    return this.dispatch(Alert(settings));
+  }
+
+  // #endregion
+  // #region ..Confirm..
+
+  /**
+   * Displays a dialog box with a specified message, along with an OK and a Cancel button.
+   *
+   * @param message Specifies the text to display in the confirm box.
+   * @param callback Callback function.
+   */
+  public confirm(message?: string): Promise<boolean>;
+
+  /**
+   * Displays a dialog box with a specified message, along with an OK and a Cancel button.
+   *
+   * @param message Specifies any elements to display in the confirm box.
+   * @param callback Callback function.
+   */
+  public confirm(message?: JSX.Element): Promise<boolean>;
+
+  /**
+   * Displays a dialog box with a specified message, along with an OK and a Cancel button.
+   *
+   * @param settings Set of key/value pairs that configure the Confirm dialog. All settings are optional.
+   */
+  public confirm(settings?: IConfirmSettings): Promise<boolean>;
+
+  /**
+   * Displays a dialog box with a specified message, along with an OK and a Cancel button.
+   *
+   * @param settings Set of key/value pairs that configure the Confirm dialog. All settings are optional.
+   */
+  public confirm(settings?: any): Promise<boolean> {
+    return this.dispatch(Confirm(settings));
+  }
+
+  // #endregion
 
 }
